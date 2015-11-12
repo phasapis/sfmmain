@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="south" resizable="true">
+
+
+			<p:growl id="msgs3" showDetail="true" />
+
+			<p:panel id="validationrules" style="margin-bottom:10px;">
+				<h:form>
+					<p:panelGrid>
+						<p:row id="row1">
+							<p:column>
+
+								<ui:repeat value="#{rulesController.rulesEB.rulesTOList}"
+									var="rulesTO">
+
+									<p:selectOneMenu value="#{rulesTO.feature}">
+										<f:selectItems value="#{rulesTO.validationFeatureList}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu value="#{rulesTO.method}">
+										<f:selectItems value="#{rulesTO.validationMethodList}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu value="#{rulesTO.condition}">
+										<f:selectItems value="#{rulesTO.validationConditionList}" />
+									</p:selectOneMenu>
+
+									<p:selectOneMenu value="#{rulesTO.operator}">
+										<f:selectItems value="#{rulesTO.validationOperatorList}" />
+									</p:selectOneMenu>
+
+									<p:inputText value="#{rulesTO.value}" size="5" required="false"
+										label="" />
+
+									<br />
+
+								</ui:repeat>
+
+
+							</p:column>
+						</p:row>
+						<p:row id="row2">
+							<p:column>
+								<p:commandButton value="Add Rule">
+									<f:ajax listener="#{rulesController.addRulesActionListner}"
+										process="@form" render="@form" />
+								</p:commandButton>
+								<p:commandButton value="Delete Rule">
+									<f:ajax listener="#{rulesController.deleteRulesActionListner}"
+										process="@form" render="@form" />
+								</p:commandButton>
+								<p:commandButton value="Save Rules"
+									action="#{rulesController.saveRulesActionListner}"
+									process="@form">
+								</p:commandButton>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</h:form>
+			</p:panel>
+
+
+
+
+		</p:layoutUnit>
+		<!-- p:layoutUnit position="east" resizable="true" style="width: 40%">
+			h:inputTextarea id="remark" cols="40" rows="15"
+				value="#{simulationForm.remark}"
+		p:layoutUnit  -->
+
+	</ui:composition>
+</body>
+</html>

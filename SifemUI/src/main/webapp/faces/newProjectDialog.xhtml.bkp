@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+		<p:layoutUnit position="north" resizable="true" minSize="300"
+			size="500">
+
+			<p:growl id="msgs" showDetail="true" />
+			<p:panel id="mainPanelID">
+				<p:panelGrid columns="2">
+
+					<h:outputText value="Project Name: " />
+					<p:inputText id="projname" value="#{projectSimulationController.projectSimulationEB.projectSimulationTO.projectName}"
+						required="true" label="Name" />
+
+					<h:outputText value="Workspace File System Location: " />
+					<p:inputText id="workspaceLocation"
+						value="#{projectSimulationController.projectSimulationEB.projectSimulationTO.workspace}" required="true"
+						label="Workspace Location" />
+
+					<p:commandButton value="Back"
+						onclick="PF('newProjectDialog').hide();"
+						icon="ui-icon-circle-arrow-w"></p:commandButton>
+					<p:commandButton value="Continue"
+						actionListener="#{projectSimulationController.createNewProjectActionListener}"
+						update=":dockForm:dockMenuItemID" icon="ui-icon-check" onsuccess="PF('newProjectDialog').hide();" ajax="false" >
+						<p:ajax update=":transformationsForm:accordionPanelID" process="@all" listener="#{transformationController.fillTransformationSourceSidePickList}"></p:ajax>
+					</p:commandButton>
+					
+						
+
+				</p:panelGrid>
+
+			</p:panel>
+
+
+		</p:layoutUnit>
+
+	</ui:composition>
+</body>
+</html>

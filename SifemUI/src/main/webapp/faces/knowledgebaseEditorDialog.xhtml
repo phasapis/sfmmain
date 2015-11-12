@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="south" resizable="true">
+
+
+			<p:growl id="msgs3" showDetail="true" />
+			<p:tabView dynamic="true">
+				<p:tab title="Knowledge Editor">
+					<p:panel id="knowledgeeditor" style="margin-bottom:10px;">
+						<p:panelGrid id="knowledgebaseeditorgrid">
+
+							<p:row id="triplerowlabels">
+								<p:column>
+									<p:outputLabel for="subjectComplete" value="Subject: " />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel for="predicateComplete" value="Predicate: " />
+								</p:column>
+
+								<p:column>
+									<p:outputLabel for="objectComplete" value="Object: " />
+								</p:column>
+
+							</p:row>
+
+							<p:row id="triplerow"
+								rendered="#{knowledgebaseEditorController.renderLine}">
+								<p:column>
+									<p:autoComplete id="subjectComplete"
+										value="#{knowledgebaseEditorController.knowledgeBaseEB.knowledgeBaseTO.subject}"
+										completeMethod="#{knowledgebaseEditorController.completeSubjectTxt}" />
+								</p:column>
+
+								<p:column>
+									<p:autoComplete id="predicateComplete"
+										value="#{knowledgebaseEditorController.knowledgeBaseEB.knowledgeBaseTO.predicate}"
+										completeMethod="#{knowledgebaseEditorController.completePredicateTxt}" />
+								</p:column>
+
+								<p:column>
+									<p:autoComplete id="objectComplete"
+										value="#{knowledgebaseEditorController.knowledgeBaseEB.knowledgeBaseTO.object}"
+										completeMethod="#{knowledgebaseEditorController.completeObjectTxt}" />
+								</p:column>
+
+							</p:row>
+
+							<p:row>
+								<p:column colspan="5">
+									<p:commandButton value="Insert"
+										actionListener="#{knowledgebaseEditorController.insertAxionActionListner()}"
+										style="float:right" />
+								</p:column>
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+				</p:tab>
+
+				<p:tab title="Rules Editor">
+
+					<p:panel id="validationrules" style="margin-bottom:10px;">
+						<h:form>
+							<p:panelGrid>
+								<p:row id="row0">
+									<p:column style="text-align: left;">
+										<h:outputLabel style="font-weight:bold;font-size:100%">Rule Label: </h:outputLabel>
+										<p:inputText value="#{rulesController.rulesEB.rulesBasicTO.ruleLabel}" size="7"
+												required="false" label="" />
+												</p:column>
+												<p:column style="vertical-align:middle;">
+												<h:outputLabel style="font-weight:bold;font-size:100%">Rule Type: </h:outputLabel>
+										<p:selectOneMenu value="#{rulesController.rulesEB.rulesBasicTO.ruleType}">
+												<f:selectItem itemLabel="Input" itemValue="input" />
+												<f:selectItem itemLabel="Output" itemValue="output" />
+											</p:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row id="row1">
+									<p:column style="text-align: left;" colspan="2">
+										<h:outputLabel style="font-weight:bold;font-size:110%">Rule (IF)</h:outputLabel>
+									</p:column>
+								</p:row>
+								<p:row id="row2">
+									<p:column style="vertical-align: bottom;" colspan="2">
+
+										<ui:repeat value="#{rulesController.rulesEB.rulesTOList}"
+											var="rulesTO">
+
+											<p:selectOneMenu value="#{rulesTO.feature}">
+												<f:selectItems value="#{rulesTO.validationFeatureList}" />
+											</p:selectOneMenu>
+											
+											<p:spacer width="10" />
+
+											<p:selectOneMenu value="#{rulesTO.method}">
+												<f:selectItems value="#{rulesController.rulesMethod}" />
+											</p:selectOneMenu>
+											
+											<p:spacer width="10" />
+
+											<p:selectOneMenu value="#{rulesTO.condition}">
+												<f:selectItems value="#{rulesTO.validationConditionList}" />
+											</p:selectOneMenu>
+											
+											<p:spacer width="10" />
+
+											<p:selectOneMenu value="#{rulesTO.operator}">
+												<f:selectItems value="#{rulesTO.validationOperatorList}" />
+											</p:selectOneMenu>
+											
+											<p:spacer width="10" />
+
+											<p:inputText value="#{rulesTO.value}" size="7"
+												required="false" label="" />
+												
+												<p:spacer width="10" />
+
+											<br />
+
+										</ui:repeat>
+
+
+									</p:column>
+								</p:row>
+								<p:row id="row3">
+									<p:column style="text-align: right;" colspan="2">
+										<p:commandButton value="Add">
+											<f:ajax listener="#{rulesController.addRulesActionListner}"
+												process="@form" render="@form" />
+										</p:commandButton>
+										<p:commandButton value="Delete">
+											<f:ajax
+												listener="#{rulesController.deleteRulesActionListner}"
+												process="@form" render="@form" />
+										</p:commandButton>
+
+									</p:column>
+								</p:row>
+
+								<p:row id="row4">
+									<p:column style="text-align: left;" colspan="2">
+										<h:outputLabel style="font-weight:bold;font-size:110%">Rule (THEN)</h:outputLabel>
+									</p:column>
+								</p:row>
+								<p:row id="row5">
+									<p:column colspan="2">
+
+										<ui:repeat value="#{rulesController.rulesEB.rulesThenTOList}"
+											var="rulesThenTO">
+
+											<p:inputText value="#{rulesThenTO.thenSubject}" size="20"
+												required="false" label="" />
+
+											<p:spacer width="10" />
+
+											<p:inputText value="#{rulesThenTO.thenPredicate}" size="20"
+												required="false" label="" />
+
+											<p:spacer width="10" />
+
+											<p:inputText value="#{rulesThenTO.thenObject}" size="20"
+												required="false" label="" />
+
+											<p:spacer width="10" />
+
+											<br />
+
+										</ui:repeat>
+</p:column>
+								</p:row>
+										<p:row id="row6">
+											<p:column style="text-align: right;" colspan="2">
+												<p:commandButton value="Add">
+													<f:ajax
+														listener="#{rulesController.addRulesThenActionListner}"
+														process="@form" render="@form" />
+												</p:commandButton>
+												<p:commandButton value="Delete">
+													<f:ajax
+														listener="#{rulesController.deleteRulesThenActionListner}"
+														process="@form" render="@form" />
+												</p:commandButton>
+
+											</p:column>
+										</p:row>
+
+
+
+									
+								<p:row>
+									<p:column style="text-align: center;" colspan="2">
+										<p:commandButton value="Save Rules"
+											action="#{rulesController.saveRulesActionListner}"
+											process="@form">
+										</p:commandButton>
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+						</h:form>
+					</p:panel>
+
+				</p:tab>
+			</p:tabView>
+
+
+
+		</p:layoutUnit>
+		<!-- p:layoutUnit position="east" resizable="true" style="width: 40%">
+			h:inputTextarea id="remark" cols="40" rows="15"
+				value="#{simulationForm.remark}"
+		p:layoutUnit  -->
+
+	</ui:composition>
+</body>
+</html>

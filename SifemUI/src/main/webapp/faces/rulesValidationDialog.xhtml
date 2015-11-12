@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="south" resizable="true">
+
+
+
+
+			<h:form id="form">
+			<p:growl id="msgs3" showDetail="true" />
+			<p:dataTable id="checkboxDT" var="rulesV"
+				value="#{rulesValidationController.rulesValidationEB.rulesValidationTOList}"
+				selection="#{rulesValidationController.rulesValidationEB.selectedRulesValidationTOList}" rowKey="#{rulesV.ruleID}"
+				style="margin-bottom:0">
+				<f:facet name="header">
+					Select Rules to Validate
+				</f:facet>
+				<p:column selectionMode="multiple"
+					style="width:16px;text-align:center" />
+				<p:column headerText="Rule ID">
+					<h:outputText value="#{rulesV.ruleID}" />
+				</p:column>
+				<p:column headerText="Rule Label">
+					<h:outputText value="#{rulesV.ruleLabel}" />
+				</p:column>
+				<p:column headerText="Rule Validity">
+					<h:outputText value="#{rulesV.ruleValidity}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton process="checkboxDT" action="#{rulesValidationController.loadRulesActionListner}" update="@form"
+						icon="" value="Load Rules"
+						oncomplete="" />
+				</f:facet>
+				<f:facet name="footer">
+					<p:commandButton process="checkboxDT" action="#{rulesValidationController.validateRulesActionListner}" update="@form"
+						icon="" value="Validate Rules"
+						oncomplete="" />
+				</f:facet>
+			</p:dataTable>
+			</h:form>
+
+
+
+
+
+			
+
+			
+
+
+
+
+		</p:layoutUnit>
+		<!-- p:layoutUnit position="east" resizable="true" style="width: 40%">
+			h:inputTextarea id="remark" cols="40" rows="15"
+				value="#{simulationForm.remark}"
+		p:layoutUnit  -->
+
+	</ui:composition>
+</body>
+</html>

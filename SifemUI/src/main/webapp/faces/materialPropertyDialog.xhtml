@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="center" resizable="true">
+
+
+			<p:accordionPanel widgetVar="accordionParams" id="accordionParamslID"
+				activeIndex="0,1,2,3" multiple="true" dynamic="true">
+
+				<p:tab title="Choose Parameter" closable="false">
+					<p:panelGrid id="paramTablegrid" columns="6">
+						<p:row id="paramsRowID">
+							<p:column rowspan="20" colspan="20">
+								<p:selectOneMenu id="loadParametersComboBox" >
+									<f:selectItem itemLabel="Select" itemValue="" />
+									<f:selectItems value="#{loadParametersController.loadParametersType}" />
+									<p:ajax listener="#{loadParametersController.ajaxBehaviorParamComboChanged}" process="@form" update=":materialPropertyForm:accordionParamslID"/>
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+						<p:row id="paramValueRowID">
+							<p:column rowspan="20" colspan="20" rendered="#{loadParametersController.renderUniqueValueInputText}">
+								<p:outputLabel value="Value: "></p:outputLabel>
+                                                                <p:inputText value="#{loadParametersController.loadParametersTO.parameterUniqueValue}" rendered="true"></p:inputText>
+							</p:column>
+						</p:row>
+						
+						<p:row id="finalbuttonsRowID" rendered="#{loadParametersController.renderFinalButtons}">
+							<p:column rowspan="20" colspan="20">
+								<p:commandButton ajax="true" value="Cancel"
+									actionListener="#{loadParametersController.resetAllActionListener}"
+									update=":materialPropertyForm:accordionParamslID" process="@form"
+									icon="ui-icon-arrowrefresh-1-s"></p:commandButton>
+							</p:column>
+							<p:column rowspan="20" colspan="20">
+								<p:commandButton ajax="true" value="SaveOrUpdate"
+									actionListener="#{loadParametersController.saveAllActionListener}"
+									update=":materialPropertyForm:accordionParamslID" process="@form"
+									icon="ui-icon-check"></p:commandButton>
+							</p:column>
+						</p:row>
+						
+					</p:panelGrid>
+				</p:tab>
+
+
+				<p:tab title="Choose Parameter Values">
+					<p:panelGrid id="paramValuesTablegrid" columns="6"
+						rendered="#{loadParametersController.renderLimitsValueView}">
+						<p:row id="startValueRowID">
+							<p:column rowspan="20" colspan="20">
+								<p:outputLabel id="startValueLabel" value="Start Value: "
+									for="startValueID" />
+							</p:column>
+							<p:column>
+								<p:inputText id="startValueID" value="#{loadParametersController.loadParametersTO.incrementalInitialValue}" size="5" >
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row id="finalValueRowID">
+							<p:column>
+								<p:outputLabel id="finalValueLabel" value="Final Value: "
+									for="finalValueTextID" />
+								<p:inputText id="finalValueTextID" value="#{loadParametersController.loadParametersTO.incrementalFinalValue}" size="5" >
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row id="incrementalValueRowID">
+							<p:column>
+								<p:outputLabel id="incrementalValueLabel"
+									value="Incremental Value: " for="incrementalValueTextID" />
+								<p:inputText id="incrementalValueTextID" value="#{loadParametersController.loadParametersTO.incrementalIncrementValue}" size="5" >
+								</p:inputText>
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+				</p:tab>
+
+
+
+				<p:tab title="Insert Parameter Values" disabled="false"
+					closable="true">
+					<p:panelGrid id="paramValuesTextAreaTablegrid" columns="1"
+						rendered="#{loadParametersController.renderTextAreaView}">
+						<p:row id="textareaValueRowID">
+							<p:column>
+                                                           <p:scrollPanel style="width:700px;height:255px"> 
+                                                            <p:inputTextarea id="textAreaValueID" value="#{loadParametersController.loadParametersTO.areaValue}" rows="30" cols="100">
+								</p:inputTextarea>
+                                                           </p:scrollPanel>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:tab>
+
+
+				<p:tab title="Upload Parameter Values" disabled="false"
+					closable="true">
+					<p:panelGrid id="uploadParameterValuesTablegrid" columns="1"
+						rendered="#{loadParametersController.renderUploaderView}">
+						<p:row id="uploadParameterValuesRowID">
+							<p:column>
+								<h:form enctype="multipart/form-data" >
+									<p:fileUpload mode="advanced"
+										fileUploadListener="#{loadParametersController.fileUploadListener}"
+										auto="false" ajax = "false"
+										update=":materialPropertyForm:accordionParamslID"/>
+								</h:form>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:tab>
+			</p:accordionPanel>
+
+		</p:layoutUnit>
+
+	</ui:composition>
+</body>
+</html>
+
+

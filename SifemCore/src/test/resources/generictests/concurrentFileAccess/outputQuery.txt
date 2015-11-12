@@ -1,0 +1,18 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX fem: <http://www.sifemontologies.com/ontologies/FiniteElementModel.owl#>
+PREFIX pak: <http://www.sifemontologies.com/ontologies/FEMSettingsPAK.owl#>
+PREFIX sim: <http://www.sifemontologies.com/ontologies/Simulation.owl#>
+SELECT 
+?xCoords 
+?yCoord 
+?zCoord 
+?nodes
+?translationXs 
+?translationY 
+?translationZ 
+?ids 
+WHERE { ?material rdf:type fem:Material . ?material fem:hasMaterialNumber ?y .    ?material pak:hasMaterialSettings ?z .  ?z pak:MATTYPE ?materialType. FILTER (?y=1) . ?nodes rdf:type fem:Node .  
+?nodes fem:isNodeOf ?subDomain. ?nodes fem:hasNodeID ?ids. ?subDomain fem:makesUp ?subDomainGroup. ?subDomainGroup fem:hasMaterial ?material. ?nodes fem:hasXCoordinate ?xCoords . ?nodes fem:hasYCoordinate ?yCoord . ?nodes fem:hasZCoordinate ?zCoord . ?nodes fem:holdsValueFor ?b . ?b rdf:type fem:Translation. ?b sim:hasVectorValue ?a . ?a sim:isReal true . ?a sim:hasVectorXValue ?translationXs . ?a sim:hasVectorYValue ?translationY . ?a sim:hasVectorZValue ?translationZ .  }

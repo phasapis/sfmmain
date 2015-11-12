@@ -1,0 +1,14 @@
+<!-- ?xml version="1.0" encoding="UTF-8"?>
+	<aspectj>
+		<aspects>
+			<aspect name="eu.sifem.aspect.LogAspect"/>
+		</aspects>
+	    <weaver options="-verbose -debug">
+	        <dump within="eu..*" beforeandafter="true"/> 
+    	    <include within="eu..*"/>
+        	<exclude within="eu.sifem.annotation.*"/>
+        	<exclude within="eu.sifem.model.*."/>
+        	<exclude within="eu.sifem.service"/>
+        	<exclude within="eu.sifem.utils"/>
+		</weaver>
+	</aspectj -->

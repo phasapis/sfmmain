@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="south" resizable="true">
+
+
+			<p:growl id="msgs3" showDetail="true" />
+			<p:panel id="validationrules" style="margin-bottom:10px;">
+				<p:panelGrid id="validationrulesgrid">
+					<p:row id="valline1" rendered="#{rules.renderLine}">
+						<p:column>
+							<p:selectOneMenu value="#{rules.feature}">
+								<f:selectItem itemLabel="IF " itemValue="" />
+								<f:selectItems value="#{rules.validationFeaturelist}" />
+								<p:ajax update="valline1" listener="#{rules.handleListChange}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu value="#{rules.method}">
+								<f:selectItem itemLabel="minima" itemValue="" />
+								<f:selectItems value="#{rules.validationMethodslist}" />
+								<p:ajax update="valline1" listener="#{rules.handleListChange}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu value="#{rules.condition}">
+								<f:selectItem itemLabel="veloc" itemValue="" />
+								<f:selectItems value="#{rules.validationConditionslist}" />
+								<p:ajax update="valline1" listener="#{rules.handleListChange}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu value="#{rules.operator}">
+								<f:selectItem itemLabel="greater" itemValue="" />
+								<f:selectItems value="#{rules.validationOperatorlist}" />
+								<p:ajax update="valline1" listener="#{rules.handleListChange}" />
+							</p:selectOneMenu>
+
+						</p:column>
+						<p:column>
+							<p:inputText value="#{rules.value}" size="5" required="false"
+								label="" />
+						</p:column>
+
+					</p:row>
+
+					<p:row>
+						<p:column colspan="5">
+							<p:commandButton value="Validate"
+								action="#{simulationForm.validate}" />
+						</p:column>
+					</p:row>
+
+				</p:panelGrid>
+
+			</p:panel>
+
+
+
+
+		</p:layoutUnit>
+		<!-- p:layoutUnit position="east" resizable="true" style="width: 40%">
+			h:inputTextarea id="remark" cols="40" rows="15"
+				value="#{simulationForm.remark}"
+		p:layoutUnit  -->
+
+	</ui:composition>
+</body>
+</html>

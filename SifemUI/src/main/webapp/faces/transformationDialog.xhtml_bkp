@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+		<p:layoutUnit position="center" resizable="true" style="width: 0%" />
+
+
+		<p:panelGrid id="tablegridNewTransformationName"
+			style="min-width:300px;min-height:75px;">
+
+			<p:row
+				rendered="#{transformationController.createAddTransformationRender}">
+				<p:column>
+
+					<p:selectOneMenu label="Transformation Name:"
+						id="transformationNameSelectID" editable="true"
+						value="#{transformationController.selectedTransformationName}"
+						style="min-width:200px;">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItems
+							value="#{transformationController.transformationList}" />
+						<p:ajax event="change"
+							listener="#{transformationController.handlerTransformationViewByName}"
+							update=":transformationsForm:accordionPanelID:tablegridCreateQuery :transformationsForm:accordionPanelID:tablegridCreateScript" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column>
+					<p:commandButton value="Refresh">
+						<p:ajax event="click"
+							listener="#{transformationController.handlerTransformationViewByNameRefresh}"
+							update=":transformationsForm:accordionPanelID:tablegridCreateQuery :transformationsForm:accordionPanelID:tablegridCreateScript tablegridNewTransformationName"
+							process="@all" />
+					</p:commandButton>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+
+		<p:accordionPanel widgetVar="accordionTransformation"
+			id="accordionPanelID" style="min-width:600px;min-height:500px;"
+			dynamic="true">
+
+			<p:tab title="Choose Transformations"
+				rendered="#{!transformationController.createAddTransformationRender}">
+				<p:panelGrid id="tablegridChooseTransformations"
+					style="min-width:400px;min-height:300px;">
+
+					<p:row>
+						<p:column>
+							<p:pickList id="transformationsPickList"
+								value="#{transformationController.transformationsDualListModel}"
+								var="trans" itemLabel="#{trans}" itemValue="#{trans}">
+								<p:ajax event="transfer" global="false"
+									listener="#{transformationController.saveOrUpdateTransformationSelection}"
+									update="accordionPanelID" />
+							</p:pickList>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:commandButton
+							actionListener="#{visualisationOutputController.handleVisualizationAndOutputListChange}"
+							update=":visualisationOutputForm:visualisationandoutputgrid 
+							:visualisationOutputForm:visualisationandoutputgrid"
+							icon="ui-icon-disk" title="Save" label="Save" value="Save"
+							oncomplete="accordionTransformation.select(#{obj - 1}); return false;"></p:commandButton>
+						</p:column>
+					</p:row>
+
+				</p:panelGrid>
+			</p:tab>
+
+			<p:tab title="Query Editor" disabled="false"
+				rendered="#{transformationController.createAddTransformationRender}">
+				<p:panelGrid id="tablegridCreateQuery"
+					style="min-width:400px;min-height: 300px;">
+					<p:row>
+						<p:column>
+							<p:inputTextarea value="#{transformationController.queryViewStr}"
+								cols="80" rows="30">
+								<p:ajax event="blur"
+									listener="#{transformationController.mapAttributesFromQuery}"
+									update="tablegridChooseTransformations :visualisationOutputForm:visualisationandoutputgrid" />
+							</p:inputTextarea>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:tab>
+
+
+
+			<p:tab title="Script Editor" disabled="false"
+				rendered="#{transformationController.createAddTransformationRender}">
+				<p:panelGrid id="tablegridCreateScript"
+					style="min-width:400px;min-height: 300px;">
+					<p:row>
+						<p:column>
+							<p:inputTextarea
+								value="#{transformationController.scriptViewStr}" cols="80"
+								rows="30">
+								<p:ajax event="blur"
+									listener="#{transformationController.mapAttributesFromQuery}"
+									update="tablegridChooseTransformations :visualisationOutputForm:visualisationandoutputgrid" />
+							</p:inputTextarea>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:tab>
+
+		</p:accordionPanel>
+		<p:panelGrid id="tablegridButtons"
+			style="min-width:150px;min-height:75px;">
+			<p:row>
+				<p:column>
+					<p:commandButton value="Transformation Manager"
+						id="createAddTransformationBtn"
+						actionListener="#{transformationController.newTransformation(true)}"
+						rendered="#{!transformationController.createAddTransformationRender}"
+						update="tablegridNewTransformationName accordionPanelID tablegridButtons" />
+
+					<p:commandButton value="Cancel"
+						rendered="#{transformationController.createAddTransformationRender}"
+						id="createAddTransformationCancelBtn"
+						actionListener="#{transformationController.newTransformation(false)}"
+						update="tablegridNewTransformationName accordionPanelID tablegridButtons"
+						oncomplete="accordionTransformation.select(#{obj - 1}); return false;" />
+
+					<p:commandButton value="SaveOrUpdate" id="saveTransformationbtn"
+						update="tablegridNewTransformationName accordionPanelID tablegridButtons"
+						rendered="#{transformationController.createAddTransformationRender}"
+						actionListener="#{transformationController.saveTransformationCreation}"
+						oncomplete="accordionTransformation.select(#{obj - 1}); return false;" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</ui:composition>
+</body>
+</html>

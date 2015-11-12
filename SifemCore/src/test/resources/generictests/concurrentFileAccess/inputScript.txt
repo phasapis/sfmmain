@@ -1,0 +1,20 @@
+datax = []
+datay = []
+
+datax = sorted(datax)
+
+def transform():
+    for i in range(0,len(ids)):
+        if float(ids[i]) not in datax: 
+            datax.append(float(ids[i]))
+            datay.append(float(translationX[i]))
+                
+    
+         
+    print(datax)
+    print(datay)
+
+    
+    
+    
+transform()

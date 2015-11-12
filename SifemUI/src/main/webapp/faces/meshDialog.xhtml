@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="north" resizable="true" minSize="300"
+			size="500">
+
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:panel style="margin-bottom:10px;">
+				<p:panelGrid id="meshGriid">
+
+					<p:row>
+						<p:column>
+							<p:selectOneMenu id="initAndBoundMeshDefaultTypes"
+								value="#{meshSetupController.meshSelectedDefault}">
+								<f:selectItem itemLabel="Select a Mesh Default" itemValue="" />
+								<f:selectItems value="#{meshSetupController.meshDefaults}" />
+								<p:ajax update="meshGriid"
+									listener="#{meshSetupController.handleMeshSelectedDefaultChange}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText id="shortdescr" rendered="#{meshSetupController.uploadMesh eq false}" value="#{meshSetupController.meshSetupEB.meshSetupTO.description}" />
+						</p:column>                                            
+
+					</p:row>
+
+					<p:row>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Division L" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="DivisionL"
+								value="#{meshSetupController.meshSetupEB.meshSetupTO.divisionL}"
+								size="4" required="true" label="" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Length (L)"  rendered="#{meshSetupController.uploadMesh eq false}"/>
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="LengthL" size="4" required="true" label="" rendered="#{meshSetupController.uploadMesh eq false}"
+								value="#{meshSetupController.geometrySetupEB.geometrySetupTO.lengthL}" />
+						</p:column>
+					</p:row>
+
+					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Division W" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="DivisionW"
+								value="#{meshSetupController.meshSetupEB.meshSetupTO.divisionW}"
+								size="4" required="true" label=""  rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Heigth (H)" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="HeigthH" size="4" required="true" label="" rendered="#{meshSetupController.uploadMesh eq false}"
+								value="#{meshSetupController.geometrySetupEB.geometrySetupTO.heigthH}" />
+						</p:column>
+					</p:row>
+
+
+
+					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Division B" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="DivisionB" size="4" label="" required="true" rendered="#{meshSetupController.uploadMesh eq false}"
+								value="#{meshSetupController.meshSetupEB.meshSetupTO.divisionB}" />
+						</p:column>
+
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Width (W)" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="WidthW" size="4" required="true" label="" rendered="#{meshSetupController.uploadMesh eq false}"
+								value="#{meshSetupController.geometrySetupEB.geometrySetupTO.widthW}" />
+						</p:column>
+					</p:row>
+
+					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Division H" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="DivisionH"
+								value="#{meshSetupController.meshSetupEB.meshSetupTO.divisionH}"
+								size="4" required="true" label="" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Width of BM (B)" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="WidthofBM" size="4" required="true" label="" rendered="#{meshSetupController.uploadMesh eq false}"
+								value="#{meshSetupController.geometrySetupEB.geometrySetupTO.widthBM}" />
+						</p:column>
+					</p:row>
+
+					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<h:outputText value="Division h" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="Divisionh" rendered="#{meshSetupController.uploadMesh eq false}"
+								value="#{meshSetupController.meshSetupEB.meshSetupTO.divisionh}"
+								size="4" required="true" label="" />
+						</p:column>
+
+						<p:column>
+							<h:outputText value="Thickness (h)" rendered="#{meshSetupController.uploadMesh eq false}" />
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
+							<p:inputText id="Thicknessh" size="4" required="true" label="" 
+								value="#{meshSetupController.geometrySetupEB.geometrySetupTO.thicknessh}" />
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<h:form enctype="multipart/form-data">
+								<p:fileUpload rendered="#{meshSetupController.uploadMesh}"
+									value="#{meshSetupController.meshUploadedFile}"
+									mode="simple" disabled="false" />
+								<p:commandButton value="Submit" update=":meshForm:meshGriid"
+									rendered="#{meshSetupController.uploadMesh}"
+									actionListener="#{meshSetupController.uploadMeshFile}"
+									disabled="false" />
+							</h:form>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+			</p:panel>
+
+		</p:layoutUnit>
+
+	</ui:composition>
+</body>
+</html>

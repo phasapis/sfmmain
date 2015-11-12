@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+
+		<p:layoutUnit position="north" resizable="true" minSize="300"
+			size="500">
+
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:panel id="boundandinitconditions" style="margin-bottom:10px;">
+
+				<p:separator />
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:selectOneMenu id="initAndBoundCondType"
+						value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.conditionType}">
+						<f:selectItem itemLabel="Select Condition Type" itemValue="" />
+						<f:selectItems value="#{boundaryInternalConditionsController.conditionTypes}" />
+						<p:ajax update="conditionInitAndBoundType conditionslistselect"
+							listener="#{boundaryInternalConditionsController.handleConditionTypeChange}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="conditionslistselect"
+						value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.condition.name}">
+						<f:selectItem itemLabel="Select Condition" itemValue="" />
+						<f:selectItems value="#{boundaryInternalConditionsController.conditions}" />
+						<p:ajax update="conditionInitAndBoundType conditionslistselect"
+							listener="#{boundaryInternalConditionsController.handleConditionListChange}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<p:separator />
+
+				<p:panel id="conditionInitAndBoundType">
+
+					<p:panelGrid id="internalVeloconditionGrid"
+						rendered="#{boundaryInternalConditionsController.renderInternalVelocity}">
+						<p:row>
+							<p:column colspan="4">
+								<h:outputText value="Internal Condition:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Velocity:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.valueX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.valueY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.valueZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Variation Step:" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.validationStepX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.validationStepY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.validationStepZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Final Value:" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.finalValueX}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.finalValueY}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocityInternal.finalValueZ}" size="5"
+									required="true" label="" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<br />
+					<p:panelGrid id="internalPressconditionGrid"
+						rendered="#{boundaryInternalConditionsController.renderInternalPressure}">
+						<p:row>
+							<p:column colspan="4">
+								<h:outputText value="Internal Condition:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Pressure:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.valueX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.valueY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.valueZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Variation Step:" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.validationStepX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.validationStepY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.validationStepZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Final Value:" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.finalValueX}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.finalValueY}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressureInternal.finalValueZ}" size="5"
+									required="true" label="" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<br />
+					<p:panelGrid id="velocitycondition"
+						rendered="#{boundaryInternalConditionsController.renderVelocity}">
+						<p:row>
+							<p:column colspan="4">
+								<h:outputText value="Boundary Condition:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Value:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.valueX}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.valueY}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.valueZ}" size="5"
+									required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Variation Step:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.validationStepX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.validationStepY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.validationStepZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Final Value:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.finalValueX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.finalValueY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.finalValueZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Patch Boundary:" />
+							</p:column>
+							<p:column colspan="2">
+								<p:selectOneMenu id="geometryVelocSelect"
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.velocity.geometry}">
+									<f:selectItem itemLabel="Select" itemValue="" />
+									<f:selectItems value="#{boundaryInternalConditionsController.patchBoundaries}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:commandButton value="Add" update="velocitycondition"
+									action="#{boundaryInternalConditionsController.addVelocityPatch}" id="hidevelocity" >
+										<f:param name="condition" value="velocity"/>
+									</p:commandButton>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panelGrid id="Pressurecondition"
+						rendered="#{boundaryInternalConditionsController.renderPressure}">
+						<p:row>
+							<p:column colspan="4">
+								<h:outputText value="Boundary Condition:" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Pressure:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.valueX}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.valueY}" size="5"
+									required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.valueZ}" size="5"
+									required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Variation Step:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.validationStepX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.validationStepY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.validationStepZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Final Value:" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.finalValueX}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.finalValueY}"
+									size="5" required="true" label="" />
+							</p:column>
+							<p:column>
+								<p:inputText value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.finalValueZ}"
+									size="5" required="true" label="" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Patch Boundary:" />
+							</p:column>
+							<p:column colspan="2">
+								<p:selectOneMenu id="geometryPressSelect"
+									value="#{boundaryInternalConditionsController.boundaryInternalConditionsItemEB.boundaryInternalConditionsItemTO.pressure.geometry}">
+									<f:selectItem itemLabel="Select" itemValue="" />
+									<f:selectItems value="#{boundaryInternalConditionsController.patchBoundaries}" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:commandButton value="Add" update="Pressurecondition"
+									action="#{boundaryInternalConditionsController.addVelocityPatch}" id="hidePressure" >
+										<f:param name="condition" value="pressure"/>
+									</p:commandButton>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+				</p:panel>
+				<p:separator />
+
+			</p:panel>
+		</p:layoutUnit>
+
+	</ui:composition>
+</body>
+</html>

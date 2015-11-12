@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+		<p:layoutUnit position="center" resizable="true" minSize="20"
+			size="40">
+
+			<p:panel id="visualisationandoutput" style="margin-bottom:10px;">
+				<h:panelGrid columns="2" cellpadding="5">
+					<p:selectOneMenu id="outputlistselect"
+						value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.graphType}">
+						<f:selectItem itemLabel="Select" itemValue="" />
+						<f:selectItems
+							value="#{visualisationOutputController.visualisationAndOutputlist}" />
+						<p:ajax event="change" update="visualisationandoutputgrid"
+							listener="#{visualisationOutputController.handleVisualizationAndOutputListChange}" />
+					</p:selectOneMenu>
+					<!-- 
+					(removing this selection after Andre requested)
+					<p:selectBooleanCheckbox
+						itemLabel="Check if Filter Attributes by Transformation is needed?"
+						value="visualisationOutputController.filterAttributesByTransformation">
+						<p:ajax update="visualisationandoutputgrid transformationGrid" />
+					</p:selectBooleanCheckbox>
+					 -->
+				</h:panelGrid>
+
+				<!-- 
+				(removing this selection after Andre requested)
+				<p:panelGrid id="transformationGrid">
+					<p:row id="transformationRowID"
+						rendered="visualisationOutputController.filterAttributesByTransformation">
+						<p:column>
+							<h:outputText value="Transformation:" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="transformationComboBoxId" size="55"
+								value="visualisationOutputController.selectedTransformationName">
+								<f:selectItem itemLabel="Select" itemValue="" />
+								<f:selectItems
+									value="visualisationOutputController.transformationsBySimulation" />
+								<p:ajax event="change"
+									update="visualisationandoutputgrid transformationGrid"
+									listener="visualisationOutputController.handlerAttributesByTransformation" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				 -->
+				<p:panelGrid id="visualisationandoutputgrid">
+					<p:row id="plot2d"
+						rendered="#{visualisationOutputController.render2Dplot}">
+						<p:column>
+							<h:outputText value="Variable:" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="output2DVelocity"
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.plot2DX}">
+								<f:selectItem itemLabel="Select x" itemValue="" />
+								<f:selectItems
+									value="#{visualisationOutputController.paramsList}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="outputdistancCavity"
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.plot2DY}">
+								<f:selectItem itemLabel="Select y" itemValue="" />
+								<f:selectItems
+									value="#{visualisationOutputController.paramsList}" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+					
+				<p:row id="plot3d" rendered="#{visualisationOutputController.render3Dplot}">
+						<p:column>
+							<h:outputText value="Variable:" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="output3DX"
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.plot3DX}">
+								<f:selectItem itemLabel="Select x" itemValue="" />
+								<f:selectItems
+									value="#{visualisationOutputController.paramsList}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="output3DY"
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.plot3DY}">
+								<f:selectItem itemLabel="Select y" itemValue="" />
+								<f:selectItems
+									value="#{visualisationOutputController.paramsList}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="output3DZ"
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.plot3DZ}">
+								<f:selectItem itemLabel="Select z" itemValue="" />
+								<f:selectItems
+									value="#{visualisationOutputController.paramsList}" />
+							</p:selectOneMenu>
+						</p:column>
+						
+					</p:row>
+					
+					<!-- p:row id="vectorfieldss"
+						rendered="#{visualisationOutputController.rendervectorfield}">
+						<p:column>
+							<h:outputText value="Vector Field:" />
+						</p:column>
+						<p:column colspan="2">
+							<p:selectOneMenu id="dsfdsdsf"
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.vectorFieldVelocity}">
+								<f:selectItem itemLabel="Select" itemValue="" />
+								<f:selectItem itemLabel="Velocity" itemValue="Velocity" />
+								<f:selectItem itemLabel="Pressure" itemValue="Pressure" />
+							</p:selectOneMenu>
+						</p:column>
+
+					</p:row>
+					<p:row id="streamline"
+						rendered="#{visualisationOutputController.renderstreamline}">
+						<p:column>
+							<h:outputText value="Streamline:" />
+						</p:column>
+						<p:column colspan="2">
+							<p:inputText
+								value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.streamLine.velocity}"
+								size="20" required="true" label="" />
+						</p:column>
+					</p:row  -->
+				</p:panelGrid>
+
+				<h:panelGrid columns="6" id="imagePanel2">
+					<p:layoutUnit position="center" resizable="true"
+						rendered="#{visualisationOutputController.renderPAKImages}">
+						<p:galleria
+							value="#{visualisationOutputController.visualisationOutputEB.visualisationOutputTO.lstOfImageLoc}"
+							var="image" panelWidth="850" panelHeight="600">
+							<img src="./ImageController?loc=#{image.location}" height="580"
+								width="780" />
+						</p:galleria>
+					</p:layoutUnit>
+				</h:panelGrid>
+
+				<h:panelGrid columns="6" id="imagePanel3D">
+					<p:layoutUnit position="center" resizable="true"
+						rendered="#{visualisationOutputController.renderPAK3D}">
+						<f:view >
+							<iframe  src="#{request.contextPath}/html5/ply.html?
+							ctx=#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}
+							&amp;name=#{visualisationOutputController.plyFileLocation}" width="850" height="600"></iframe>
+						</f:view>
+					</p:layoutUnit>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="6" id="visualisationandoutputID">
+					<p:layoutUnit position="center" resizable="true" rendered="#{dataAnalysisController.renderSemanticIntepretation}">
+						<h:outputText value="#{dataAnalysisController.dataAnalysisEB.dataAnalysisTO.outputRDF}" escape="false" style="white-space:pre-line;" />
+					</p:layoutUnit>
+				</h:panelGrid>
+
+			</p:panel>
+			<h:panelGrid id="panelbuttons" columns="2" cellpadding="5">
+				<p:commandButton value="Show" id="showbtn"
+					update="imagePanel2 imagePanel3D semanticInterpretationGreenwoodBtnID panelbuttons"
+					actionListener="#{visualisationOutputController.showOutput}"
+					url="#" />
+
+
+				<!-- rendered=visualisationOutputController.renderDisplacementsemanticInterpretation}  -->
+				<p:commandButton value="Semantic Interpretation Displacement"
+					id="semanticInterpretationGreenwoodBtnID"
+					actionListener="#{dataAnalysisController.showSemanticInterpretation}"
+					update="imagePanel2 imagePanel3D semanticInterpretationGreenwoodBtnID panelbuttons visualisationandoutputID"
+					url="#" />
+
+				<p:commandButton value="Semantic Interpretation"
+					rendered="#{visualisationOutputController.renderGreenWoodsemanticInterpretation}"
+					id="semanticInterpretationDisplacementBtnID"
+					onclick="PF('semanticInterpretationGreenWoodDialog').show();"
+					url="#" />
+			</h:panelGrid>
+
+		</p:layoutUnit>
+
+		<!-- (12)  -->
+
+		<!-- (12) -->
+
+	</ui:composition>
+</body>
+</html>

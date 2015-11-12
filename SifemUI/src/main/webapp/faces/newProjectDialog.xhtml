@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<body>
+	<ui:composition>
+		<p:layoutUnit position="north" resizable="true" minSize="300"
+			size="500">
+
+			<p:growl id="msgs" showDetail="true" />
+			<p:panel id="mainPanelID">
+				<p:panelGrid columns="2" style="border: 0px" id="testGrid">
+
+					<p:selectOneMenu id="solverNameListSelect"
+						value="#{solverSetupController.solverSetupEB.solverTO.name}">
+						<f:selectItem itemLabel="Select Solver" itemValue="" />
+						<f:selectItems value="#{solverSetupController.solverNames}" />
+						<p:ajax event="change" update="testGrid"
+							listener="#{solverSetupController.handleSolverTypeListChange}" />
+					</p:selectOneMenu>
+
+					<p:selectOneMenu id="solverTypelistselect"
+						value="#{solverSetupController.solverSetupEB.solverTO.type}"
+						style="border: 0px">
+						<f:selectItem itemLabel="Select Solver Type" itemValue="" />
+						<f:selectItems value="#{solverSetupController.solverTypes}" />
+						<p:ajax event="change" update="testGrid"
+							listener="#{solverSetupController.handleSolverMethodListChange}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Project Name: " />
+					<p:inputText id="projname"
+						value="#{projectSimulationController.projectSimulationEB.projectSimulationTO.projectName}"
+						required="true" label="Name" />
+
+
+					<p:commandButton value="Back"
+						onclick="PF('newProjectDialog').hide();"
+						icon="ui-icon-circle-arrow-w"></p:commandButton>
+					<p:commandButton value="Continue"
+						actionListener="#{projectSimulationController.createNewProjectActionListener}"
+						update=":dockForm:dockMenuItemID" icon="ui-icon-check"
+						onsuccess="PF('newProjectDialog').hide();" ajax="false">
+						<p:ajax update=":transformationsForm:accordionPanelID"
+							process="@all"
+							listener="#{transformationController.fillTransformationSourceSidePickList}"></p:ajax>
+					</p:commandButton>
+
+
+
+				</p:panelGrid>
+
+			</p:panel>
+
+
+		</p:layoutUnit>
+
+	</ui:composition>
+</body>
+</html>
