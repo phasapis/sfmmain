@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.sifem</groupId>
@@ -8,23 +8,23 @@
 	<version>1.0</version>
 	<name>Sifem Parent Project</name>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>sifem3</id>
-			<url>http://vmdeb20.deri.ie:8001/repository/sifem3/</url>
-		</snapshotRepository>
-	</distributionManagement>
+	<!--<distributionManagement>-->
+	<!--<snapshotRepository>-->
+	<!--<id>sifem3</id>-->
+	<!--<url>http://vmdeb20.deri.ie:8001/repository/sifem3/</url>-->
+	<!--</snapshotRepository>-->
+	<!--</distributionManagement>-->
 
 	<modules>
 		<module>SifemAPI</module>
 		<module>SifemCore</module>
 		<module>SifemUI</module>
-                <!--
-		<module>SifemMQBroker</module>
-		<module>SifemSolverMiddleware</module>
-		 module>SifemBatchUploadMiddleware</module 
-		<module>SifemPlyConverter</module>
-                -->
+		<!--
+<module>SifemMQBroker</module>
+<module>SifemSolverMiddleware</module>
+ module>SifemBatchUploadMiddleware</module
+<module>SifemPlyConverter</module>
+        -->
 	</modules>
 
 	<build>
@@ -37,6 +37,7 @@
 						<source>1.7</source>
 						<target>1.7</target>
 					</configuration>
+					<version>3.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -47,10 +48,21 @@
 	</properties>
 
 	<repositories>
+		<!--<repository>-->
+		<!--<id>sifem3</id>-->
+		<!--<name>sifem</name>-->
+		<!--<url>http://vmdeb20.deri.ie:8001/repository/sifem3/</url>-->
+		<!--<releases>-->
+		<!--<enabled>true</enabled>-->
+		<!--</releases>-->
+		<!--<snapshots>-->
+		<!--<enabled>true</enabled>-->
+		<!--</snapshots>-->
+
 		<repository>
 			<id>sifem3</id>
 			<name>sifem</name>
-			<url>http://vmdeb20.deri.ie:8001/repository/sifem3/</url>
+			<url>http://resources.smile.deri.ie/maven-repository/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -92,7 +104,7 @@
 
 	</repositories>
 
-	<pluginRepositories>
+	<!--<pluginRepositories>
 		<pluginRepository>
 			<id>sifem3</id>
 			<name>sifem</name>
@@ -104,7 +116,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories>
+	</pluginRepositories>-->
 
 	<dependencies>
 
@@ -115,7 +127,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
-<!--			<scope>runtime</scope>-->
+			<!--			<scope>runtime</scope>-->
 		</dependency>
 
 		<dependency>
@@ -148,6 +160,12 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
 
 
 
@@ -199,11 +217,11 @@
 			<version>0.8-4</version>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>org.rosuda</groupId>
 			<artifactId>javaGD</artifactId>
 			<version>1.2</version>
-		</dependency>
+		</dependency>-->
 
 		<!-- jena -->
 		<dependency>
@@ -230,6 +248,22 @@
 			<artifactId>jena-iri</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+
+
+
+
+		<dependency>
+			<groupId>com.google.collections</groupId>
+			<artifactId>google-collections</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+
 
 
 		<!-- apache commons -->
@@ -348,13 +382,13 @@
 			<version>1.7.0.RELEASE</version>
 		</dependency>
 
-<!--
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-commons-core</artifactId>
-			<version>1.4.1.RELEASE</version>
-		</dependency>
--->
+		<!--
+                <dependency>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-commons-core</artifactId>
+                    <version>1.4.1.RELEASE</version>
+                </dependency>
+        -->
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>

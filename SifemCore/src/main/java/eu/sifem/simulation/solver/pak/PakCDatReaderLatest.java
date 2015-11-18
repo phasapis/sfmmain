@@ -247,35 +247,37 @@ public class PakCDatReaderLatest {
 		}
 
 		int count = 1;
-		while(card7PatternMatcher.find()) {
-			Map<String, String> card7Row = new HashMap<String, String>();
-			String n = card7PatternMatcher.group(1).trim();
-			card7Row.put(PakCData.Card7.N.toString(), n);
-			String i1 = card7PatternMatcher.group(2).trim();
-			card7Row.put(PakCData.Card7.I1.toString(), i1);
-			String i2 = card7PatternMatcher.group(3).trim();
-			card7Row.put(PakCData.Card7.I2.toString(), i2);
-			String i3 = card7PatternMatcher.group(4).trim();
-			card7Row.put(PakCData.Card7.I3.toString(), i3);
-			String i4 = card7PatternMatcher.group(5).trim();
-			card7Row.put(PakCData.Card7.I4.toString(), i4);
-			String i5 = card7PatternMatcher.group(6).trim();
-			card7Row.put(PakCData.Card7.I5.toString(), i5);
-			String i6 = card7PatternMatcher.group(7).trim();
-			card7Row.put(PakCData.Card7.I6.toString(), i6);
-			String i7 = card7PatternMatcher.group(8).trim();
-			card7Row.put(PakCData.Card7.I7.toString(), i7);
-			String i8 = card7PatternMatcher.group(9).trim();
-			card7Row.put(PakCData.Card7.I8.toString(), i8);
-			String cord1nx = card7PatternMatcher.group(10).trim();
-			card7Row.put(PakCData.Card7.CORD1NX.toString(), cord1nx);
-			String cord2ny = card7PatternMatcher.group(11).trim();
-			card7Row.put(PakCData.Card7.CORD2NY.toString(), cord2ny);
-			String cord3nz = card7PatternMatcher.group(12).trim();
-			card7Row.put(PakCData.Card7.CORD3NZ.toString(), cord3nz);
-			pakCdata.card7.put(String.valueOf(count++), card7Row);
-			//System.out.println(n + "\t" + i1 + "\t" + i2 + "\t" + i3 + "\t" + i4 + 
-			//		"\t" + i5 + "\t" + i6 + "\t" + i7 + "\t" + i8  + cord1nx + "\t" + cord2ny + "\t" + cord3nz + "\t");			
+		if (card7PatternMatcher != null) {
+			while(card7PatternMatcher.find()) {
+                Map<String, String> card7Row = new HashMap<String, String>();
+                String n = card7PatternMatcher.group(1).trim();
+                card7Row.put(PakCData.Card7.N.toString(), n);
+                String i1 = card7PatternMatcher.group(2).trim();
+                card7Row.put(PakCData.Card7.I1.toString(), i1);
+                String i2 = card7PatternMatcher.group(3).trim();
+                card7Row.put(PakCData.Card7.I2.toString(), i2);
+                String i3 = card7PatternMatcher.group(4).trim();
+                card7Row.put(PakCData.Card7.I3.toString(), i3);
+                String i4 = card7PatternMatcher.group(5).trim();
+                card7Row.put(PakCData.Card7.I4.toString(), i4);
+                String i5 = card7PatternMatcher.group(6).trim();
+                card7Row.put(PakCData.Card7.I5.toString(), i5);
+                String i6 = card7PatternMatcher.group(7).trim();
+                card7Row.put(PakCData.Card7.I6.toString(), i6);
+                String i7 = card7PatternMatcher.group(8).trim();
+                card7Row.put(PakCData.Card7.I7.toString(), i7);
+                String i8 = card7PatternMatcher.group(9).trim();
+                card7Row.put(PakCData.Card7.I8.toString(), i8);
+                String cord1nx = card7PatternMatcher.group(10).trim();
+                card7Row.put(PakCData.Card7.CORD1NX.toString(), cord1nx);
+                String cord2ny = card7PatternMatcher.group(11).trim();
+                card7Row.put(PakCData.Card7.CORD2NY.toString(), cord2ny);
+                String cord3nz = card7PatternMatcher.group(12).trim();
+                card7Row.put(PakCData.Card7.CORD3NZ.toString(), cord3nz);
+                pakCdata.card7.put(String.valueOf(count++), card7Row);
+                //System.out.println(n + "\t" + i1 + "\t" + i2 + "\t" + i3 + "\t" + i4 +
+                //		"\t" + i5 + "\t" + i6 + "\t" + i7 + "\t" + i8  + cord1nx + "\t" + cord2ny + "\t" + cord3nz + "\t");
+            }
 		}
 
 		while(card8PatternMatcher.find()) {
@@ -306,36 +308,38 @@ public class PakCDatReaderLatest {
 		}
 
 		count = 1;
-		while(card8_1_bPatternMatcher.find()) {
-			Map<String, String> card8_1_bRow = new HashMap<String, String>();
-			String nn = card8_1_bPatternMatcher.group(1).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NN.toString(), nn);
-			String nel1 = card8_1_bPatternMatcher.group(2).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL1.toString(), nel1);
-			String nel2 = card8_1_bPatternMatcher.group(3).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL2.toString(), nel2);
-			String nel3 = card8_1_bPatternMatcher.group(4).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL3.toString(), nel3);
-			String nel4 = card8_1_bPatternMatcher.group(5).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL4.toString(), nel4);
-			String nel5 = card8_1_bPatternMatcher.group(6).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL5.toString(), nel5);
-			String nel6 = card8_1_bPatternMatcher.group(7).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL6.toString(), nel6);
-			String nel7 = card8_1_bPatternMatcher.group(8).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL7.toString(), nel7);
-			String nel8 = card8_1_bPatternMatcher.group(9).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.NEL8.toString(), nel8);
-			String materialId = card8_1_bPatternMatcher.group(10).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.MaterialID.toString(), materialId);
-			String youngsMod = card8_1_bPatternMatcher.group(11).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.YoungsModulus.toString(), youngsMod);
-			String dampCoeff = card8_1_bPatternMatcher.group(14).trim();
-			card8_1_bRow.put(PakCData.Card8_1_b.DampingCoefficient.toString(), dampCoeff);
-			//System.out.println(nel1 + "\t" + nel2 + "\t" + nel3 + "\t" + nel4 + 
-			//		"\t" + nel5 + "\t" + nel6 + "\t" + nel7 + "\t" + nel8 + "\t" + 
-			//		materialId + "\t" + youngsMod + "\t" + dampCoeff);					
-			pakCdata.card8_1_b.put(String.valueOf(count++), card8_1_bRow);
+		if (card8_1_bPatternMatcher != null) {
+			while(card8_1_bPatternMatcher.find()) {
+                Map<String, String> card8_1_bRow = new HashMap<String, String>();
+                String nn = card8_1_bPatternMatcher.group(1).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NN.toString(), nn);
+                String nel1 = card8_1_bPatternMatcher.group(2).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL1.toString(), nel1);
+                String nel2 = card8_1_bPatternMatcher.group(3).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL2.toString(), nel2);
+                String nel3 = card8_1_bPatternMatcher.group(4).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL3.toString(), nel3);
+                String nel4 = card8_1_bPatternMatcher.group(5).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL4.toString(), nel4);
+                String nel5 = card8_1_bPatternMatcher.group(6).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL5.toString(), nel5);
+                String nel6 = card8_1_bPatternMatcher.group(7).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL6.toString(), nel6);
+                String nel7 = card8_1_bPatternMatcher.group(8).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL7.toString(), nel7);
+                String nel8 = card8_1_bPatternMatcher.group(9).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.NEL8.toString(), nel8);
+                String materialId = card8_1_bPatternMatcher.group(10).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.MaterialID.toString(), materialId);
+                String youngsMod = card8_1_bPatternMatcher.group(11).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.YoungsModulus.toString(), youngsMod);
+                String dampCoeff = card8_1_bPatternMatcher.group(14).trim();
+                card8_1_bRow.put(PakCData.Card8_1_b.DampingCoefficient.toString(), dampCoeff);
+                //System.out.println(nel1 + "\t" + nel2 + "\t" + nel3 + "\t" + nel4 +
+                //		"\t" + nel5 + "\t" + nel6 + "\t" + nel7 + "\t" + nel8 + "\t" +
+                //		materialId + "\t" + youngsMod + "\t" + dampCoeff);
+                pakCdata.card8_1_b.put(String.valueOf(count++), card8_1_bRow);
+            }
 		}
 
 		while(card9PatternMatcher.find()){
@@ -365,32 +369,34 @@ public class PakCDatReaderLatest {
 		}
 
 		count = 1;
-		while(card11_secondPatternMatcher.find()) {
-			Map<String, String> card11_secondMap = new HashMap<String, String>();
-			//Element, Node1, Node2, Node3, Node4, TimeFunc, IVal1, IVal2, IVal3, IVal4;
-			String element = card11_secondPatternMatcher.group(1).trim();
-			String node1 = card11_secondPatternMatcher.group(2).trim();
-			String node2 = card11_secondPatternMatcher.group(3).trim();
-			String node3 = card11_secondPatternMatcher.group(4).trim();
-			String node4 = card11_secondPatternMatcher.group(5).trim();
-			String timeFunc = card11_secondPatternMatcher.group(6).trim();
-			String ival1 = card11_secondPatternMatcher.group(7).trim();
-			String ival2 = card11_secondPatternMatcher.group(8).trim();
-			String ival3 = card11_secondPatternMatcher.group(9).trim();
-			String ival4 = card11_secondPatternMatcher.group(10).trim();
-			card11_secondMap.put(PakCData.Card11_second.Element.toString(), element);
-			card11_secondMap.put(PakCData.Card11_second.Node1.toString(), node1);
-			card11_secondMap.put(PakCData.Card11_second.Node2.toString(), node2);
-			card11_secondMap.put(PakCData.Card11_second.Node3.toString(), node3);
-			card11_secondMap.put(PakCData.Card11_second.Node4.toString(), node4);
-			card11_secondMap.put(PakCData.Card11_second.TimeFunc.toString(), timeFunc);
-			card11_secondMap.put(PakCData.Card11_second.IVal1.toString(), ival1);
-			card11_secondMap.put(PakCData.Card11_second.IVal2.toString(), ival2);
-			card11_secondMap.put(PakCData.Card11_second.IVal3.toString(), ival3);
-			card11_secondMap.put(PakCData.Card11_second.IVal4.toString(), ival4);
-			//	System.out.println(element + "\t"  + node1 + "\t" + node2 + "\t" + node3 + "\t" + node4 + "\t" +  
-			//		timeFunc + "\t" + ival1 + "\t" + ival2 + "\t" + ival3 + "\t" + ival4);
-			pakCdata.card11_second.put(String.valueOf(count++), card11_secondMap);
+		if (card11_secondPatternMatcher != null) {
+			while(card11_secondPatternMatcher.find()) {
+                Map<String, String> card11_secondMap = new HashMap<String, String>();
+                //Element, Node1, Node2, Node3, Node4, TimeFunc, IVal1, IVal2, IVal3, IVal4;
+                String element = card11_secondPatternMatcher.group(1).trim();
+                String node1 = card11_secondPatternMatcher.group(2).trim();
+                String node2 = card11_secondPatternMatcher.group(3).trim();
+                String node3 = card11_secondPatternMatcher.group(4).trim();
+                String node4 = card11_secondPatternMatcher.group(5).trim();
+                String timeFunc = card11_secondPatternMatcher.group(6).trim();
+                String ival1 = card11_secondPatternMatcher.group(7).trim();
+                String ival2 = card11_secondPatternMatcher.group(8).trim();
+                String ival3 = card11_secondPatternMatcher.group(9).trim();
+                String ival4 = card11_secondPatternMatcher.group(10).trim();
+                card11_secondMap.put(PakCData.Card11_second.Element.toString(), element);
+                card11_secondMap.put(PakCData.Card11_second.Node1.toString(), node1);
+                card11_secondMap.put(PakCData.Card11_second.Node2.toString(), node2);
+                card11_secondMap.put(PakCData.Card11_second.Node3.toString(), node3);
+                card11_secondMap.put(PakCData.Card11_second.Node4.toString(), node4);
+                card11_secondMap.put(PakCData.Card11_second.TimeFunc.toString(), timeFunc);
+                card11_secondMap.put(PakCData.Card11_second.IVal1.toString(), ival1);
+                card11_secondMap.put(PakCData.Card11_second.IVal2.toString(), ival2);
+                card11_secondMap.put(PakCData.Card11_second.IVal3.toString(), ival3);
+                card11_secondMap.put(PakCData.Card11_second.IVal4.toString(), ival4);
+                //	System.out.println(element + "\t"  + node1 + "\t" + node2 + "\t" + node3 + "\t" + node4 + "\t" +
+                //		timeFunc + "\t" + ival1 + "\t" + ival2 + "\t" + ival3 + "\t" + ival4);
+                pakCdata.card11_second.put(String.valueOf(count++), card11_secondMap);
+            }
 		}
 		//System.out.println("CARD12_1");
 		while(card12_1_numberPatternMatcher.find()){
@@ -470,15 +476,17 @@ public class PakCDatReaderLatest {
 		}
 
 		count = 1;
-		while(card13_1_bPatternMatcher.find()){
-			System.out.println(count);
-			Map<String, String> map = new HashMap<String, String>();
-			//	FN1IBRJ, FN2IBRJ;
-			String fn1ibrj = card13_1_bPatternMatcher.group(1).trim();
-			String fn2ibrj = card13_1_bPatternMatcher.group(2).trim();
-			map.put(PakCData.Card13_1_bPattern.FN1IBRJ.toString(), fn1ibrj);
-			map.put(PakCData.Card13_1_bPattern.FN2IBRJ.toString(), fn2ibrj);
-			pakCdata.card13_1_b.put(String.valueOf(count++), map);					
+		if (card13_1_bPatternMatcher != null) {
+			while(card13_1_bPatternMatcher.find()){
+                System.out.println(count);
+                Map<String, String> map = new HashMap<String, String>();
+                //	FN1IBRJ, FN2IBRJ;
+                String fn1ibrj = card13_1_bPatternMatcher.group(1).trim();
+                String fn2ibrj = card13_1_bPatternMatcher.group(2).trim();
+                map.put(PakCData.Card13_1_bPattern.FN1IBRJ.toString(), fn1ibrj);
+                map.put(PakCData.Card13_1_bPattern.FN2IBRJ.toString(), fn2ibrj);
+                pakCdata.card13_1_b.put(String.valueOf(count++), map);
+            }
 		}
 
 		while(card14PatternMatcher.find()){
