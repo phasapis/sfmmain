@@ -273,8 +273,6 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 		List<ParameterTO> updatedParameters = addTemplateName(solverConfigCreatorTO);
 		solverConfigCreatorTO.setLoadParametersTOList(updatedParameters);
 		for(ParameterTO loadParametersTO : solverConfigCreatorTO.getLoadParametersTOList()){
-			System.out.println("Parameters to 1: "+loadParametersTO+ "++++"+loadParametersTO.getTemplateName());
-			System.out.println("Parameters to 2: "+ParameterTypes.getParameterTypesByTemplateName(loadParametersTO.getTemplateName()));
 			mapTeplateKeysAndIds.put(ParameterTypes.getParameterTypesByTemplateName(loadParametersTO.getTemplateName()),loadParametersTO);
 			List<String> parameterValueList = new ArrayList<String>();
 			

@@ -38,7 +38,7 @@ public enum ParameterTypes {
         MATERIAL2("MATERIAL 2 - YOUNG'S MODULUS E POISSON RATIO Nu"),        
         
         MATERIALS("MATERIALS");
-        
+
 	private String name;
 	
 	ParameterTypes(String name){
@@ -61,9 +61,6 @@ public enum ParameterTypes {
 		}
 		Set<ParameterTypes> parameterTypes = EnumSet.allOf(ParameterTypes.class);
 		for(ParameterTypes parameterType : parameterTypes) {
-			System.out.println("template 1: "+StringUtils.deleteWhitespace(templateName).trim());
-			System.out.println("template 2: "+StringUtils.deleteWhitespace(parameterType.getName()).trim());
-
 
 			if(StringUtils.equalsIgnoreCase(StringUtils.deleteWhitespace(templateName).trim(), StringUtils.deleteWhitespace(parameterType.getName()).trim())){
 				return parameterType;				

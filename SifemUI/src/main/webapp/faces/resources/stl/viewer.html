@@ -1,8 +1,8 @@
 <html>
-<>
-    <title>OBJ STL viewer</title>
+    <title>SIFEM Mesh Viewer</title>
     <!--<script type="text/javascript" src="/Sifem/faces/resources/js/three.min.js"></script>-->
     <!--<script type="text/javascript" src="/Sifem/faces/resources/js/objstl.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <link href="src/css/Madeleine.css" rel="stylesheet" />
     <script src="src/lib/stats.js"></script>
     <script src="src/lib/detector.js"></script>
@@ -65,7 +65,7 @@
 <body>
 <center>
 <div id="target" class="madeleine"></div>
-<div class="theme">
+<!--<div class="theme">
     <div class="themeButton light"  onclick="mad.adaptViewerTheme('light');">Light</div>
     <div class="themeButton lime"   onclick="mad.adaptViewerTheme('lime');">Lime</div>
     <div class="themeButton toxic"  onclick="mad.adaptViewerTheme('toxic');">Toxic</div>
@@ -74,18 +74,39 @@
     <div class="themeButton soft"   onclick="mad.adaptViewerTheme('soft');">Soft</div>
     <div class="themeButton rose"   onclick="mad.adaptViewerTheme('rose');">Rose</div>
     <div class="themeButton dark"   onclick="mad.adaptViewerTheme('dark');">Dark</div>
-</div>
+</div>-->
 </center>
 
 <script>
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
 
-     var mad = new Madeleine({
-     target: 'target', // target div id
-     data: './test.stl', // data path
-     path: './src',  // path to source directory from current html file
-     h:800,
-     w:800
-     });
+    $.get( "/Sifem/rest/fetchMeshVisualization/typeForModel/"+getUrlVars()["model"], function( data ) {
+        if(data=="stl"){
+            var mad = new Madeleine({
+                target: 'target', // target div id
+                data:'/Sifem/rest/fetchMeshVisualization/stlForModel/'+getUrlVars()["model"],
+                path: './src',  // path to source directory from current html file
+                h:800,
+                w:800
+            });
+        }else if(data=="png"){
+            $('#target').html('<img id="modelViz" src=\'/Sifem/rest/fetchMeshVisualization/pngForModel/'+getUrlVars()["model"]+'\' />');
+        }else{
+            $('#target').html('<b>Model not available for preview !</b>');
+        }
+    })
+
 </script>
 </body>
 </html>
