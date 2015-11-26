@@ -161,7 +161,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
 
         private static String topicName = "Job.queue";
         private static String initialContextFactory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory";
-        private static String connectionString = "tcp://192.168.7.131:61616";
+        private static String connectionString = "tcp://192.168.7.115:61616";        
         private static boolean messageReceived = false;    
         
 	private PAKCRestServiceWrapperTO callService(
@@ -179,28 +179,51 @@ public class ProcessRunnableService implements IProcessRunnableService {
             simulationInstance.setCfgFile(cfgFileByteArr);
             String parameter = Util.getJsonStrFromObject(simulationInstance);
 
-            System.out.println("http://192.168.7.131:8080/SolverInterface/webresources/solver/authenticate/testusername/password");
-            session = Request.Get("http://192.168.7.131:8080/SolverInterface/webresources/solver/authenticate/testusername/password").execute().returnContent().asString();
-            System.out.println(session);
+            if(commandLineArgument.equals("HeadModel"))
+            {
+                System.out.println("http://192.168.7.115:8080/SolverInterface/webresources/solver/authenticate" + "/testusername/password");
+                session = Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/solver/authenticate" + "/testusername/password").execute().returnContent().asString();
+                System.out.println(session);
 
-            Request.Post("http://192.168.7.131:8080/SolverInterface/webresources/ConfigurationFile/upload/"+ session).bodyForm(
-                Form.form().add("simulationInstance", parameter).build()).execute();
+                Request.Post("http://192.168.7.115:8080/SolverInterface/webresources/ConfigurationFile/upload/head/" + session).bodyForm(Form.form().add("simulationInstance",parameter).build()).execute();
 
-//            Request.Get("http://192.168.7.131:8080/SolverInterface/webresources/solver/cad/init/" + "CochleaCoiledModel-WithLongitudinalCoupling" + "/" + session).execute();
-            Request.Get("http://192.168.7.131:8080/SolverInterface/webresources/solver/cad/init/" + commandLineArgument + "/" + session).execute();
+                System.out.println("http://192.168.7.115:8080/SolverInterface/webresources/solver/cad/init" + "/" + commandLineArgument +"/"+ session );
+                Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/solver/cad/init" + "/" + commandLineArgument +"/"+ session ).execute();
+
+                subscribeWithTopicLookup(session);            
+                System.out.println(" -------------- Done");
+                String responseContentStr = Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/accessResults/simulation/headmodel/" + session)
+                    .execute().returnContent().asString();            
+                System.out.println(" -------------- Done");
+                Gson gson = new GsonBuilder().create();
+                simulationInstance  = gson.fromJson(responseContentStr, PAKCRestServiceTO.class);                
+            }
+            else
+            {
+                System.out.println("http://192.168.7.115:8080/SolverInterface/webresources/solver/authenticate/testusername/password");
+                session = Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/solver/authenticate/testusername/password").execute().returnContent().asString();
+                System.out.println(session);
+
+                Request.Post("http://192.168.7.115:8080/SolverInterface/webresources/ConfigurationFile/upload/"+ session).bodyForm(
+                    Form.form().add("simulationInstance", parameter).build()).execute();
+
+    //            Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/solver/cad/init/" + "CochleaCoiledModel-WithLongitudinalCoupling" + "/" + session).execute();
+                Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/solver/cad/init/" + commandLineArgument + "/" + session).execute();
+
+                subscribeWithTopicLookup(session);  
+                this.messageReceived = false;
+
+                System.out.println(" -------------- Done");
+                String responseContentStr = Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/accessResults/simulation/" + session)
+                    .execute().returnContent().asString();            
+                System.out.println(" -------------- Done");
+                Gson gson = new GsonBuilder().create();
+                simulationInstance  = gson.fromJson(responseContentStr, PAKCRestServiceTO.class);
+
+                System.out.println(" -------------- Done");
+
+            }
             
-            subscribeWithTopicLookup(session);  
-            this.messageReceived = false;
-            
-            System.out.println(" -------------- Done");
-            String responseContentStr = Request.Get("http://192.168.7.131:8080/SolverInterface/webresources/accessResults/simulation/" + session)
-                .execute().returnContent().asString();            
-            System.out.println(" -------------- Done");
-            Gson gson = new GsonBuilder().create();
-            simulationInstance  = gson.fromJson(responseContentStr, PAKCRestServiceTO.class);
-                
-            System.out.println(" -------------- Done");
-		
             InputStream datIS = new ByteArrayInputStream(simulationInstance.getDatFile());
             InputStream unvIS = new ByteArrayInputStream(simulationInstance.getUnvFile());
 

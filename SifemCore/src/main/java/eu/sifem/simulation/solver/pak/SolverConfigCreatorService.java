@@ -209,6 +209,9 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                solverConfigCreatorTO.getMeshSetupTO().getName().equals("Cochlea Slice Model 2") ||
                solverConfigCreatorTO.getMeshSetupTO().getName().equals("Cochlea Slice Model 3"))
                 return handleSliceModelOneCase(solverConfigCreatorTO, mapAttributeValues, mapTeplateKeysAndIds);
+
+            if(solverConfigCreatorTO.getMeshSetupTO().getName().equals("Head Model"))
+                return handleHeadModelCase(solverConfigCreatorTO, mapAttributeValues, mapTeplateKeysAndIds);
             
             
             return null;
@@ -1760,6 +1763,108 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 
                 System.err.println("Res: " + resultFilesAsString);
 		return resultFilesAsString;        
+    }
+
+    private List<String> handleHeadModelCase(SolverConfigCreatorTO solverConfigCreatorTO, Map<String, List<String>> mapAttributeValues, Map<ParameterTypes, ParameterTO> mapTeplateKeysAndIds) throws IOException
+    {
+                InputStream in = this.getClass().getClassLoader().getResourceAsStream("input_HeadModel.txt");
+		String templateStr = IOUtils.toString(in);
+		
+		List<String> resultFilesAsString = new ArrayList<String>();
+		Map<ParameterTypes,Integer> mapCount = getMapCounter();
+		
+		Boolean isMaterial1Filled = Boolean.FALSE;
+		Boolean isMaterial2Filled = Boolean.FALSE;
+                
+		Map<String,CombinationHelper> combinationMap = new TreeMap<String,CombinationHelper>();
+		
+		int size = applyCombinationMapService(mapAttributeValues,solverConfigCreatorTO.getLoadParametersTOList(),combinationMap);
+                System.err.println("size = " + size);
+		for(int i=0;i<size;i++){
+			StringBuilder sb = new StringBuilder();
+			int count = 0;
+			++count;
+			
+			String paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.MATERIAL1.getName())){
+				if(mapCount.get(ParameterTypes.MATERIAL1).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL1)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL1).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL1).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL1).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+                                                                valueStr = valueStr.replace(';', ' ');                                                            
+								sb.append(valueStr);
+							}	
+						isMaterial1Filled = Boolean.TRUE;		
+					}
+		
+					//mapCount.put(ParameterTypes.SHOULD_PRESCRIBE_PRESSURE, BigDecimal.ONE.intValue());
+				}
+			}
+                        System.err.println("3 -- " + sb.toString());
+			
+                        ++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.MATERIAL2.getName())){
+				if(mapCount.get(ParameterTypes.MATERIAL2).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL2)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL2).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL2).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIAL2).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+                                                                valueStr = valueStr.replace(';', ' ');
+								sb.append(valueStr);
+							}	
+						isMaterial2Filled = Boolean.TRUE;		
+					}
+		
+				}
+			}
+                        System.err.println("3 -- " + sb.toString());
+
+                                                
+			System.out.println("Before test: "+sb.toString().trim());                        
+			Boolean isAllParametersFilled = isMaterial1Filled && isMaterial2Filled; // && isExternalparametersFilled;
+                        
+                        System.err.println("allParams -- " + sb.toString());
+
+                        
+			if(isAllParametersFilled && !"".equals(sb.toString())){
+				resultFilesAsString.add(sb.toString().trim());	
+				mapCount = getMapCounter();
+			}else{
+				continue;
+			}
+		}
+
+                System.err.println("Res: " + resultFilesAsString);
+		return resultFilesAsString;        
+        
     }
 
 }
