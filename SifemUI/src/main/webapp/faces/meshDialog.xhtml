@@ -8,16 +8,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <body>
+
+
 	<ui:composition>
 
 		<p:layoutUnit position="north" resizable="true" minSize="300"
 			size="500">
-
 			<p:growl id="msgs" showDetail="true" />
 
 			<p:panel style="margin-bottom:10px;">
 				<p:panelGrid id="meshGriid">
-
 					<p:row>
 						<p:column>
 							<p:selectOneMenu id="initAndBoundMeshDefaultTypes"
@@ -30,11 +30,14 @@
 						</p:column>
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
 							<h:outputText id="shortdescr" rendered="#{meshSetupController.uploadMesh eq false}" value="#{meshSetupController.meshSetupEB.meshSetupTO.description}" />
-						</p:column>                                            
+						</p:column>
+						<p:column rendered="#{meshSetupController.uploadMesh eq false and meshSetupController.meshSelectedDefault !=null and meshSetupController.meshSelectedDefault.length() > 0}">
+							<h:commandButton value="View STL in new tab" onclick="window.open('/Sifem/faces/resources/stl/viewer.html', '_blank')" />
+						</p:column>
 
 					</p:row>
 
-					<p:row>
+					<p:row rendered="#{meshSetupController.uploadMesh eq false and meshSetupController.meshSelectedDefault !=null and meshSetupController.meshSelectedDefault.length() > 0 and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Head') !=true and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Slice') !=true}">
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
 							<h:outputText value="Division L" />
 						</p:column>
@@ -53,7 +56,7 @@
 						</p:column>
 					</p:row>
 
-					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+					<p:row rendered="#{meshSetupController.uploadMesh eq false and meshSetupController.meshSelectedDefault != null and meshSetupController.meshSelectedDefault.length() > 0 and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Head') !=true and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Slice') !=true}">
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
 							<h:outputText value="Division W" rendered="#{meshSetupController.uploadMesh eq false}" />
 						</p:column>
@@ -74,7 +77,7 @@
 
 
 
-					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+					<p:row rendered="#{meshSetupController.uploadMesh eq false and meshSetupController.meshSelectedDefault !=null and meshSetupController.meshSelectedDefault.length() > 0 and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Head') !=true and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Slice') !=true}">
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
 							<h:outputText value="Division B" rendered="#{meshSetupController.uploadMesh eq false}" />
 						</p:column>
@@ -92,7 +95,7 @@
 						</p:column>
 					</p:row>
 
-					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+					<p:row rendered="#{meshSetupController.uploadMesh eq false and meshSetupController.meshSelectedDefault !=null and meshSetupController.meshSelectedDefault.length() > 0 and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Head') !=true and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Slice') !=true}">
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
 							<h:outputText value="Division H" rendered="#{meshSetupController.uploadMesh eq false}" />
 						</p:column>
@@ -111,7 +114,7 @@
 						</p:column>
 					</p:row>
 
-					<p:row rendered="#{meshSetupController.uploadMesh eq false}">
+					<p:row rendered="#{meshSetupController.uploadMesh eq false and meshSetupController.meshSelectedDefault !=null and meshSetupController.meshSelectedDefault.length() > 0 and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Head') !=true and meshSetupController.meshSetupEB.meshSetupTO.name.contains('Slice') !=true}">
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">
 							<h:outputText value="Division h" rendered="#{meshSetupController.uploadMesh eq false}" />
 						</p:column>
@@ -130,6 +133,7 @@
 						</p:column>
 					</p:row>
 
+
 					<p:row>
 						<p:column>
 							<h:form enctype="multipart/form-data">
@@ -143,6 +147,9 @@
 							</h:form>
 						</p:column>
 					</p:row>
+
+
+
 				</p:panelGrid>
 
 			</p:panel>

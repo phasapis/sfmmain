@@ -51,11 +51,16 @@ public enum ParameterTypes {
 	
 	
 	public static ParameterTypes getParameterTypesByTemplateName(String templateName){
+		System.out.println("template "+templateName);
 		if(templateName==null || "".equals(templateName)){
 			return null;
 		}
 		Set<ParameterTypes> parameterTypes = EnumSet.allOf(ParameterTypes.class);
 		for(ParameterTypes parameterType : parameterTypes) {
+			System.out.println("template 1: "+StringUtils.deleteWhitespace(templateName).trim());
+			System.out.println("template 2: "+StringUtils.deleteWhitespace(parameterType.getName()).trim());
+
+
 			if(StringUtils.equalsIgnoreCase(StringUtils.deleteWhitespace(templateName).trim(), StringUtils.deleteWhitespace(parameterType.getName()).trim())){
 				return parameterType;				
 			}
