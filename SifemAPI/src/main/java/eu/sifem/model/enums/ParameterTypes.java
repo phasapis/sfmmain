@@ -33,6 +33,10 @@ public enum ParameterTypes {
         SHOULD_PRESCRIBE_FORCE("SHOULD_PRESCRIBE_FORCE"),
         SLICE_FREQUENCY("FREQUENCY_VALUE"),
 
+        MATERIAL1("MATERIAL 1 - YOUNG'S MODULUS E POISSON RATIO Nu"),
+        
+        MATERIAL2("MATERIAL 2 - YOUNG'S MODULUS E POISSON RATIO Nu"),        
+        
         MATERIALS("MATERIALS");
         
 	private String name;
