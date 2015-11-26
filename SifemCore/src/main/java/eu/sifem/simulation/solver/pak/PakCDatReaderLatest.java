@@ -20,7 +20,8 @@ public class PakCDatReaderLatest {
 	private static String card4PatternString = "C\\s*/\\s*4\\s*/.*\\sC.*\\s(.{5})(.{5})(.{5})(.{5})(.{10})(.{10})(.{5})(.{5})(.{10})(.{5})";
 	
 	private static String card5PatternString = "C\\s*/\\s*5\\s*/.*\\sC.*\\s(.{5})";	
-	private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\sC\\s*.*\\s(.{5})(.{10})";
+	//private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\sC\\s*.*\\s(.{5})(.{10})";
+        private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\s(.{5})(.{10})";
 	private static String card7TextPatternString = "C\\s*/\\s*7\\s*/.*\\sC.*\\)(.*)C\\s*/\\s*8\\s*/";
 	private static String card7PatternString = ".{5}(.{5}).{1}(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})(.{2}).{2}(.{15})(.{15})(.{15})";
 	private static String card8PatternString = "C\\s*/\\s*8/.*\\sC.*\\s(.{5})(.{10})(.{5})(.{5})(.{5})(.{5})";
@@ -280,7 +281,7 @@ public class PakCDatReaderLatest {
             }
 		}
 
-		while(card8PatternMatcher.find()) {
+		while(card8PatternMatcher!=null && card8PatternMatcher.find()) {
 			String netip = card8PatternMatcher.group(1).trim();			
 			String net = card8PatternMatcher.group(2).trim();
 			String indax = card8PatternMatcher.group(3).trim();
@@ -299,7 +300,7 @@ public class PakCDatReaderLatest {
 			//		"\t" + ipn + "\t" + unknown1);
 		}	
 
-		while(card8_1_aPatternMatcher.find()) {
+		while(card8_1_aPatternMatcher!=null && card8_1_aPatternMatcher.find()) {
 			String np2dmx = card8_1_aPatternMatcher.group(1).trim();
 			String iswell = card8_1_aPatternMatcher.group(2).trim();
 			pakCdata.card8_1_a.put(PakCData.Card8_1_a.NP2DMX.toString(), np2dmx);
@@ -342,7 +343,7 @@ public class PakCDatReaderLatest {
             }
 		}
 
-		while(card9PatternMatcher.find()){
+		while(card9PatternMatcher!=null && card9PatternMatcher.find()){
 			String numzad = card9PatternMatcher.group(1).trim();
 			pakCdata.card9.put(PakCData.Card9.Numzad.toString(), numzad);
 			//System.out.println(numzad);
