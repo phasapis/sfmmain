@@ -1,18 +1,20 @@
 package eu.sifem.mb.controller;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.Serializable;
+import java.util.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
+import eu.sifem.model.ColumnModel;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.FileUploadEvent;
@@ -24,6 +26,8 @@ import eu.sifem.service.ISimulationService;
 import eu.sifem.utils.BasicFileTools;
 import java.io.IOException;
 
+import org.primefaces.event.CellEditEvent;
+
 /**
  * 
  * @author jbjares
@@ -32,6 +36,20 @@ import java.io.IOException;
 @ManagedBean(name = "loadParametersController") 
 @ViewScoped
 public class LoadParametersController extends GenericMB{
+
+	public void onCellEdit(CellEditEvent event) {
+		Object oldValue = event.getOldValue();
+		Object newValue = event.getNewValue();
+		System.out.println( "Cell Changed Old: " + oldValue + ", New:" + newValue);
+		if(newValue != null && !newValue.equals(oldValue)) {
+			System.out.println( "Cell Changed Old: " + oldValue + ", New:" + newValue);
+		}
+	}
+
+//	public void onCellEdit(Row entity) {
+//		System.out.println( "Cell Changed Old: " + entity.getId() + ", New:" + entity.getBrand());
+//	}
+
 
 	private static final String UPLOAD = "apload";
 
@@ -55,7 +73,7 @@ public class LoadParametersController extends GenericMB{
 	private UploadedFile fileUpload;
 	
 	private Boolean renderUploaderView = Boolean.TRUE;
-	private Boolean renderTextAreaView = Boolean.TRUE;
+	private Boolean renderTextAreaView = Boolean.FALSE;
 	private Boolean renderLimitsValueView = Boolean.TRUE;
 	private Boolean renderUniqueValueInputText = Boolean.TRUE;
 	private Boolean renderFinalButtons = Boolean.TRUE;
@@ -94,9 +112,13 @@ public class LoadParametersController extends GenericMB{
 
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals("")!=true)
                         {
+							createDynamicColumns();
+							renderTextAreaView = Boolean.TRUE;
                             String areaText = getFileContents(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
                             this.loadParametersTO.setAreaValue(areaText);
-                        }
+                        }else{
+							renderTextAreaView = Boolean.FALSE;
+						}
                         
                         
 			unBlockAllTabs();
@@ -215,7 +237,7 @@ public class LoadParametersController extends GenericMB{
 	
 	private void unBlockAllTabs(){
 		renderUploaderView = Boolean.TRUE;
-		renderTextAreaView = Boolean.TRUE;
+		//renderTextAreaView = Boolean.TRUE;
 		renderLimitsValueView = Boolean.TRUE;
 		renderUniqueValueInputText = Boolean.TRUE;
 		renderFinalButtons = Boolean.TRUE;
@@ -337,12 +359,115 @@ public class LoadParametersController extends GenericMB{
 		this.loadParametersTO = loadParametersTO;
 	}
 
-        private String getFileContents(String defaultFile)
-        throws IOException
-        {
-            FileInputStream f = new FileInputStream(new File("/home/panos/Dropbox/assisting_files/" + defaultFile));
-            return (org.apache.commons.io.IOUtils.toString(f));
-        }
+	private String getFileContents(String defaultFile)
+	throws IOException
+	{
+		FileInputStream f = new FileInputStream(new File(defaultFile)); //"/home/panos/Dropbox/assisting_files/" +
+
+
+		return (org.apache.commons.io.IOUtils.toString(f));
+	}
+
+	public final static List<String> VALID_COLUMN_KEYS = Arrays.asList("id", "brand");
+
+	public String columnTemplate = "id brand year";
+
+	public List<ColumnModel> columns;
+
+	public void createDynamicColumns() {
+		String[] columnKeys = columnTemplate.split(" ");
+		columns = new ArrayList<ColumnModel>();
+
+		for(String columnKey : columnKeys) {
+			String key = columnKey.trim();
+
+			if(VALID_COLUMN_KEYS.contains(key)) {
+				columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
+			}
+		}
+	}
+
+	public String getColumnTemplate() {
+		return columnTemplate;
+	}
+
+	public void setColumnTemplate(String columnTemplate) {
+		this.columnTemplate = columnTemplate;
+	}
+
+	public List<ColumnModel> getColumns() {
+		return columns;
+	}
+
+
+	public List<Row> rows;
+
+	public void setRows(List<Row> rows) {
+		this.rows = rows;
+	}
+
+
+	@PostConstruct
+	public void init() {
+		rows = new ArrayList<>();
+		rows.add(new Row("1","test"));
+		rows.add(new Row("2","dsad sadsadsada"));
+	}
+
+
+	public List<Row> getRows() {
+
+		return this.rows;
+	}
+
+	static public class Row implements Serializable {
+
+		public String id;
+		public String brand;
+
+		public Row(String id, String brand) {
+			this.id = id;
+			this.brand = brand;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getBrand() {
+			return brand;
+		}
+
+		public void setBrand(String brand) {
+			this.brand = brand;
+		}
+	}
+
+
+	static public class ColumnModel implements Serializable {
+
+		private String header;
+		private String property;
+
+		public ColumnModel(String header, String property) {
+			this.header = header;
+			this.property = property;
+		}
+
+		public String getHeader() {
+			return header;
+		}
+
+		public String getProperty() {
+			return property;
+		}
+	}
+
+
 
 
 }
