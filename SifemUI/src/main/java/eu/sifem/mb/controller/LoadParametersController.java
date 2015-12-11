@@ -1,10 +1,8 @@
 package eu.sifem.mb.controller;
 
-import java.io.Serializable;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
-
-import java.io.File;
-import java.io.FileInputStream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -15,6 +13,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import eu.sifem.model.ColumnModel;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.FileUploadEvent;
@@ -24,7 +26,6 @@ import eu.sifem.mb.entitybean.LoadParametersEB;
 import eu.sifem.model.to.ParameterTO;
 import eu.sifem.service.ISimulationService;
 import eu.sifem.utils.BasicFileTools;
-import java.io.IOException;
 
 import org.primefaces.event.CellEditEvent;
 
@@ -40,15 +41,37 @@ public class LoadParametersController extends GenericMB{
 	public void onCellEdit(CellEditEvent event) {
 		Object oldValue = event.getOldValue();
 		Object newValue = event.getNewValue();
-		System.out.println( "Cell Changed Old: " + oldValue + ", New:" + newValue);
 		if(newValue != null && !newValue.equals(oldValue)) {
-			System.out.println( "Cell Changed Old: " + oldValue + ", New:" + newValue);
+			//System.out.println( "Cell Changed Old: " + oldValue + ", New:" + newValue);
+			StringWriter sw = new StringWriter();
+			CSVPrinter csvFilePrinter = null;
+			List<String> headers = new ArrayList<>();
+			for(ColumnModel c : columns){
+				headers.add(c.getProperty());
+			}
+			//csvFilePrinter.printRecord(headers);
+			String[] tmp = new String[headers.size()];
+			tmp = headers.toArray(tmp);
+			CSVFormat csvFileFormat = CSVFormat.EXCEL.withHeader(tmp);
+			try {
+				csvFilePrinter = new CSVPrinter(sw, csvFileFormat);
+				for (Map<String,String> row : rows) {
+					List record = new ArrayList();
+					for(String header : headers){
+						record.add(row.get(header));
+					}
+					csvFilePrinter.printRecord(record);
+				}
+				csvFilePrinter.flush();
+				csvFilePrinter.close();
+				String newCsv = sw.toString().replace("\"","");
+				//logger.info(newCsv);
+				this.loadParametersTO.setAreaValue(newCsv);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
-
-//	public void onCellEdit(Row entity) {
-//		System.out.println( "Cell Changed Old: " + entity.getId() + ", New:" + entity.getBrand());
-//	}
 
 
 	private static final String UPLOAD = "apload";
@@ -112,10 +135,27 @@ public class LoadParametersController extends GenericMB{
 
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals("")!=true)
                         {
-							createDynamicColumns();
+
 							renderTextAreaView = Boolean.TRUE;
                             String areaText = getFileContents(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
                             this.loadParametersTO.setAreaValue(areaText);
+
+
+							File csvData = new File(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
+							CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.EXCEL.withHeader());
+							logger.info(parser.getHeaderMap());
+
+
+							rows = new ArrayList<>();
+							columns = new ArrayList<ColumnModel>();
+							for(String columnKey : parser.getHeaderMap().keySet()) {
+								columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
+							}
+
+							for (CSVRecord csvRecord : parser) {
+								rows.add(csvRecord.toMap());
+							}
+
                         }else{
 							renderTextAreaView = Boolean.FALSE;
 						}
@@ -368,83 +408,26 @@ public class LoadParametersController extends GenericMB{
 		return (org.apache.commons.io.IOUtils.toString(f));
 	}
 
-	public final static List<String> VALID_COLUMN_KEYS = Arrays.asList("id", "brand");
 
-	public String columnTemplate = "id brand year";
+	/* Data table */
 
 	public List<ColumnModel> columns;
-
-	public void createDynamicColumns() {
-		String[] columnKeys = columnTemplate.split(" ");
-		columns = new ArrayList<ColumnModel>();
-
-		for(String columnKey : columnKeys) {
-			String key = columnKey.trim();
-
-			if(VALID_COLUMN_KEYS.contains(key)) {
-				columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
-			}
-		}
-	}
-
-	public String getColumnTemplate() {
-		return columnTemplate;
-	}
-
-	public void setColumnTemplate(String columnTemplate) {
-		this.columnTemplate = columnTemplate;
-	}
 
 	public List<ColumnModel> getColumns() {
 		return columns;
 	}
 
+	public List<Map<String,String>> rows;
 
-	public List<Row> rows;
-
-	public void setRows(List<Row> rows) {
+	public void setRows(List<Map<String,String>> rows) {
 		this.rows = rows;
 	}
 
 
-	@PostConstruct
-	public void init() {
-		rows = new ArrayList<>();
-		rows.add(new Row("1","test"));
-		rows.add(new Row("2","dsad sadsadsada"));
-	}
 
-
-	public List<Row> getRows() {
+	public List<Map<String,String>> getRows() {
 
 		return this.rows;
-	}
-
-	static public class Row implements Serializable {
-
-		public String id;
-		public String brand;
-
-		public Row(String id, String brand) {
-			this.id = id;
-			this.brand = brand;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getBrand() {
-			return brand;
-		}
-
-		public void setBrand(String brand) {
-			this.brand = brand;
-		}
 	}
 
 
@@ -466,8 +449,4 @@ public class LoadParametersController extends GenericMB{
 			return property;
 		}
 	}
-
-
-
-
 }
