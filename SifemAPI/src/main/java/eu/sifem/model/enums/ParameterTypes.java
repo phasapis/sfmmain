@@ -36,7 +36,9 @@ public enum ParameterTypes {
         MATERIAL1("MATERIAL 1 - YOUNG'S MODULUS E POISSON RATIO Nu"),
         
         MATERIAL2("MATERIAL 2 - YOUNG'S MODULUS E POISSON RATIO Nu"),        
-        
+
+        TYMPANIC("FREQUENCY TYMPANIC_MEMMBRANE_FUNCTION_VALUE"),        
+                
         MATERIALS("MATERIALS");
         
 	private String name;

@@ -212,8 +212,10 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 
             if(solverConfigCreatorTO.getMeshSetupTO().getName().equals("Head Model"))
                 return handleHeadModelCase(solverConfigCreatorTO, mapAttributeValues, mapTeplateKeysAndIds);
-            
-            
+
+            if(solverConfigCreatorTO.getMeshSetupTO().getName().equals("Middle Ear Model"))
+                return handleMiddleEarCase(solverConfigCreatorTO, mapAttributeValues, mapTeplateKeysAndIds);
+                        
             return null;
 	}
 
@@ -1863,6 +1865,73 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                 System.err.println("Res: " + resultFilesAsString);
 		return resultFilesAsString;        
         
+    }
+
+    private List<String> handleMiddleEarCase(SolverConfigCreatorTO solverConfigCreatorTO, Map<String, List<String>> mapAttributeValues, Map<ParameterTypes, ParameterTO> mapTeplateKeysAndIds)
+    throws IOException
+    {
+                InputStream in = this.getClass().getClassLoader().getResourceAsStream("input_MiddleEarModel.txt");
+		String templateStr = IOUtils.toString(in);
+		
+		List<String> resultFilesAsString = new ArrayList<String>();
+		Map<ParameterTypes,Integer> mapCount = getMapCounter();
+		
+		Boolean isTympanic1Filled = Boolean.FALSE;
+                
+		Map<String,CombinationHelper> combinationMap = new TreeMap<String,CombinationHelper>();
+		
+		int size = applyCombinationMapService(mapAttributeValues,solverConfigCreatorTO.getLoadParametersTOList(),combinationMap);
+                System.err.println("size = " + size);
+		for(int i=0;i<size;i++){
+			StringBuilder sb = new StringBuilder();
+			int count = 0;
+			++count;
+			
+			String paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.TYMPANIC.getName())){
+				if(mapCount.get(ParameterTypes.TYMPANIC).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.TYMPANIC)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.TYMPANIC).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.TYMPANIC).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.TYMPANIC).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+                                                                valueStr = valueStr.replace(';', ' ');                                                            
+								sb.append(valueStr);
+							}	
+						isTympanic1Filled = Boolean.TRUE;		
+					}
+		
+					//mapCount.put(ParameterTypes.SHOULD_PRESCRIBE_PRESSURE, BigDecimal.ONE.intValue());
+				}
+                        }
+                        
+			System.out.println("Before test: "+sb.toString().trim());                        
+			Boolean isAllParametersFilled = isTympanic1Filled;
+                        
+                        System.err.println("allParams -- " + sb.toString());
+                        
+			if(isAllParametersFilled && !"".equals(sb.toString())){
+				resultFilesAsString.add(sb.toString().trim());	
+				mapCount = getMapCounter();
+			}else{
+				continue;
+			}
+		}
+
+                System.err.println("Res: " + resultFilesAsString);
+		return resultFilesAsString;                
     }
 
 }

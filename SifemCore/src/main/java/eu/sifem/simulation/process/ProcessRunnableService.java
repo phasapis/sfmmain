@@ -179,7 +179,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
             simulationInstance.setCfgFile(cfgFileByteArr);
             String parameter = Util.getJsonStrFromObject(simulationInstance);
 
-            if(commandLineArgument.equals("HeadModel"))
+            if(commandLineArgument.equals("HeadModel") || commandLineArgument.equals("MiddleEar"))
             {
                 System.out.println("http://192.168.7.115:8080/SolverInterface/webresources/solver/authenticate" + "/testusername/password");
                 session = Request.Get("http://192.168.7.115:8080/SolverInterface/webresources/solver/authenticate" + "/testusername/password").execute().returnContent().asString();
