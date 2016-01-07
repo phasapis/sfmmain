@@ -89,18 +89,45 @@
 
 
 				<p:tab title="Insert Parameter Values" disabled="false"
-					closable="true">
-					<p:panelGrid id="paramValuesTextAreaTablegrid" columns="1"
-						rendered="#{loadParametersController.renderTextAreaView}">
-						<p:row id="textareaValueRowID">
+					closable="true" rendered="#{loadParametersController.renderTextAreaView}">
+					<!--<p:panelGrid id="paramValuesTextAreaTablegrid" columns="1"-->
+						<!--rendered="#{loadParametersController.renderTextAreaView}">-->
+						<!--<p:row id="textareaValueRowID">
 							<p:column>
                                                            <p:scrollPanel style="width:700px;height:255px"> 
                                                             <p:inputTextarea id="textAreaValueID" value="#{loadParametersController.loadParametersTO.areaValue}" rows="30" cols="100">
 								</p:inputTextarea>
                                                            </p:scrollPanel>
 							</p:column>
-						</p:row>
-					</p:panelGrid>
+						</p:row>-->
+					<p:contextMenu for="paramsTable" widgetVar="cMenu">
+						<p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('paramsTable').showCellEditor();return false;"/>
+						<p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>
+					</p:contextMenu>
+					<div style="height: 300px; overflow: auto;">
+					<p:dataTable id="paramsTable" var="row" value="#{loadParametersController.rows}" editable="true" editMode="cell" widgetVar="paramsTable">
+
+						<p:ajax  event="cellEdit" update="paramsTable" process="@this" listener="#{loadParametersController.onCellEdit}"/>
+
+						<c:forEach items="#{loadParametersController.columns}" var="column" varStatus="colLoopStatus">
+							<p:column headerText="#{column.header}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{row[column.property]}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{row[column.property]}"
+													 style="width:100%" disabled="#{column.property eq 'id'}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+						</c:forEach>
+
+					</p:dataTable>
+					</div>
+
+
+
 				</p:tab>
 
 

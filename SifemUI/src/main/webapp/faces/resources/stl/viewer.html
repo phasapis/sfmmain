@@ -1,0 +1,112 @@
+<html>
+    <title>SIFEM Mesh Viewer</title>
+    <!--<script type="text/javascript" src="/Sifem/faces/resources/js/three.min.js"></script>-->
+    <!--<script type="text/javascript" src="/Sifem/faces/resources/js/objstl.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link href="src/css/Madeleine.css" rel="stylesheet" />
+    <script src="src/lib/stats.js"></script>
+    <script src="src/lib/detector.js"></script>
+    <script src="src/lib/three.min.js"></script>
+    <script src="src/Madeleine.js"></script>
+    <style type="text/css">
+
+        .theme {
+            text-align: center;
+        }
+
+        .themeButton {
+            padding: 0;
+            margin: 1px;
+            width: 150px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 40px;
+            text-align: center;
+            background: #FFFFFF;
+            display: inline-block;
+            border: 1px solid #EFEFEF;
+        }
+
+        .light {
+            color: #DFDFDF;
+        }
+
+        .dark {
+            color: #000000;
+        }
+
+        .soft {
+            color: #FF9900;
+        }
+
+        .lime {
+            color: #D4FF00;
+        }
+
+        .rose {
+            color: #C94C66;
+        }
+
+        .lego {
+            color: #00A08C;
+        }
+
+        .toxic {
+            color: #5254CB;
+        }
+
+        .cobalt {
+            color: #0C6BC0;
+        }
+    </style>
+</head>
+<body>
+<center>
+<div id="target" class="madeleine"></div>
+<!--<div class="theme">
+    <div class="themeButton light"  onclick="mad.adaptViewerTheme('light');">Light</div>
+    <div class="themeButton lime"   onclick="mad.adaptViewerTheme('lime');">Lime</div>
+    <div class="themeButton toxic"  onclick="mad.adaptViewerTheme('toxic');">Toxic</div>
+    <div class="themeButton lego"   onclick="mad.adaptViewerTheme('lego');">Lego</div>
+    <div class="themeButton cobalt" onclick="mad.adaptViewerTheme('cobalt');">Cobalt</div>
+    <div class="themeButton soft"   onclick="mad.adaptViewerTheme('soft');">Soft</div>
+    <div class="themeButton rose"   onclick="mad.adaptViewerTheme('rose');">Rose</div>
+    <div class="themeButton dark"   onclick="mad.adaptViewerTheme('dark');">Dark</div>
+</div>-->
+</center>
+
+<script>
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+    $.get( "/Sifem/rest/fetchMeshVisualization/typeForModel/"+getUrlVars()["model"], function( data ) {
+        if(data=="stl"){
+            var mad = new Madeleine({
+                target: 'target', // target div id
+                data:'/Sifem/rest/fetchMeshVisualization/stlForModel/'+getUrlVars()["model"],
+                path: './src',  // path to source directory from current html file
+                h:800,
+                w:800
+            });
+        }else if(data=="png"){
+            $('#target').html('<img id="modelViz" src=\'/Sifem/rest/fetchMeshVisualization/pngForModel/'+getUrlVars()["model"]+'\' />');
+        }else{
+            $('#target').html('<b>Model not available for preview !</b>');
+        }
+    })
+
+</script>
+</body>
+</html>
