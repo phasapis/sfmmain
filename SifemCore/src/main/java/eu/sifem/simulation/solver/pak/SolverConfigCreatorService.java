@@ -1601,7 +1601,8 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT);
+                                                                valueStr = valueStr.replace(';', ' ');                                                            
+								sb.append(valueStr);
 							}	
 						isShouldProvidePressureFilled = Boolean.TRUE;		
 					}
@@ -1632,7 +1633,8 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT);
+                                                            valueStr = valueStr.replace(';', ' ');                                                              								
+                                                            sb.append(valueStr);
 							}	
 						isShouldProvideForceFilled = Boolean.TRUE;		
 					}
@@ -1699,6 +1701,10 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						}
                                                 
 						if(!NA.equals(value) && !"".equals(value)){
+                                                        value = value.replace(';', ' ');
+                                                        //System.err.println();
+                                                        //System.err.println();
+                                                        //System.err.println(value);
 							sb.append(value + " \r\n");
 						}
 

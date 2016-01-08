@@ -11,7 +11,7 @@ import java.io.*;
 @RestController
 @RequestMapping("/fetchMeshVisualization")
 public class FetchMeshVisualization {
-    public final String modelPath = "/media/Data/UBIProjects/sfmmain/SifemUI/src/main/webapp/faces/resources/stl/";
+    public final String modelPath = "/home/panos/Downloads/Sifem_code_18062015/Sifem_code_18062015/Sifem/SifemUI/src/main/webapp/faces/resources/stl/";
 
     @RequestMapping(value="/typeForModel/{model}", method = RequestMethod.GET)
     public String getType(@PathVariable String model, HttpServletResponse response) {

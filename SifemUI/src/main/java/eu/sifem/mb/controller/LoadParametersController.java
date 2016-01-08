@@ -53,6 +53,7 @@ public class LoadParametersController extends GenericMB{
 			String[] tmp = new String[headers.size()];
 			tmp = headers.toArray(tmp);
 			CSVFormat csvFileFormat = CSVFormat.EXCEL.withHeader(tmp);
+                        //csvFileFormat.withSkipHeaderRecord(true);
 			try {
 				csvFilePrinter = new CSVPrinter(sw, csvFileFormat);
 				for (Map<String,String> row : rows) {
@@ -60,6 +61,7 @@ public class LoadParametersController extends GenericMB{
 					for(String header : headers){
 						record.add(row.get(header));
 					}
+                                        //System.err.println(" Record: " + record);
 					csvFilePrinter.printRecord(record);
 				}
 				csvFilePrinter.flush();
@@ -135,32 +137,40 @@ public class LoadParametersController extends GenericMB{
 
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals("")!=true)
                         {
-
-							renderTextAreaView = Boolean.TRUE;
+                            renderTextAreaView = Boolean.TRUE;
+                            String headerlessText = "";
                             String areaText = getFileContents(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
-                            this.loadParametersTO.setAreaValue(areaText);
 
+                            File csvData = new File(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
+                            CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.EXCEL.withHeader());
+                            logger.info(parser.getHeaderMap());
 
-							File csvData = new File(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
-							CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.EXCEL.withHeader());
-							logger.info(parser.getHeaderMap());
+        			rows = new ArrayList<>();
+				columns = new ArrayList<ColumnModel>();
+				for(String columnKey : parser.getHeaderMap().keySet()) {
+					columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
+				}
 
-
-							rows = new ArrayList<>();
-							columns = new ArrayList<ColumnModel>();
-							for(String columnKey : parser.getHeaderMap().keySet()) {
-								columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
-							}
-
-							for (CSVRecord csvRecord : parser) {
-								rows.add(csvRecord.toMap());
-							}
-
-                        }else{
-							renderTextAreaView = Boolean.FALSE;
-						}
-                        
-                        
+				for (CSVRecord csvRecord : parser) {
+                                    Map<String,String> data = csvRecord.toMap();
+                                    
+                                    for(String columnKey : parser.getHeaderMap().keySet())
+                                    {					
+                                        headerlessText += data.get(columnKey) + ",";
+                                    }
+                                    System.err.println();
+                                    headerlessText += "\r\n";
+                                    rows.add(csvRecord.toMap());
+				}
+                                
+                            System.err.println(headerlessText);
+                                
+                            this.loadParametersTO.setAreaValue(headerlessText);                                
+                        }
+                        else
+                        {
+        			renderTextAreaView = Boolean.FALSE;
+			}
 			unBlockAllTabs();
 		} catch (Exception e) {
 			addExceptionMessage(e);
@@ -403,7 +413,6 @@ public class LoadParametersController extends GenericMB{
 	throws IOException
 	{
 		FileInputStream f = new FileInputStream(new File(defaultFile)); //"/home/panos/Dropbox/assisting_files/" +
-
 
 		return (org.apache.commons.io.IOUtils.toString(f));
 	}
