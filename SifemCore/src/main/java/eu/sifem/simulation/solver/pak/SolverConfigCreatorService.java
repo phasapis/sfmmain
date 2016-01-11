@@ -320,7 +320,9 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 			
 			if(loadParametersTO.getAreaValue()!=null && !"".equals(loadParametersTO.getAreaValue())){
 				StringBuilder sb = new StringBuilder();                            
-				String areaParam = Util.changeStringToDefaultSeparator(loadParametersTO.getAreaValue());
+				//String areaParam = Util.changeStringToDefaultSeparator(loadParametersTO.getAreaValue());
+                                String areaParam = loadParametersTO.getAreaValue();
+                                /*
 				String[] areaParamArr = areaParam.split("\n");
 
                                 System.out.println(" areaParam " + areaParam);
@@ -341,7 +343,9 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                                         String fileID = saveOrUpdateCSVAcessoryFiles(loadParametersTO.getName(), sb.toString(), solverConfigCreatorTO);
 					propertyGenericValues.put("areaValue",fileID);
 				}                                                               
-                                
+                                */
+       				parameterValueList.add(areaParam);
+
 				mapAttributeValues.put(loadParametersTO.getId(),parameterValueList);
 				continue;
 			}
@@ -1610,7 +1614,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					mapCount.put(ParameterTypes.SHOULD_PRESCRIBE_PRESSURE, BigDecimal.ONE.intValue());
 				}
 			}
-                        System.err.println("3 -- " + sb.toString());
+                        //System.err.println("3 -- " + sb.toString());
 			
                         ++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
@@ -1642,7 +1646,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					mapCount.put(ParameterTypes.SHOULD_PRESCRIBE_FORCE, BigDecimal.ONE.intValue());
 				}
 			}
-                        System.err.println("3 -- " + sb.toString());
+                        //System.err.println("3 -- " + sb.toString());
 
                         ++count;                        
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
@@ -1673,13 +1677,13 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					mapCount.put(ParameterTypes.SLICE_FREQUENCY, BigDecimal.ONE.intValue());
 				}
 			}
-                        System.err.println("3 -- " + sb.toString());
+                        //System.err.println("3 -- " + sb.toString());
                         
 			//MATERIAL PROPERTIES PART
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
                         
-                        System.err.println("Where am i = " + paramHeader);
+                        //System.err.println("Where am i = " + paramHeader);
                         
 			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.MATERIALS.getName())){
 				if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.MATERIALS)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.MATERIALS).getId()).isEmpty()){
@@ -1702,10 +1706,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                                                 
 						if(!NA.equals(value) && !"".equals(value)){
                                                         value = value.replace(';', ' ');
-                                                        //System.err.println();
-                                                        //System.err.println();
-                                                        //System.err.println(value);
-							sb.append(value + " \r\n");
+							sb.append(value);
 						}
 
 						isMaterialsFilled = Boolean.TRUE;				
@@ -1714,7 +1715,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 				}
 
 			}
-                        System.err.println("4 -- " + sb.toString());
+                        //System.err.println("4 -- " + sb.toString());
                        
 
 			//ANALYSIS PARAMETERS 
@@ -1749,14 +1750,14 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					mapCount.put(ParameterTypes.ANALYSIS, BigDecimal.ONE.intValue());
 				}
 			}
-                        System.err.println("3 -- " + sb.toString());
+                        //System.err.println("3 -- " + sb.toString());
 
                                                 
-			System.out.println("Before test: "+sb.toString().trim());                        
+			//System.out.println("Before test: "+sb.toString().trim());                        
 			Boolean isAllParametersFilled = isShouldProvideForceFilled && isShouldProvidePressureFilled 
                                                         && isFrequencyFilled && isMaterialsFilled && isAnalysisFilled; // && isExternalparametersFilled;
                         
-                        System.err.println("allParams -- " + sb.toString());
+                        //System.err.println("allParams -- " + sb.toString());
 
                         
 			if(isAllParametersFilled && !"".equals(sb.toString())){

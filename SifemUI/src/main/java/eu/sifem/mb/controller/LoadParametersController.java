@@ -158,7 +158,9 @@ public class LoadParametersController extends GenericMB{
                                     {					
                                         headerlessText += data.get(columnKey) + ",";
                                     }
-                                    System.err.println();
+                                    
+                                    headerlessText = headerlessText.substring(0, headerlessText.length()-1);
+                                    //System.err.println();
                                     headerlessText += "\r\n";
                                     rows.add(csvRecord.toMap());
 				}
