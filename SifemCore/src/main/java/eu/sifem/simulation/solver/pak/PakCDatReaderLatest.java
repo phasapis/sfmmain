@@ -14,13 +14,13 @@ public class PakCDatReaderLatest {
 
 	//private static String cardInfoPatternString = "C\\s*/(\\d*)/\\s*([\\w\\s]*)\\((.*)\\)";
 	private static String card1PatternString = "C\\s*/\\s*1\\s*\\/.*\\sC.*\\s(.*)";	
-	private static String card2PatternString = "C\\s*/\\s*2\\s*/.*\\s*(.{5})";
+	private static String card2PatternString = "C\\s*/\\s*2\\s*/.*\\s*C\\s*.*\\s(.{5})";
 	private static String card3PatternString = "C\\s*/\\s*3\\s*/\\s*.*\\sC.*\\s(.{10})(.{5})(.{5})(.{5})(.{5})(.{5})(.{5})(.{5})";
 	//private static String card4PatternString = "C\\s*/\\s*4\\s*/.*\\sC.*\\s(.{5})(.{5})(.{5})(.{5})(.{10})(.{10})(.{5})(.{5})(.{10})";
 	private static String card4PatternString = "C\\s*/\\s*4\\s*/.*\\sC.*\\s(.{5})(.{5})(.{5})(.{5})(.{10})(.{10})(.{5})(.{5})(.{10})(.{5})";
 	
 	private static String card5PatternString = "C\\s*/\\s*5\\s*/.*\\sC.*\\s(.{5})";	
-	private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\s(.{5})(.{10})";
+	private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\sC\\s*.*\\s(.{5})(.{10})";
 	private static String card7TextPatternString = "C\\s*/\\s*7\\s*/.*\\sC.*\\)(.*)C\\s*/\\s*8\\s*/";
 	private static String card7PatternString = ".{5}(.{5}).{1}(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})(.{2}).{2}(.{15})(.{15})(.{15})";
 	private static String card8PatternString = "C\\s*/\\s*8/.*\\sC.*\\s(.{5})(.{10})(.{5})(.{5})(.{5})(.{5})";
@@ -54,7 +54,7 @@ public class PakCDatReaderLatest {
 	private static String card12_1_a_materialType2_1PatternString = "C\\s*\\/\\s*12-1\\s*\\/\\s*MATERIAL.*\\sC.*\\sC.*\\s.*\\sC.*Density.*\\s(.{10})(.{10})";
 	//private static String card12_1_a_materialType2_2PatternString = "C\\s*\\/\\s*12-1\\s*\\/\\s*MATERIAL.*\\sC.*\\s.*\\sC\\s*DENS.*\\s.*\\sC\\s*POROSITY.*\\s(.{10})(.{10})(.{10})(.{10})";
 	private static String card12_1_a_materialType2_2PatternString = "C\\s*\\/\\s*12-1\\s*\\/\\s*MATERIAL.*\\sC.*\\sC.*\\s.*\\sC.*Density.*\\s.*\\sC.*Porosity.*\\s(.{10})(.{10})(.{10})(.{10})";
-	private static String card13PatternString = "C\\s*\\/\\s*13\\s*\\/.*\\s(.{10})(.{5})";
+	private static String card13PatternString = "C\\s*\\/\\s*13\\s*\\/.*\\sC\\s*.*\\s(.{10})(.{5})";
 	private static String card13_1_aPatternString = "C\\s*\\/\\s*13-1\\s*\\/.*\\sC.*\\sC.*\\s(.{10})(.{5})";
 	//private static String card13_1_bTextPatternString = "C\\s*\\/\\s*13-1\\s*\\/.*\\sC.*\\sC.*\\s.*\\sC.*\\sC.*\\)\\s(.*)C\\s*/\\s*14";
 	//private static String card13_1_bTextPatternString = "C\\s*\\/13-1\\s*\\/.*IMAX\\)\\s(.*)C\\s*/14\\s*/\\s*FORCES";

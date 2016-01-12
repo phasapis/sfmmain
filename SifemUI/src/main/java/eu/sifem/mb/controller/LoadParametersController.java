@@ -27,6 +27,8 @@ import eu.sifem.model.to.ParameterTO;
 import eu.sifem.service.ISimulationService;
 import eu.sifem.utils.BasicFileTools;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.primefaces.event.CellEditEvent;
 
 /**
@@ -151,22 +153,31 @@ public class LoadParametersController extends GenericMB{
 					columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
 				}
 
+                                
+                                int i = 1;
+                                //System.err.println(parser.getRecordNumber());
+
 				for (CSVRecord csvRecord : parser) {
                                     Map<String,String> data = csvRecord.toMap();
-                                    
+                                    String line = "";
                                     for(String columnKey : parser.getHeaderMap().keySet())
-                                    {					
-                                        headerlessText += data.get(columnKey) + ",";
+                                    {	
+                                        line += data.get(columnKey);
+                                        headerlessText += data.get(columnKey) + "   ";
                                     }
+                                    System.err.println("i=" + i + "   NEWLINE " + line);
                                     
+                                    //to be removed
                                     headerlessText = headerlessText.substring(0, headerlessText.length()-1);
                                     //System.err.println();
                                     headerlessText += "\r\n";
                                     rows.add(csvRecord.toMap());
+                                    i++;
 				}
                                 
+                            headerlessText = StringUtils.chomp(headerlessText);
                             System.err.println(headerlessText);
-                                
+                            System.err.println("i= " + i);    
                             this.loadParametersTO.setAreaValue(headerlessText);                                
                         }
                         else

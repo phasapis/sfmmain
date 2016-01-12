@@ -1706,7 +1706,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                                                 
 						if(!NA.equals(value) && !"".equals(value)){
                                                         value = value.replace(';', ' ');
-							sb.append(value);
+							sb.append(value  + "\r\n");
 						}
 
 						isMaterialsFilled = Boolean.TRUE;				
