@@ -1,0 +1,66 @@
+<html>
+<title>SIFEM Mesh Viewer</title>
+<!--<script type="text/javascript" src="/Sifem/faces/resources/js/three.min.js"></script>-->
+<!--<script type="text/javascript" src="/Sifem/faces/resources/js/objstl.js"></script>-->
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="../js/three.min.js"></script>
+<script src="../js/objstl.js"></script>
+<style type="text/css">
+
+    .theme {
+        text-align: center;
+    }
+
+    #webgl {
+        background-color:white;
+        border:solid 1px black;
+        width:100%;
+        height:90%;
+    }
+
+</style>
+</head>
+<body>
+<center>
+    <div id="webgl" oncontextmenu="return false;"></div>
+</center>
+
+<script>
+
+    $( document ).ready(function() {
+       load();
+    });
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+    $.get( "/Sifem/rest/fetchMeshVisualization/typeForModel/"+getUrlVars()["model"], function( data ) {
+        if(data=="stl"){
+//            var mad = new Madeleine({
+//                target: 'target', // target div id
+//                data:'/Sifem/rest/fetchMeshVisualization/stlForModel/'+getUrlVars()["model"],
+//                path: './src',  // path to source directory from current html file
+//                h:800,
+//                w:800
+//            });
+            example('/Sifem/rest/fetchMeshVisualization/stlForModel/'+getUrlVars()["model"]);
+        }else if(data=="png"){
+            $('#webgl').html('<img id="modelViz" src=\'/Sifem/rest/fetchMeshVisualization/pngForModel/'+getUrlVars()["model"]+'\' />');
+        }else{
+            $('#webgl').html('<b>Model not available for preview !</b>');
+        }
+    })
+
+</script>
+</body>
+</html>
