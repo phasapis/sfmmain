@@ -36,9 +36,11 @@ public enum ParameterTypes {
         MATERIAL1("MATERIAL 1 - YOUNG'S MODULUS E POISSON RATIO Nu"),
         
         MATERIAL2("MATERIAL 2 - YOUNG'S MODULUS E POISSON RATIO Nu"),        
-        
+
+        TYMPANIC("FREQUENCY TYMPANIC_MEMMBRANE_FUNCTION_VALUE"),        
+                
         MATERIALS("MATERIALS");
-        
+
 	private String name;
 	
 	ParameterTypes(String name){
@@ -55,11 +57,13 @@ public enum ParameterTypes {
 	
 	
 	public static ParameterTypes getParameterTypesByTemplateName(String templateName){
+		System.out.println("template "+templateName);
 		if(templateName==null || "".equals(templateName)){
 			return null;
 		}
 		Set<ParameterTypes> parameterTypes = EnumSet.allOf(ParameterTypes.class);
 		for(ParameterTypes parameterType : parameterTypes) {
+
 			if(StringUtils.equalsIgnoreCase(StringUtils.deleteWhitespace(templateName).trim(), StringUtils.deleteWhitespace(parameterType.getName()).trim())){
 				return parameterType;				
 			}

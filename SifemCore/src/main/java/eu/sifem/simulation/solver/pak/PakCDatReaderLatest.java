@@ -20,8 +20,7 @@ public class PakCDatReaderLatest {
 	private static String card4PatternString = "C\\s*/\\s*4\\s*/.*\\sC.*\\s(.{5})(.{5})(.{5})(.{5})(.{10})(.{10})(.{5})(.{5})(.{10})(.{5})";
 	
 	private static String card5PatternString = "C\\s*/\\s*5\\s*/.*\\sC.*\\s(.{5})";	
-	//private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\sC\\s*.*\\s(.{5})(.{10})";
-        private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\s(.{5})(.{10})";
+	private static String card6PatternString = "C\\s*/\\s*6\\s*/.*\\sC\\s*.*\\s(.{5})(.{10})";
 	private static String card7TextPatternString = "C\\s*/\\s*7\\s*/.*\\sC.*\\)(.*)C\\s*/\\s*8\\s*/";
 	private static String card7PatternString = ".{5}(.{5}).{1}(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})(.{2}).{2}(.{15})(.{15})(.{15})";
 	private static String card8PatternString = "C\\s*/\\s*8/.*\\sC.*\\s(.{5})(.{10})(.{5})(.{5})(.{5})(.{5})";
@@ -55,7 +54,7 @@ public class PakCDatReaderLatest {
 	private static String card12_1_a_materialType2_1PatternString = "C\\s*\\/\\s*12-1\\s*\\/\\s*MATERIAL.*\\sC.*\\sC.*\\s.*\\sC.*Density.*\\s(.{10})(.{10})";
 	//private static String card12_1_a_materialType2_2PatternString = "C\\s*\\/\\s*12-1\\s*\\/\\s*MATERIAL.*\\sC.*\\s.*\\sC\\s*DENS.*\\s.*\\sC\\s*POROSITY.*\\s(.{10})(.{10})(.{10})(.{10})";
 	private static String card12_1_a_materialType2_2PatternString = "C\\s*\\/\\s*12-1\\s*\\/\\s*MATERIAL.*\\sC.*\\sC.*\\s.*\\sC.*Density.*\\s.*\\sC.*Porosity.*\\s(.{10})(.{10})(.{10})(.{10})";
-	private static String card13PatternString = "C\\s*\\/\\s*13\\s*\\/.*\\sC\\s*.*\\s(.{10})(.{5})";	
+	private static String card13PatternString = "C\\s*\\/\\s*13\\s*\\/.*\\sC\\s*.*\\s(.{10})(.{5})";
 	private static String card13_1_aPatternString = "C\\s*\\/\\s*13-1\\s*\\/.*\\sC.*\\sC.*\\s(.{10})(.{5})";
 	//private static String card13_1_bTextPatternString = "C\\s*\\/\\s*13-1\\s*\\/.*\\sC.*\\sC.*\\s.*\\sC.*\\sC.*\\)\\s(.*)C\\s*/\\s*14";
 	//private static String card13_1_bTextPatternString = "C\\s*\\/13-1\\s*\\/.*IMAX\\)\\s(.*)C\\s*/14\\s*/\\s*FORCES";
@@ -182,18 +181,18 @@ public class PakCDatReaderLatest {
 //			//	System.out.println(cardNumber + "\t" + cardName + "\t" + cardReadFormat);
 //		}	
 
-		while(card1PatternMatcher.find()){
+		while(card1PatternMatcher != null && card1PatternMatcher.find()){
 			String title = card1PatternMatcher.group(1).trim();
 			pakCdata.card1.put(PakCData.Card1.TITLE.toString(), title);
 			//	System.out.println(title);
 		}
 
-		while(card2PatternMatcher.find()){
+		while(card2PatternMatcher != null && card2PatternMatcher.find()){
 			String indfor = card2PatternMatcher.group(1).trim();
 			pakCdata.card2.put(PakCData.Card2.INDFOR.toString(), indfor);
 		}
 
-		while(card3PatternMatcher.find()){
+		while(card3PatternMatcher != null && card3PatternMatcher.find()){
 			String np = card3PatternMatcher.group(1).trim();
 			pakCdata.card3.put(PakCData.Card3.NP.toString(), np);
 			String nget = card3PatternMatcher.group(2).trim();
@@ -210,7 +209,7 @@ public class PakCDatReaderLatest {
 			//			"\t" + nstac + "\t" + nper + "\t" + prin + "\t");
 		}
 
-		while(card4PatternMatcher.find()){
+		while(card4PatternMatcher != null && card4PatternMatcher.find()){
 			String inteb = card4PatternMatcher.group(1).trim();
 			pakCdata.card4.put(PakCData.Card4.INTEB.toString(), inteb);
 			String indsc = card4PatternMatcher.group(2).trim();
@@ -233,13 +232,13 @@ public class PakCDatReaderLatest {
 			//			"\t" + epsta + "\t" + epstr + "\t" + njrap + "\t" + isolver + "\t" + frequency);
 		}
 
-		while(card5PatternMatcher.find()){
+		while(card5PatternMatcher !=null && card5PatternMatcher.find()){
 			String irest = card5PatternMatcher.group(1).trim();
 			pakCdata.card5.put(PakCData.Card5.IREST.toString(), irest);
 			//	System.out.println(irest);
 		}
 
-		while(card6PatternMatcher.find()){
+		while(card6PatternMatcher !=null && card6PatternMatcher.find()){
 			String ndti = card6PatternMatcher.group(1).trim();
 			String timei = card6PatternMatcher.group(2).trim();
 			pakCdata.card6.put(PakCData.Card6.NDTI.toString(), ndti);
@@ -281,7 +280,7 @@ public class PakCDatReaderLatest {
             }
 		}
 
-		while(card8PatternMatcher!=null && card8PatternMatcher.find()) {
+		while(card8PatternMatcher != null && card8PatternMatcher.find()) {
 			String netip = card8PatternMatcher.group(1).trim();			
 			String net = card8PatternMatcher.group(2).trim();
 			String indax = card8PatternMatcher.group(3).trim();
@@ -300,7 +299,7 @@ public class PakCDatReaderLatest {
 			//		"\t" + ipn + "\t" + unknown1);
 		}	
 
-		while(card8_1_aPatternMatcher!=null && card8_1_aPatternMatcher.find()) {
+		while(card8_1_aPatternMatcher !=null && card8_1_aPatternMatcher.find()) {
 			String np2dmx = card8_1_aPatternMatcher.group(1).trim();
 			String iswell = card8_1_aPatternMatcher.group(2).trim();
 			pakCdata.card8_1_a.put(PakCData.Card8_1_a.NP2DMX.toString(), np2dmx);
@@ -343,13 +342,13 @@ public class PakCDatReaderLatest {
             }
 		}
 
-		while(card9PatternMatcher!=null && card9PatternMatcher.find()){
+		while(card9PatternMatcher !=null && card9PatternMatcher.find()){
 			String numzad = card9PatternMatcher.group(1).trim();
 			pakCdata.card9.put(PakCData.Card9.Numzad.toString(), numzad);
 			//System.out.println(numzad);
 		}
 
-		while(card10PatternMatcher.find()){
+		while(card10PatternMatcher !=null && card10PatternMatcher.find()){
 			String qx0 = card10PatternMatcher.group(1).trim();
 			String qy0 = card10PatternMatcher.group(2).trim();
 			String qz0 = card10PatternMatcher.group(3).trim();
@@ -361,7 +360,7 @@ public class PakCDatReaderLatest {
 			//	System.out.println(qx0 + "\t" + qy0 + "\t" + qz0 + "\t" + p0);
 		}
 
-		while(card11PatternMatcher.find()){
+		while(card11PatternMatcher !=null && card11PatternMatcher.find()){
 			String maxsil = card11PatternMatcher.group(1).trim();
 			String indpj = card11PatternMatcher.group(2).trim();
 			pakCdata.card11.put(PakCData.Card11.MAXSIL.toString(), maxsil);
@@ -400,14 +399,14 @@ public class PakCDatReaderLatest {
             }
 		}
 		//System.out.println("CARD12_1");
-		while(card12_1_numberPatternMatcher.find()){
+		while(card12_1_numberPatternMatcher !=null && card12_1_numberPatternMatcher.find()){
 			String number = card12_1_numberPatternMatcher.group(1).trim();
 			pakCdata.card12_1_number.put(PakCData.Card12_1_number.NoOfMaterials.toString(), number);
 			//System.out.println("NUMBER: "+pakCdata.card12_1_number);
 		}
 
 		count = 1;		
-		while(card12_1_a_materialCommonPatternMatcher.find()){
+		while(card12_1_a_materialCommonPatternMatcher !=null && card12_1_a_materialCommonPatternMatcher.find()){
 			Map<String, String> card12_1_aMap = new HashMap<String, String>();
 			String model = card12_1_a_materialCommonPatternMatcher.group(1).trim();
 			card12_1_aMap.put(PakCData.Card12_1_a_materialCommon.Model.toString(), model);
@@ -420,7 +419,7 @@ public class PakCDatReaderLatest {
 			pakCdata.card12_1_a_materialCommon.put(String.valueOf(count++), card12_1_aMap);
 		}		
 
-		while(card12_1_a_materialType1_1PatternMatcher.find()){
+		while(card12_1_a_materialType1_1PatternMatcher !=null &&card12_1_a_materialType1_1PatternMatcher.find()){
 			String youngsMod = card12_1_a_materialType1_1PatternMatcher.group(1).trim();
 			String poissonRatio = card12_1_a_materialType1_1PatternMatcher.group(2).trim();
 			String density = card12_1_a_materialType1_1PatternMatcher.group(3).trim();			
@@ -429,7 +428,7 @@ public class PakCDatReaderLatest {
 			pakCdata.card12_1_a_materialType1_1.put(PakCData.Card12_1_a_materialType1_1.Density.toString(), density);
 		}		
 
-		while(card12_1_a_materialType1_2PatternMatcher.find()){
+		while(card12_1_a_materialType1_2PatternMatcher !=null &&card12_1_a_materialType1_2PatternMatcher.find()){
 			//Porosity, Permeability, BulkModuluesOfSolid, BulkModulusOfFluid; 			
 			String porosity = card12_1_a_materialType1_2PatternMatcher.group(1).trim();
 			String permeability = card12_1_a_materialType1_2PatternMatcher.group(2).trim();
@@ -441,14 +440,14 @@ public class PakCDatReaderLatest {
 			pakCdata.card12_1_a_materialType1_2.put(PakCData.Card12_1_a_materialType1_2.BulkModulusOfFluid.toString(), fluidBulkModulus);
 		}
 
-		while(card12_1_a_materialType2_1PatternMatcher.find()){
+		while(card12_1_a_materialType2_1PatternMatcher !=null &&card12_1_a_materialType2_1PatternMatcher.find()){
 			String fluidDensity = card12_1_a_materialType2_1PatternMatcher.group(1).trim();
 			String speedOfSound = card12_1_a_materialType2_1PatternMatcher.group(2).trim();
 			pakCdata.card12_1_a_materialType2_1.put(PakCData.Card12_1_a_materialType2_1.DensityFluid.toString(), fluidDensity);
 			pakCdata.card12_1_a_materialType2_1.put(PakCData.Card12_1_a_materialType2_1.SpeedOfSound.toString(), speedOfSound);
 		}		
 
-		while(card12_1_a_materialType2_2PatternMatcher.find()){
+		while(card12_1_a_materialType2_2PatternMatcher !=null && card12_1_a_materialType2_2PatternMatcher.find()){
 			//Porosity, Permeability, BulkModuluesOfSolid, BulkModulusOfFluid; 			
 			String porosity = card12_1_a_materialType2_2PatternMatcher.group(1).trim();
 			String permeability = card12_1_a_materialType2_2PatternMatcher.group(2).trim();
@@ -460,7 +459,7 @@ public class PakCDatReaderLatest {
 			pakCdata.card12_1_a_materialType2_2.put(PakCData.Card12_1_a_materialType1_2.BulkModulusOfFluid.toString(), fluidBulkModulus);
 		}
 
-		while(card13PatternMatcher.find()){
+		while(card13PatternMatcher !=null && card13PatternMatcher.find()){
 			//	NTABFT, MAXTFT;			
 			String ntabft = 	card13PatternMatcher.group(1).trim();
 			String maxtft = 	card13PatternMatcher.group(2).trim();
@@ -468,7 +467,7 @@ public class PakCDatReaderLatest {
 			pakCdata.card13.put(PakCData.Card13.MAXTFT.toString(), maxtft);
 		}
 
-		while(card13_1_aPatternMatcher.find()){
+		while(card13_1_aPatternMatcher !=null && card13_1_aPatternMatcher.find()){
 			//	IBR, IMAX;	
 			String ibr = 	card13_1_aPatternMatcher.group(1).trim();
 			String imax = 	card13_1_aPatternMatcher.group(2).trim();
@@ -490,7 +489,7 @@ public class PakCDatReaderLatest {
             }
 		}
 
-		while(card14PatternMatcher.find()){
+		while(card14PatternMatcher !=null &&card14PatternMatcher.find()){
 			String numberOfForces = card14PatternMatcher.group(1).trim();
 			pakCdata.card14.put(PakCData.Card14Pattern.NumberOfForces.toString(), numberOfForces);
 		}
@@ -510,7 +509,7 @@ public class PakCDatReaderLatest {
 			pakCdata.card14_1.put(String.valueOf(count++), map);					
 		}
 
-		if(card16PatternMatcher.find())
+		if(card16PatternMatcher !=null && card16PatternMatcher.find())
 			System.out.println("Stop Card Found");
 
 		return pakCdata;

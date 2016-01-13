@@ -1,18 +1,22 @@
 package eu.sifem.mb.controller;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
+import eu.sifem.model.ColumnModel;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.FileUploadEvent;
@@ -22,7 +26,10 @@ import eu.sifem.mb.entitybean.LoadParametersEB;
 import eu.sifem.model.to.ParameterTO;
 import eu.sifem.service.ISimulationService;
 import eu.sifem.utils.BasicFileTools;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+
+import org.primefaces.event.CellEditEvent;
 
 /**
  * 
@@ -32,6 +39,44 @@ import java.io.IOException;
 @ManagedBean(name = "loadParametersController") 
 @ViewScoped
 public class LoadParametersController extends GenericMB{
+
+	public void onCellEdit(CellEditEvent event) {
+		Object oldValue = event.getOldValue();
+		Object newValue = event.getNewValue();
+		if(newValue != null && !newValue.equals(oldValue)) {
+			//System.out.println( "Cell Changed Old: " + oldValue + ", New:" + newValue);
+			StringWriter sw = new StringWriter();
+			CSVPrinter csvFilePrinter = null;
+			List<String> headers = new ArrayList<>();
+			for(ColumnModel c : columns){
+				headers.add(c.getProperty());
+			}
+			//csvFilePrinter.printRecord(headers);
+			String[] tmp = new String[headers.size()];
+			tmp = headers.toArray(tmp);
+			CSVFormat csvFileFormat = CSVFormat.EXCEL.withHeader(tmp);
+                        //csvFileFormat.withSkipHeaderRecord(true);
+			try {
+				csvFilePrinter = new CSVPrinter(sw, csvFileFormat);
+				for (Map<String,String> row : rows) {
+					List record = new ArrayList();
+					for(String header : headers){
+						record.add(row.get(header));
+					}
+                                        //System.err.println(" Record: " + record);
+					csvFilePrinter.printRecord(record);
+				}
+				csvFilePrinter.flush();
+				csvFilePrinter.close();
+				String newCsv = sw.toString().replace("\"","");
+				//logger.info(newCsv);
+				this.loadParametersTO.setAreaValue(newCsv);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 
 	private static final String UPLOAD = "apload";
 
@@ -55,7 +100,7 @@ public class LoadParametersController extends GenericMB{
 	private UploadedFile fileUpload;
 	
 	private Boolean renderUploaderView = Boolean.TRUE;
-	private Boolean renderTextAreaView = Boolean.TRUE;
+	private Boolean renderTextAreaView = Boolean.FALSE;
 	private Boolean renderLimitsValueView = Boolean.TRUE;
 	private Boolean renderUniqueValueInputText = Boolean.TRUE;
 	private Boolean renderFinalButtons = Boolean.TRUE;
@@ -94,11 +139,51 @@ public class LoadParametersController extends GenericMB{
 
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals("")!=true)
                         {
+                            renderTextAreaView = Boolean.TRUE;
+                            String headerlessText = "";
                             String areaText = getFileContents(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
-                            this.loadParametersTO.setAreaValue(areaText);
+
+                            File csvData = new File(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
+                            CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), CSVFormat.EXCEL.withHeader());
+                            logger.info(parser.getHeaderMap());
+
+        			rows = new ArrayList<>();
+				columns = new ArrayList<ColumnModel>();
+				for(String columnKey : parser.getHeaderMap().keySet()) {
+					columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
+				}
+
+                                
+                                int i = 1;
+                                //System.err.println(parser.getRecordNumber());
+
+				for (CSVRecord csvRecord : parser) {
+                                    Map<String,String> data = csvRecord.toMap();
+                                    String line = "";
+                                    for(String columnKey : parser.getHeaderMap().keySet())
+                                    {	
+                                        line += data.get(columnKey);
+                                        headerlessText += data.get(columnKey) + "   ";
+                                    }
+                                    System.err.println("i=" + i + "   NEWLINE " + line);
+                                    
+                                    //to be removed
+                                    headerlessText = headerlessText.substring(0, headerlessText.length()-1);
+                                    //System.err.println();
+                                    headerlessText += "\r\n";
+                                    rows.add(csvRecord.toMap());
+                                    i++;
+				}
+                                
+                            headerlessText = StringUtils.chomp(headerlessText);
+                            System.err.println(headerlessText);
+                            System.err.println("i= " + i);    
+                            this.loadParametersTO.setAreaValue(headerlessText);                                
                         }
-                        
-                        
+                        else
+                        {
+        			renderTextAreaView = Boolean.FALSE;
+			}
 			unBlockAllTabs();
 		} catch (Exception e) {
 			addExceptionMessage(e);
@@ -215,7 +300,7 @@ public class LoadParametersController extends GenericMB{
 	
 	private void unBlockAllTabs(){
 		renderUploaderView = Boolean.TRUE;
-		renderTextAreaView = Boolean.TRUE;
+		//renderTextAreaView = Boolean.TRUE;
 		renderLimitsValueView = Boolean.TRUE;
 		renderUniqueValueInputText = Boolean.TRUE;
 		renderFinalButtons = Boolean.TRUE;
@@ -337,12 +422,53 @@ public class LoadParametersController extends GenericMB{
 		this.loadParametersTO = loadParametersTO;
 	}
 
-        private String getFileContents(String defaultFile)
-        throws IOException
-        {
-            FileInputStream f = new FileInputStream(new File("/home/panos/Dropbox/assisting_files/" + defaultFile));
-            return (org.apache.commons.io.IOUtils.toString(f));
-        }
+	private String getFileContents(String defaultFile)
+	throws IOException
+	{
+		FileInputStream f = new FileInputStream(new File(defaultFile)); //"/home/panos/Dropbox/assisting_files/" +
+
+		return (org.apache.commons.io.IOUtils.toString(f));
+	}
 
 
+	/* Data table */
+
+	public List<ColumnModel> columns;
+
+	public List<ColumnModel> getColumns() {
+		return columns;
+	}
+
+	public List<Map<String,String>> rows;
+
+	public void setRows(List<Map<String,String>> rows) {
+		this.rows = rows;
+	}
+
+
+
+	public List<Map<String,String>> getRows() {
+
+		return this.rows;
+	}
+
+
+	static public class ColumnModel implements Serializable {
+
+		private String header;
+		private String property;
+
+		public ColumnModel(String header, String property) {
+			this.header = header;
+			this.property = property;
+		}
+
+		public String getHeader() {
+			return header;
+		}
+
+		public String getProperty() {
+			return property;
+		}
+	}
 }
