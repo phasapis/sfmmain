@@ -43,7 +43,9 @@
         return vars;
     }
 
-    if(getUrlVars()["model"]=="CochleaCoiledModel-WithLongitudinalCoupling"){
+    if(getUrlVars()["model"]=="HeadModel"){
+        window.location.href = '/Sifem/faces/resources/stl/HeadModel.html';
+    }else if(getUrlVars()["model"]=="CochleaCoiledModel-WithLongitudinalCoupling"){
         $('#main').html('<div id="c1" class="tile"></div><div id="c2" class="tile"></div><div id="c3" class="tile"></div><div id="c4" class="tile"></div>');
         var mad1 = new Madeleine({
             target: 'c1', // target div id
