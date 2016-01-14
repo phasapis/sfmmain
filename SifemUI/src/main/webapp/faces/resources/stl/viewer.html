@@ -9,74 +9,26 @@
     <script src="src/lib/three.min.js"></script>
     <script src="src/Madeleine.js"></script>
     <style type="text/css">
-
-        .theme {
-            text-align: center;
+        #main{
+            height: 80%;
+            width: 80%;
+        }
+        .tile {
+            margin: 0.9%;
+            width: 47.9%;
+            height: 47.9%;
+            float: left;
+            background: #DADADA;
         }
 
-        .themeButton {
-            padding: 0;
-            margin: 1px;
-            width: 150px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: 800;
-            line-height: 40px;
-            text-align: center;
-            background: #FFFFFF;
-            display: inline-block;
-            border: 1px solid #EFEFEF;
-        }
-
-        .light {
-            color: #DFDFDF;
-        }
-
-        .dark {
-            color: #000000;
-        }
-
-        .soft {
-            color: #FF9900;
-        }
-
-        .lime {
-            color: #D4FF00;
-        }
-
-        .rose {
-            color: #C94C66;
-        }
-
-        .lego {
-            color: #00A08C;
-        }
-
-        .toxic {
-            color: #5254CB;
-        }
-
-        .cobalt {
-            color: #0C6BC0;
-        }
     </style>
 </head>
 <body>
 <center>
+<div id="main">
 <div id="target" class="madeleine"></div>
-<!--<div class="theme">
-    <div class="themeButton light"  onclick="mad.adaptViewerTheme('light');">Light</div>
-    <div class="themeButton lime"   onclick="mad.adaptViewerTheme('lime');">Lime</div>
-    <div class="themeButton toxic"  onclick="mad.adaptViewerTheme('toxic');">Toxic</div>
-    <div class="themeButton lego"   onclick="mad.adaptViewerTheme('lego');">Lego</div>
-    <div class="themeButton cobalt" onclick="mad.adaptViewerTheme('cobalt');">Cobalt</div>
-    <div class="themeButton soft"   onclick="mad.adaptViewerTheme('soft');">Soft</div>
-    <div class="themeButton rose"   onclick="mad.adaptViewerTheme('rose');">Rose</div>
-    <div class="themeButton dark"   onclick="mad.adaptViewerTheme('dark');">Dark</div>
-</div>-->
+</div>
 </center>
-
 <script>
     function getUrlVars()
     {
@@ -91,21 +43,53 @@
         return vars;
     }
 
-    $.get( "/Sifem/rest/fetchMeshVisualization/typeForModel/"+getUrlVars()["model"], function( data ) {
-        if(data=="stl"){
-            var mad = new Madeleine({
-                target: 'target', // target div id
-                data:'/Sifem/rest/fetchMeshVisualization/stlForModel/'+getUrlVars()["model"],
-                path: './src',  // path to source directory from current html file
-                h:800,
-                w:800
-            });
-        }else if(data=="png"){
-            $('#target').html('<img id="modelViz" src=\'/Sifem/rest/fetchMeshVisualization/pngForModel/'+getUrlVars()["model"]+'\' />');
-        }else{
-            $('#target').html('<b>Model not available for preview !</b>');
-        }
-    })
+    if(getUrlVars()["model"]=="CochleaCoiledModel-WithLongitudinalCoupling"){
+        $('#main').html('<div id="c1" class="tile"></div><div id="c2" class="tile"></div><div id="c3" class="tile"></div><div id="c4" class="tile"></div>');
+        var mad1 = new Madeleine({
+            target: 'c1', // target div id
+            data:'/Sifem/rest/fetchMeshVisualization/stlForModel/parametricbasilar',
+            path: './src',  // path to source directory from current html file
+            h:500,
+            w:500
+        });
+        var mad2 = new Madeleine({
+            target: 'c2', // target div id
+            data:'/Sifem/rest/fetchMeshVisualization/stlForModel/parametricbone',
+            path: './src',  // path to source directory from current html file
+            h:500,
+            w:500
+        });
+        var mad3 = new Madeleine({
+            target: 'c3', // target div id
+            data:'/Sifem/rest/fetchMeshVisualization/stlForModel/parametricscalas',
+            path: './src',  // path to source directory from current html file
+            h:500,
+            w:500
+        });
+        var mad4 = new Madeleine({
+            target: 'c4', // target div id
+            data:'/Sifem/rest/fetchMeshVisualization/stlForModel/parametricvestibuli',
+            path: './src',  // path to source directory from current html file
+            h:500,
+            w:500
+        });
+    }else{
+        $.get( "/Sifem/rest/fetchMeshVisualization/typeForModel/"+getUrlVars()["model"], function( data ) {
+            if(data=="stl"){
+                var mad = new Madeleine({
+                    target: 'target', // target div id
+                    data:'/Sifem/rest/fetchMeshVisualization/stlForModel/'+getUrlVars()["model"],
+                    path: './src',  // path to source directory from current html file
+                    h:800,
+                    w:800
+                });
+            }else if(data=="png"){
+                $('#target').html('<img id="modelViz" src=\'/Sifem/rest/fetchMeshVisualization/pngForModel/'+getUrlVars()["model"]+'\' />');
+            }else{
+                $('#target').html('<b>Model not available for preview !</b>');
+            }
+        });
+    }
 
 </script>
 </body>
