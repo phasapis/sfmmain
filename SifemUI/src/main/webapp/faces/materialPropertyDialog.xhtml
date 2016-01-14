@@ -86,20 +86,26 @@
 					</p:panelGrid>
 				</p:tab>
 
-
-
-				<p:tab title="Insert Parameter Values" disabled="false"
-					closable="true" rendered="#{loadParametersController.renderTextAreaView}">
-					<!--<p:panelGrid id="paramValuesTextAreaTablegrid" columns="1"-->
-						<!--rendered="#{loadParametersController.renderTextAreaView}">-->
-						<!--<p:row id="textareaValueRowID">
+                            
+				<p:tab id="textbox1" title="Insert Parameter Values" 
+                                       closable="true" rendered="#{loadParametersController.showFileContents eq false}">
+					<p:panelGrid id="paramValuesTextAreaTablegrid" columns="1"
+						rendered="#{loadParametersController.showFileContents eq false}">
+						<p:row id="textareaValueRowID">
 							<p:column>
                                                            <p:scrollPanel style="width:700px;height:255px"> 
                                                             <p:inputTextarea id="textAreaValueID" value="#{loadParametersController.loadParametersTO.areaValue}" rows="30" cols="100">
 								</p:inputTextarea>
                                                            </p:scrollPanel>
 							</p:column>
-						</p:row>-->
+						</p:row>
+					</p:panelGrid>
+				</p:tab>                            
+
+
+				<p:tab id="filecontents" title="Insert Parameter Values" disabled="false"
+					closable="true"  rendered="#{loadParametersController.showFileContents eq true}">
+
 					<p:contextMenu for="paramsTable" widgetVar="cMenu">
 						<p:menuitem value="Edit Cell" icon="ui-icon-search" onclick="PF('paramsTable').showCellEditor();return false;"/>
 						<p:menuitem value="Hide Menu" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>

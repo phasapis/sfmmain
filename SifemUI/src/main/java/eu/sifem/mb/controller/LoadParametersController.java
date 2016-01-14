@@ -4,20 +4,14 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-
-import eu.sifem.model.ColumnModel;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang.StringUtils;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -103,6 +97,7 @@ public class LoadParametersController extends GenericMB{
 	private Boolean renderTextAreaView = Boolean.FALSE;
 	private Boolean renderLimitsValueView = Boolean.TRUE;
 	private Boolean renderUniqueValueInputText = Boolean.TRUE;
+        private Boolean showFileContents   = Boolean.FALSE;
 	private Boolean renderFinalButtons = Boolean.TRUE;
 	
 	@ManagedProperty(value="#{simulationService}")
@@ -130,13 +125,23 @@ public class LoadParametersController extends GenericMB{
 	public void ajaxBehaviorParamComboChanged() {
 		try {
 			this.loadParametersTO = getParameterTOFromSessionByName(getComboBoxParamNameValue());
-
+                        this.showFileContents = Boolean.FALSE;
+                        
                         System.err.println(" --- " + getComboBoxParamNameValue());
-                        System.err.println(" ---- " + this.loadParametersDefaultValues.get(getComboBoxParamNameValue()));
+                        System.err.println(" ---- " + this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
                         
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getParameterUniqueValue().equals("")!=true)
                             this.loadParametersTO.setParameterUniqueValue(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getParameterUniqueValue());
 
+                            System.err.println(" filecontents " + showFileContents + " " + this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals(""));
+                        
+                        if(!this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals(""))
+                        {
+                            showFileContents = Boolean.TRUE;
+                            System.err.println(" filecontents " + showFileContents);
+                            
+                        }
+                        
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals("")!=true)
                         {
                             renderTextAreaView = Boolean.TRUE;
@@ -306,6 +311,14 @@ public class LoadParametersController extends GenericMB{
 		renderFinalButtons = Boolean.TRUE;
 		return;
 	}
+
+        public Boolean getShowFileContents() {
+            return showFileContents;
+        }
+
+        public void setShowFileContents(Boolean showFileContents) {
+            this.showFileContents = showFileContents;
+        }
 	
 	private ParameterTO getParameterTOFromSessionByName(String name){
 		ParameterTO selectedParam = new ParameterTO(name); 
