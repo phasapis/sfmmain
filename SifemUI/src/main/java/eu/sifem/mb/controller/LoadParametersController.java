@@ -34,7 +34,44 @@ import org.primefaces.event.CellEditEvent;
 @ViewScoped
 public class LoadParametersController extends GenericMB{
 
-	public void onCellEdit(CellEditEvent event) {
+
+
+	private static final String UPLOAD = "apload";
+
+	private static final String AREA = "area";
+
+	private static final String INCREMENT = "increment";
+
+	private static final String UNIQUE = "unique";
+
+	private static final long serialVersionUID = -8702564978402821144L;
+
+	private Map<String,String> loadParametersType = new TreeMap<String,String>();
+
+	private Map<String,ParameterTO> loadParametersDefaultValues = new TreeMap<String,ParameterTO>();
+                
+	@ManagedProperty(value="#{loadParametersEB}")
+	private LoadParametersEB loadParametersEB;
+	
+	private ParameterTO loadParametersTO = new ParameterTO();
+	
+	private UploadedFile fileUpload;
+
+	private String measurementUnitString = new String("");
+                
+	private Boolean renderUploaderView = Boolean.TRUE;
+	private Boolean renderTextAreaView = Boolean.FALSE;
+	private Boolean renderLimitsValueView = Boolean.TRUE;
+	private Boolean renderUniqueValueInputText = Boolean.TRUE;
+        private Boolean showFileContents   = Boolean.FALSE;
+        private Boolean hasMeasurementUnit = Boolean.FALSE;
+	private Boolean renderFinalButtons = Boolean.TRUE;
+
+	@ManagedProperty(value="#{simulationService}")
+	private ISimulationService simulationService;
+
+	public void onCellEdit(CellEditEvent event)
+        {
 		Object oldValue = event.getOldValue();
 		Object newValue = event.getNewValue();
 		if(newValue != null && !newValue.equals(oldValue)) {
@@ -70,40 +107,7 @@ public class LoadParametersController extends GenericMB{
 			}
 		}
 	}
-
-
-	private static final String UPLOAD = "apload";
-
-	private static final String AREA = "area";
-
-	private static final String INCREMENT = "increment";
-
-	private static final String UNIQUE = "unique";
-
-	private static final long serialVersionUID = -8702564978402821144L;
-
-	private Map<String,String> loadParametersType = new TreeMap<String,String>();
-
-	private Map<String,ParameterTO> loadParametersDefaultValues = new TreeMap<String,ParameterTO>();
-                
-	@ManagedProperty(value="#{loadParametersEB}")
-	private LoadParametersEB loadParametersEB;
-	
-	private ParameterTO loadParametersTO = new ParameterTO();
-	
-	private UploadedFile fileUpload;
-	
-	private Boolean renderUploaderView = Boolean.TRUE;
-	private Boolean renderTextAreaView = Boolean.FALSE;
-	private Boolean renderLimitsValueView = Boolean.TRUE;
-	private Boolean renderUniqueValueInputText = Boolean.TRUE;
-        private Boolean showFileContents   = Boolean.FALSE;
-	private Boolean renderFinalButtons = Boolean.TRUE;
-	
-	@ManagedProperty(value="#{simulationService}")
-	private ISimulationService simulationService;
-
-	
+        
 	public void fileUploadListener(FileUploadEvent event){
 		try {
 			fileUpload=event.getFile();
@@ -126,6 +130,8 @@ public class LoadParametersController extends GenericMB{
 		try {
 			this.loadParametersTO = getParameterTOFromSessionByName(getComboBoxParamNameValue());
                         this.showFileContents = Boolean.FALSE;
+                        this.hasMeasurementUnit = Boolean.FALSE;
+                        this.measurementUnitString = new String("");                        
                         
                         System.err.println(" --- " + getComboBoxParamNameValue());
                         System.err.println(" ---- " + this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile());
@@ -133,7 +139,7 @@ public class LoadParametersController extends GenericMB{
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getParameterUniqueValue().equals("")!=true)
                             this.loadParametersTO.setParameterUniqueValue(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getParameterUniqueValue());
 
-                            System.err.println(" filecontents " + showFileContents + " " + this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals(""));
+                        System.err.println(" filecontents " + showFileContents + " " + this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals(""));
                         
                         if(!this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals(""))
                         {
@@ -141,6 +147,14 @@ public class LoadParametersController extends GenericMB{
                             System.err.println(" filecontents " + showFileContents);
                             
                         }
+
+                        if(!this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getMeasurementUnit().equals(""))
+                        {
+                           hasMeasurementUnit = Boolean.TRUE;
+                           measurementUnitString = this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getMeasurementUnit();
+                           System.err.println(" unit " + measurementUnitString);                           
+                        }
+                        
                         
                         if(this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals("")!=true)
                         {
@@ -168,7 +182,8 @@ public class LoadParametersController extends GenericMB{
                                     for(String columnKey : parser.getHeaderMap().keySet())
                                     {	
                                         line += data.get(columnKey);
-                                        headerlessText += data.get(columnKey) + "   ";
+                                        //headerlessText += data.get(columnKey) + "   ";
+                                        headerlessText += data.get(columnKey) + " ";
                                     }
                                     System.err.println("i=" + i + "   NEWLINE " + line);
                                     
@@ -484,4 +499,21 @@ public class LoadParametersController extends GenericMB{
 			return property;
 		}
 	}
+        
+        public Boolean getHasMeasurementUnit() {
+            return hasMeasurementUnit;
+        }
+
+        public void setHasMeasurementUnit(Boolean hasMeasurementUnit) {
+            this.hasMeasurementUnit = hasMeasurementUnit;
+        }        
+
+        public String getMeasurementUnitString() {
+            return measurementUnitString;
+        }
+
+        public void setMeasurementUnitString(String measurementUnitString) {
+            this.measurementUnitString = measurementUnitString;
+        }
+                
 }

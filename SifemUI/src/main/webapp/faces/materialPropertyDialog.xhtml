@@ -17,7 +17,7 @@
 				activeIndex="0,1,2,3" multiple="true" dynamic="true">
 
 				<p:tab title="Choose Parameter" closable="false">
-					<p:panelGrid id="paramTablegrid" columns="6">
+					<p:panelGrid id="paramTablegrid" columns="4">
 						<p:row id="paramsRowID">
 							<p:column rowspan="20" colspan="20">
 								<p:selectOneMenu id="loadParametersComboBox" >
@@ -33,7 +33,13 @@
                                                                 <p:inputText value="#{loadParametersController.loadParametersTO.parameterUniqueValue}" rendered="true"></p:inputText>
 							</p:column>
 						</p:row>
-						
+
+                                                <p:row id="mesunit" rendered="#{loadParametersController.hasMeasurementUnit}">
+                                                    <p:column rowspan="20" colspan="20">
+                                                        <p:outputLabel value="#{loadParametersController.measurementUnitString}"></p:outputLabel>
+                                                    </p:column>                                                
+                                                </p:row>
+                                                                                        
 						<p:row id="finalbuttonsRowID" rendered="#{loadParametersController.renderFinalButtons}">
 							<p:column rowspan="20" colspan="20">
 								<p:commandButton ajax="true" value="Cancel"
@@ -48,7 +54,7 @@
 									icon="ui-icon-check"></p:commandButton>
 							</p:column>
 						</p:row>
-						
+
 					</p:panelGrid>
 				</p:tab>
 

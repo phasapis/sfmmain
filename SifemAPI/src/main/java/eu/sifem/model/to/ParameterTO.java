@@ -60,6 +60,8 @@ public class ParameterTO implements Comparable,AbstractTO{
 	private String incrementalIncrementValue;
 
 	private String defaultFile = new String("");
+        
+        private String measurementUnit = new String("");
                 
 	private InputStream parameterFile;
 	
@@ -191,6 +193,16 @@ public class ParameterTO implements Comparable,AbstractTO{
 	public void setSimulation(String simulation) {
 		this.simulation = simulation;
 	}
+
+        public String getMeasurementUnit() {
+            return measurementUnit;
+        }
+
+        public void setMeasurementUnit(String measurementUnit) {
+            this.measurementUnit = measurementUnit;
+        }
+
+
 
 	@Override
 	public int compareTo(Object o) {
