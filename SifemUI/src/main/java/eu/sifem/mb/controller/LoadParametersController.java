@@ -144,15 +144,14 @@ public class LoadParametersController extends GenericMB{
                         if(!this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getDefaultFile().equals(""))
                         {
                             showFileContents = Boolean.TRUE;
-                            System.err.println(" filecontents " + showFileContents);
-                            
+                            //System.err.println(" filecontents " + showFileContents);                            
                         }
 
                         if(!this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getMeasurementUnit().equals(""))
                         {
                            hasMeasurementUnit = Boolean.TRUE;
                            measurementUnitString = this.loadParametersDefaultValues.get(getComboBoxParamNameValue()).getMeasurementUnit();
-                           System.err.println(" unit " + measurementUnitString);                           
+                           //System.err.println(" unit " + measurementUnitString);
                         }
                         
                         
@@ -185,7 +184,7 @@ public class LoadParametersController extends GenericMB{
                                         //headerlessText += data.get(columnKey) + "   ";
                                         headerlessText += data.get(columnKey) + " ";
                                     }
-                                    System.err.println("i=" + i + "   NEWLINE " + line);
+                                    //System.err.println("i=" + i + "   NEWLINE " + line);
                                     
                                     //to be removed
                                     headerlessText = headerlessText.substring(0, headerlessText.length()-1);
@@ -196,8 +195,8 @@ public class LoadParametersController extends GenericMB{
 				}
                                 
                             headerlessText = StringUtils.chomp(headerlessText);
-                            System.err.println(headerlessText);
-                            System.err.println("i= " + i);    
+                            //System.err.println(headerlessText);
+                            //System.err.println("i= " + i);    
                             this.loadParametersTO.setAreaValue(headerlessText);                                
                         }
                         else
@@ -265,7 +264,7 @@ public class LoadParametersController extends GenericMB{
 			addExceptionMessage(e);
 		}
 	}
-	
+
 	private String getComboBoxParamNameValue() {
 		UIComponent loadParameters = findComponent(PARAMETER_NAME_COMBOBOX);
 		org.primefaces.component.selectonemenu.SelectOneMenu selectOneMenuLoadparameters = (SelectOneMenu) loadParameters;
