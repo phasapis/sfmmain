@@ -1284,7 +1284,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                 Boolean isDensityFilled = Boolean.FALSE;
 		Boolean isExternalparametersFilled = Boolean.FALSE;
 		Boolean isBasilarMembraneFiled = Boolean.FALSE;
-                Boolean isAnalysisFilled = Boolean.FALSE;
+                //Boolean isAnalysisFilled = Boolean.FALSE;
                 
 		Map<String,CombinationHelper> combinationMap = new TreeMap<String,CombinationHelper>();
 		
@@ -1459,22 +1459,22 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 			//BASILAR MEMRBANE PART
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
-			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.BASILARMEMMBRANE.getName())){
-				if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.BASILARMEMMBRANE)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILARMEMMBRANE).getId()).isEmpty()){
-					if(mapCount.get(ParameterTypes.BASILARMEMMBRANE).equals(BigDecimal.ZERO.intValue())){
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.BASILAR_MEMBRANE_L.getName())){
+				if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_L)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_L).getId()).isEmpty()){
+					if(mapCount.get(ParameterTypes.BASILAR_MEMBRANE_L).equals(BigDecimal.ZERO.intValue())){
 						sb.append(paramHeader);
-						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILARMEMMBRANE).getId());
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_L).getId());
 						if(valueList!=null){
 							sb.append(Util.removeListKeysFromString(valueList.toString()));
 							isBasilarMembraneFiled = Boolean.TRUE;										
 						}
 					}
-					mapCount.put(ParameterTypes.BASILARMEMMBRANE, BigDecimal.ONE.intValue());
+					mapCount.put(ParameterTypes.BASILAR_MEMBRANE_L, BigDecimal.ONE.intValue());
 				}
 
 			}                        
 			sb.append("\n");                        
-
+                        /*
 			//ANALYSIS PARAMETERS 
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
@@ -1508,7 +1508,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 				}
 			}
                         System.err.println("3 -- " + sb.toString());
-
+                        */
 			//DENSITY PARAMETERS
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
@@ -1544,7 +1544,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                         
 			System.out.println("Before test: "+sb.toString().trim());                        
 			Boolean isAllParametersFilled = isMeshDivisionFilled && isGeometryFilled && isLoadParametersFilled &&
-					isMaterialPropertyFilled && isDensityFilled &&isSolidFilled && isRoundWindowFiled && isBasilarMembraneFiled && isAnalysisFilled; // && isExternalparametersFilled;
+					isMaterialPropertyFilled && isDensityFilled &&isSolidFilled && isRoundWindowFiled && isBasilarMembraneFiled; // && isExternalparametersFilled;
                         
                         System.err.println("allParams -- " + sb.toString());
 
