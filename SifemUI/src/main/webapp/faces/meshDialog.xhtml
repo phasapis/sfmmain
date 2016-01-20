@@ -25,7 +25,8 @@
 								<f:selectItem itemLabel="Select a Mesh Default" itemValue="" />
 								<f:selectItems value="#{meshSetupController.meshDefaults}" />
 								<p:ajax update="meshGriid"
-									listener="#{meshSetupController.handleMeshSelectedDefaultChange}" />
+									listener="#{meshSetupController.handleMeshSelectedDefaultChange}" /> <!-- :materialPropertyForm:accordionParamslID:loadParametersComboBox-->
+								<p:ajax listener="#{loadParametersController.updateParameters}"  update=":materialPropertyForm:accordionParamslID" />
 							</p:selectOneMenu>
 						</p:column>
 						<p:column rendered="#{meshSetupController.uploadMesh eq false}">

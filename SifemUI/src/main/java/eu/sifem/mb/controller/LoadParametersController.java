@@ -1,29 +1,29 @@
 package eu.sifem.mb.controller;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.*;
+import eu.sifem.mb.entitybean.LoadParametersEB;
+import eu.sifem.model.to.ParameterTO;
+import eu.sifem.service.ISimulationService;
+import eu.sifem.utils.BasicFileTools;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
-import org.primefaces.component.selectonemenu.SelectOneMenu;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
-
-import eu.sifem.mb.entitybean.LoadParametersEB;
-import eu.sifem.model.to.ParameterTO;
-import eu.sifem.service.ISimulationService;
-import eu.sifem.utils.BasicFileTools;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.primefaces.event.CellEditEvent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * 
@@ -69,6 +69,15 @@ public class LoadParametersController extends GenericMB{
 
 	@ManagedProperty(value="#{simulationService}")
 	private ISimulationService simulationService;
+
+
+	// paramsForMesh, filtering symfwna me to name field
+	static Map<String,List<String>> paramsForMesh = new HashMap<>();
+	static {
+		paramsForMesh.put("Middle Ear Model",Arrays.asList("Tympanic Membrane Function"));
+		paramsForMesh.put("Head Model",Arrays.asList("Material 1", "Material 2"));
+	}
+
 
 	public void onCellEdit(CellEditEvent event)
         {
@@ -227,8 +236,9 @@ public class LoadParametersController extends GenericMB{
 			String name = getComboBoxParamNameValue();
 			this.loadParametersTO.setId(id);
 			this.loadParametersTO.setName(name);
-			
+			logger.info("++++ saveAllActionListener +++");
 			loadParametersEB.getLoadParametersTOList().add(this.loadParametersTO);
+			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("paramsToRes", this.loadParametersTO);
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
@@ -365,17 +375,50 @@ public class LoadParametersController extends GenericMB{
 		this.loadParametersEB = loadParametersEB;
 	}
 
+	public ArrayList<ParameterTO> filterParamsBySelectedMesh(List<ParameterTO> lstOfParams){
+		ArrayList<ParameterTO> newParams = new ArrayList<>();
+		try {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+			String meshSelectedDefault = (String)session.getAttribute("meshSelectedDefault");
+			if (meshSelectedDefault != null) {
+				for (ParameterTO parameterTO : lstOfParams) {
+					String name = parameterTO.getName();
+					if (paramsForMesh.get(meshSelectedDefault).contains(name)){
+						newParams.add(parameterTO);
+					}
+				}
+			}
+
+			if (newParams.size() > 0) return newParams;
+		}catch (NullPointerException e){
+		}
+
+
+		newParams.addAll(lstOfParams);
+		return newParams;
+	}
+
+
+	public void updateParameters (AjaxBehaviorEvent event) {
+		FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("materialPropertyForm:accordionParamslID");
+
+	}
+
+
 	public Map<String, String> getLoadParametersType() {
 		try {
+			this.loadParametersType.clear();
 			List<ParameterTO> lstOfParams = simulationService.findAllParametersService();
                         
-                        for(int i=0;i<lstOfParams.size();i++)
-                        {
-                            ParameterTO p = lstOfParams.get(i);
-                            System.out.println("--- " + p.getAreaValue() + " " + p.getId() + " " + p.getSimulation() + " " + p.getName() + " " + p.getShowAsMaterial());
-                        }
-                        
-			for (ParameterTO parameterTO : lstOfParams) {
+//                        for(int i=0;i<lstOfParams.size();i++)
+//                        {
+//                            ParameterTO p = lstOfParams.get(i);
+//                            System.out.println("--- " + p.getAreaValue() + " " + p.getId() + " " + p.getSimulation() + " " + p.getName() + " " + p.getShowAsMaterial());
+//                        }
+
+
+			for (ParameterTO parameterTO : filterParamsBySelectedMesh(lstOfParams)) {
                                 /*System.err.println("--- " + (parameterTO.getAreaValue()==null) +
                                                    " \n" + (parameterTO.getShowAsMaterial()==null) );
 				if(!parameterTO.getShowAsMaterial()){

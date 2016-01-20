@@ -1,24 +1,21 @@
 package eu.sifem.mb.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-
-import org.primefaces.model.UploadedFile;
-
 import eu.sifem.mb.entitybean.GeometrySetupEB;
 import eu.sifem.mb.entitybean.MeshSetupEB;
 import eu.sifem.model.to.GeometrySetupTO;
 import eu.sifem.model.to.MeshSetupTO;
 import eu.sifem.service.IMeshService;
-import eu.sifem.service.dao.IMeshSetupDAOService;
-import javax.faces.bean.SessionScoped;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.primefaces.model.UploadedFile;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -63,12 +60,19 @@ public class MeshSetupController extends GenericMB
 	private UploadedFile meshUploadedFile;
 	
 	private Boolean uploadMesh = Boolean.FALSE;
+
 	
 
 
 	public void handleMeshSelectedDefaultChange() {
 		
                 populateMeshWithBIORCDefault();
+
+
+		//save to session
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+		session.setAttribute("meshSelectedDefault", this.meshSelectedDefault);
                 /*
                 try {
 			if(BIO_IRC_BOX_MODEL.equalsIgnoreCase(meshSelectedDefault)){
