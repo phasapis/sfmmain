@@ -30,43 +30,18 @@ http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 
 	<context:property-placeholder
 		location="classpath:SifemLinuxPathResource.properties" />
-<!--
-	<bean id="virtDataset" class="virtuoso.jena.driver.VirtDataset"
-		name="virtDataset">
-		<constructor-arg type="java.lang.String"
-			value="jdbc:virtuoso://localhost:1111/" />
-		<constructor-arg type="java.lang.String" value="dba" />
-		<constructor-arg type="java.lang.String" value="dba" />
-	</bean>
-
-	<mongo:db-factory id="mongoDbFactory" host="localhost"
-		port="27017" dbname="sifem" />
-
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg ref="mongoDbFactory" />
-	</bean>
-
-	<mongo:mapping-converter id="converter"
-		db-factory-ref="mongoDbFactory" />
-
-	<bean name="gridFsTemplate"
-		class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
-		<constructor-arg ref="mongoDbFactory" />
-		<constructor-arg ref="converter" />
-	</bean>
--->
 
 	<bean id="virtDataset" class="virtuoso.jena.driver.VirtDataset"
 		name="virtDataset">
 		<constructor-arg type="java.lang.String"
-			value="jdbc:virtuoso://192.168.3.12:1111/" />
+			value="jdbc:virtuoso://127.0.0.1:1111/" />
 		<constructor-arg type="java.lang.String" value="dba" />
 		<constructor-arg type="java.lang.String" value="dba" />
 	</bean>
 
 	<!-- Mongo config 140.203.155.215 -->
-	<mongo:db-factory id="mongoDbFactory" host="192.168.3.13"
-		port="27017" dbname="sifem" username="deri" password="n1kon,c@mera" />
+	<mongo:db-factory id="mongoDbFactory" host="127.0.0.1"
+		port="27017" dbname="sifem" />
 
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg ref="mongoDbFactory" />
@@ -98,7 +73,7 @@ http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 		<property name="runProcessQueueEnt" value="${RUN_PROCESS_QUEUE_ENT}" />
 	</bean>
 
-	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" p:brokerURL="tcp://127.0.0.1:61616" />
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" p:brokerURL="tcp://213.249.38.66:61617" />
 
 	<bean id="simulationRunnableListener" class="eu.sifem.simulation.async.SimulationRunnableListener" />
 	<jms:listener-container container-type="default" connection-factory="connectionFactory" acknowledge="auto">

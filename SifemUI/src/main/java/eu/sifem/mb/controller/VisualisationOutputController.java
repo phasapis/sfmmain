@@ -37,6 +37,7 @@ import eu.sifem.model.to.ImageLocationTO;
 import eu.sifem.model.to.ParameterTO;
 import eu.sifem.model.to.PlyConverterTO;
 import eu.sifem.model.to.ProjectSimulationTO;
+import eu.sifem.model.to.SessionIndexTO;
 import eu.sifem.model.to.TransformationTO;
 import eu.sifem.model.to.ViewTO;
 import eu.sifem.service.IFeatureExtractorService;
@@ -777,16 +778,28 @@ public class VisualisationOutputController extends GenericMB {
 	}
 
 	private String getShinyHostNameAndParameters(){
-		String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
+		//String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
 		//String selectedSolverName = solverSetupEB.getSolverTO().getName();
-		String projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();
+		SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
+		
+		
+		StringBuilder sb = new StringBuilder();
+		List<String> projidList = sessionIndexTO.getProjectIdList();
+		int count = 1;
+		for(String projId : projidList){
+			sb.append("&id_"+count+"=");
+			sb.append(projId);
+			count++;
+		}
 		
                 
 		//TODO FIXME - After tests, we need to use the commented version in place of the version with fixed project and simulation name, below.
 
-		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()
-				+"?interpretationHostName="+resourceInjectionService.getApplicationServerURL()+
-				"&workspacePath=NULL&getProjectName="+projectName+"&simulationName="+simulationName+"".trim();
+//		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()
+//				+"?interpretationHostName="+resourceInjectionService.getApplicationServerURL()+
+//				"&workspacePath=NULL&getProjectName="+projectName+"&simulationName="+simulationName+"".trim();
+		
+		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()+"?interpretationHostName="+resourceInjectionService.getApplicationServerURL()+sb.toString().trim();
                    
                 
 /*                

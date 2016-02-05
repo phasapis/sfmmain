@@ -15,6 +15,8 @@ import java.util.TreeMap;
 public class ProjectSimulationTO implements AbstractTO{
 
 	private static final long serialVersionUID = 7643849882106237799L;
+	
+	private String id;
 
 	private String projectName;
 	
@@ -90,6 +92,15 @@ public class ProjectSimulationTO implements AbstractTO{
 	public void setInstanceFiles(Map<Integer, Map<String, File>> instanceFiles) {
 		this.instanceFiles = instanceFiles;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 
 	
 

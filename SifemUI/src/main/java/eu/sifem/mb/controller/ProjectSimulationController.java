@@ -11,6 +11,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import org.bson.types.ObjectId;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -175,11 +177,11 @@ public class ProjectSimulationController extends GenericMB {
 //				workspaceLocation = "/usr/local/SifemResourceFiles/workspace/TheOne/";
 				
 				//File workspaceFile = new File(workspaceLocation);
-				ProjectSimulationTO simulation = simulationService.findByNameService(projectName);
-				
-				if(simulation==null){
-					
-				}
+//				ProjectSimulationTO simulation = simulationService.findByNameService(projectName);
+//				
+//				if(simulation==null){
+//					
+//				}
 				transformationEB.getTransformationTO().setProjectName(projectName);
 				List<TransformationTO> transformations = transformation.findAllByProjectNameService(projectName);
 				ProjectSimulationTO projectSimulationTO  = new ProjectSimulationTO();
@@ -477,6 +479,15 @@ public class ProjectSimulationController extends GenericMB {
 					for(String parameter:to.getParameters()){
 						paramsList.put(parameter,parameter);
 					}
+				}
+				if(to!=null && to.get_id()!=null){
+					SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
+					if(sessionIndexTO==null){
+						sessionIndexTO = new SessionIndexTO();
+					}
+					String id = ((ObjectId) to.get_id()).toString();
+					sessionIndexTO.getProjectIdList().add(id);
+					getSession().setAttribute(CONFIG_SESSION_OBJ, sessionIndexTO);
 				}
 			}
 	//TODO insertcode here
