@@ -641,6 +641,9 @@ public class PakSparulRDFMapper implements IPakRDFMapperService {
 			yCoordinate = String.valueOf(round(Double.parseDouble(yCoordinate), roundOffDecimalPlaces));			
 			nodeResourceProps.put(FemOntology.Property.DataProperty.hasYCoordinate, "\""+new Util().convertNoNumberToNumber(yCoordinate)+"\"^^xsd:double");		
 			String zCoordinate = card7Map.get(PakCData.Card7.CORD3NZ.toString()).trim();
+                        //System.err.println(" -- y(after)=" + yCoordinate + "  z(before)=" + zCoordinate);
+                        
+                        //zCoordinate = zCoordinate.split("-")[0];
 			zCoordinate = String.valueOf(round(Double.parseDouble(zCoordinate), roundOffDecimalPlaces));			
 			nodeResourceProps.put(FemOntology.Property.DataProperty.hasZCoordinate, "\""+new Util().convertNoNumberToNumber(zCoordinate)+"\"^^xsd:double" );			
 

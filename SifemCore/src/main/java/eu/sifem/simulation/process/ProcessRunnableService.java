@@ -192,8 +192,10 @@ public class ProcessRunnableService implements IProcessRunnableService {
                 System.out.println("http://"+vmIp+":8080/SolverInterface/webresources/solver/cad/init" + "/" + commandLineArgument +"/"+ session );
                 Request.Get("http://"+vmIp+":8080/SolverInterface/webresources/solver/cad/init" + "/" + commandLineArgument +"/"+ session ).execute();
 
-                subscribeWithTopicLookup(session);            
-                System.out.println(" -------------- Done");
+                subscribeWithTopicLookup(session);
+                this.messageReceived = false;
+                
+                System.out.println(" -------------- Done  " + "http://"+vmIp+":8080/SolverInterface/webresources/accessResults/simulation/headmodel/" + session);
                 String responseContentStr = Request.Get("http://"+vmIp+":8080/SolverInterface/webresources/accessResults/simulation/headmodel/" + session)
                     .execute().returnContent().asString();            
                 System.out.println(" -------------- Done");

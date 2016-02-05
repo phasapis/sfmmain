@@ -520,7 +520,7 @@ public class PakCDatReaderLatest {
 		PakCDatReaderLatest pakCReader = new PakCDatReaderLatest();
 		//String pakCfilePath = "src/main/resources/PAK/Pak.dat";
 //		String pakCfilePath = "/home/panos/Desktop/TaperedLIUPak.dat";
-		String pakCfilePath = "/media/panos/USB/Cochlea Box Model Longitudinal Coupling/out/Pak.dat";
+		String pakCfilePath = "/home/panos/Downloads/sifem_outdata/Cochlea Box Model Longitudinal Coupling/out/Pak.dat";
 		
 		
 		PakCData pakCData1 = pakCReader.read(pakCfilePath);

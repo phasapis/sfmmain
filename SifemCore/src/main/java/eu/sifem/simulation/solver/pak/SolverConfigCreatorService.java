@@ -1474,42 +1474,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 
 			}                        
 			sb.append("\n");                        
-                        /*
-			//ANALYSIS PARAMETERS 
-			++count;
-			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
-			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.ANALYSIS.getName())){
-				if(mapCount.get(ParameterTypes.ANALYSIS).equals(BigDecimal.ZERO.intValue())){
-					sb.append(paramHeader);
-					
-					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS).getId()).isEmpty()){
-						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS).getId());
-						String valueStr = NA;
-						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS).getId());
-						int currentIndex = 0;
-							if(ch!=null && ch.getCurrentIndex()!=null){
-								currentIndex = ch.getCurrentIndex();						
-							}
-							if(!valueList.isEmpty()){
-								valueStr = valueList.get(currentIndex);
-								if(ch!=null && ch.getCurrentIndex()!=null){
-									ch.setCurrentIndex(++currentIndex);						
-								}
-							}
-                                                        
-							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr + "\r\n");
-							}
-                                                                
-						isAnalysisFilled = Boolean.TRUE;		
-					}
-		
-					mapCount.put(ParameterTypes.ANALYSIS, BigDecimal.ONE.intValue());
-				}
-			}
-                        System.err.println("3 -- " + sb.toString());
-                        */
-			//DENSITY PARAMETERS
+                        
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
 			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.DENSITY.getName())){

@@ -76,6 +76,13 @@ public class LoadParametersController extends GenericMB{
 	static {
 		paramsForMesh.put("Middle Ear Model",Arrays.asList("Tympanic Membrane Function"));
 		paramsForMesh.put("Head Model",Arrays.asList("Material 1", "Material 2"));
+                paramsForMesh.put("Cochlea Tapered Model UCL",Arrays.asList("Frequency", "Conduction Type", "Fluid", "Solid", "RW Window", "Basilar Membrane", "Analysis Type"));
+                paramsForMesh.put("Cochlea Box Model Longitudinal Coupling",Arrays.asList("Frequency",  "Fluid", "Youngs Modulus", "Damping", "External"));
+                paramsForMesh.put("Cochlea Coiled Model Longitudinal Coupling",Arrays.asList("Frequency",  "Fluid", "Youngs Modulus", "Damping Multiplier", "Damping", "Function"));
+                paramsForMesh.put("Cochlea Tapered Model LIU",Arrays.asList("Frequency", "Conduction Type", "Fluid", "Solid", "RW Window", "Basilar Membrane L", "Density Damping Ratio"));                
+                paramsForMesh.put("Cochlea Slice Model 1",Arrays.asList("Prescribe Pressure", "Prescribe Force", "Slice Frequency", "Materials", "Analysis Type"));
+                paramsForMesh.put("Cochlea Slice Model 2",Arrays.asList("Prescribe Pressure", "Prescribe Force", "Slice Frequency", "Materials", "Analysis Type"));
+                paramsForMesh.put("Cochlea Slice Model 3",Arrays.asList("Prescribe Pressure", "Prescribe Force", "Slice Frequency", "Materials", "Analysis Type"));                
 	}
 
 
