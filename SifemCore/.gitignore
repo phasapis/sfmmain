@@ -1,3 +1,5 @@
 /target/
 /log.txt
 /test-output/
+/.classpath
+/nbactions.xml
