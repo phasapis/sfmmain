@@ -107,6 +107,8 @@ public class ProjectSimulationController extends GenericMB {
 	@ManagedProperty(value="#{visualisationOutputEB}")
 	private VisualisationOutputEB visualisationOutputEB;
 	
+	private List<String> existentProjectIDList = new ArrayList<String>();
+	
 	
 	private Map<String, String> paramsList = new TreeMap<String, String>();
 	
@@ -133,11 +135,12 @@ public class ProjectSimulationController extends GenericMB {
 					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
 					if (ProjectSimulationTOObj != null && ProjectSimulationTOObj instanceof ProjectSimulationEB) {
 						((ProjectSimulationEB)ProjectSimulationTOObj).setProjectSimulationTO(new ProjectSimulationTO());
+						fillListOfParams();	//
 						putSessionBean("projectSimulationEB",ProjectSimulationTOObj);
 						
 					}
 				}
-				fillListOfParams();	
+				//fillListOfParams();	
 			}
 
 		} catch (Exception e) {
@@ -481,13 +484,15 @@ public class ProjectSimulationController extends GenericMB {
 					}
 				}
 				if(to!=null && to.get_id()!=null){
-					SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
-					if(sessionIndexTO==null){
-						sessionIndexTO = new SessionIndexTO();
-					}
-					String id = ((ObjectId) to.get_id()).toString();
-					sessionIndexTO.getProjectIdList().add(id);
-					getSession().setAttribute(CONFIG_SESSION_OBJ, sessionIndexTO);
+					//SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
+//					if(sessionIndexTO==null){
+//						sessionIndexTO = new SessionIndexTO();
+//					}
+					//String id = ((ObjectId) to.get_id()).toString();
+					this.projectSimulationEB.getProjectSimulationTO().getTransformations().add(new TransformationTO(to.get_id()));
+//					sessionIndexTO.getProjectIdList().add(id);
+//					getSession().setAttribute(CONFIG_SESSION_OBJ, sessionIndexTO);
+					
 				}
 			}
 	//TODO insertcode here
@@ -652,6 +657,14 @@ public class ProjectSimulationController extends GenericMB {
 
 	public void setIndexingService(IIndexingService indexingService) {
 		this.indexingService = indexingService;
+	}
+
+	public List<String> getExistentProjectIDList() {
+		return existentProjectIDList;
+	}
+
+	public void setExistentProjectIDList(List<String> existentProjectIDList) {
+		this.existentProjectIDList = existentProjectIDList;
 	}
 
 

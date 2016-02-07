@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -780,17 +781,19 @@ public class VisualisationOutputController extends GenericMB {
 	private String getShinyHostNameAndParameters(){
 		//String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
 		//String selectedSolverName = solverSetupEB.getSolverTO().getName();
-		SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
+		//SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
 		
-		
+		List<TransformationTO> transformations = projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().getTransformations();
 		StringBuilder sb = new StringBuilder();
-		List<String> projidList = sessionIndexTO.getProjectIdList();
+		//List<String> projidList = sessionIndexTO.getProjectIdList();
 		int count = 1;
-		for(String projId : projidList){
+		for(TransformationTO trans:transformations){
+			String transID = ((ObjectId)trans.get_id()).toString();
 			sb.append("&id_"+count+"=");
-			sb.append(projId);
+			sb.append(transID);
 			count++;
 		}
+
 		
                 
 		//TODO FIXME - After tests, we need to use the commented version in place of the version with fixed project and simulation name, below.

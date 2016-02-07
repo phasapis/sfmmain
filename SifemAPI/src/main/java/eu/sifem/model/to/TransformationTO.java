@@ -59,7 +59,10 @@ public class TransformationTO implements AbstractTO{
 		this.simulationName = simulationName;
 	}
 
-
+	public TransformationTO(ObjectId id) {
+		super();
+		this._id = id;
+	}
 	
 
 	public ObjectId get_id() {
