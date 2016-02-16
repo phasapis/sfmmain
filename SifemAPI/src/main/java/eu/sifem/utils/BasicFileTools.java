@@ -2,6 +2,7 @@ package eu.sifem.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -502,4 +503,44 @@ public class BasicFileTools {
 		}
 		return result;
 	}
+	
+	public static InputStream getFileAsMock(byte[] byteArr, String tempoeraryFileSystemLocation) throws Exception{
+        if(byteArr!=null ){
+        	InputStream file = new ByteArrayInputStream(byteArr);
+        	if(!isAnEmptyInputStream(file)){
+        		return file;        		
+        	}
+        }
+        
+        File fileFSystem = new File(tempoeraryFileSystemLocation);
+        if(fileFSystem!=null){
+        	InputStream fileIS = new FileInputStream(fileFSystem);        		
+	        	if(!isAnEmptyInputStream(fileIS)){
+	            	return fileIS;
+	        	}
+        }
+        
+        
+        
+		throw new RuntimeException("File Not found Exception: "+tempoeraryFileSystemLocation); 
+	}
+	
+	public static InputStream getFileAsMock(byte[] byteArr, InputStream tempoeraryFileSystemLocation) throws Exception{
+        if(byteArr!=null ){
+        	InputStream file = new ByteArrayInputStream(byteArr);
+        	if(!isAnEmptyInputStream(file)){
+        		return file;        		
+        	}
+        }
+        
+        if(tempoeraryFileSystemLocation!=null){
+        	return tempoeraryFileSystemLocation;
+        }
+        
+        
+        
+		throw new RuntimeException("File Not found Exception: "+tempoeraryFileSystemLocation); 
+	}
 }
+
+

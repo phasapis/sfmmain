@@ -14,7 +14,15 @@ private static final long serialVersionUID = -7622290983547686018L;
 	
 	private InputStream unvFile;
 	
-	
+    private InputStream pImagFile;
+    
+    private InputStream dCenterLineFile;
+    
+    private InputStream pRealFile;
+    
+    private InputStream vMagnFile;
+    
+    private InputStream vPhaseFile;
 
 	public String getSessionID() {
 		return sessionID;
@@ -47,5 +55,52 @@ private static final long serialVersionUID = -7622290983547686018L;
 	public void setUnvFile(InputStream unvFile) {
 		this.unvFile = unvFile;
 	}
+
+	public InputStream getpImagFile() {
+		return pImagFile;
+	}
+
+	public void setpImagFile(InputStream pImagFile) {
+		this.pImagFile = pImagFile;
+	}
+
+	public InputStream getdCenterLineFile() {
+		return dCenterLineFile;
+	}
+
+	public void setdCenterLineFile(InputStream dCenterLineFile) {
+		this.dCenterLineFile = dCenterLineFile;
+	}
+
+	public InputStream getpRealFile() {
+		return pRealFile;
+	}
+
+	public void setpRealFile(InputStream pRealFile) {
+		this.pRealFile = pRealFile;
+	}
+
+	public InputStream getvMagnFile() {
+		return vMagnFile;
+	}
+
+	public void setvMagnFile(InputStream vMagnFile) {
+		this.vMagnFile = vMagnFile;
+	}
+
+	public InputStream getvPhaseFile() {
+		return vPhaseFile;
+	}
+
+	public void setvPhaseFile(InputStream vPhaseFile) {
+		this.vPhaseFile = vPhaseFile;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+    
+    
+
 
 }

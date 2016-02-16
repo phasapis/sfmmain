@@ -17,8 +17,10 @@ import javax.jms.Topic;
 import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -35,19 +37,20 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import eu.sifem.dao.mongo.SolverResultFilesDAO;
 import eu.sifem.model.to.AsyncTripleStoreInsertMessageTO;
 import eu.sifem.model.to.DatAndUnvSolverTO;
 import eu.sifem.model.to.PAKCRestServiceTO;
 import eu.sifem.model.to.PAKCRestServiceWrapperTO;
 import eu.sifem.model.to.SessionIndexTO;
 import eu.sifem.model.to.SimulationInstanceTO;
+import eu.sifem.model.to.SolverResultFilesTO;
 import eu.sifem.service.IPakSolverControlerService;
 import eu.sifem.service.IProcessRunnableService;
 import eu.sifem.service.dao.IConfigFileDAOService;
 import eu.sifem.service.dao.IDatAndUnvSolverDAOService;
+import eu.sifem.utils.BasicFileTools;
 import eu.sifem.utils.Util;
-import java.io.File;
-import javax.naming.Context;
 
 @Configuration
 @EnableScheduling
@@ -55,6 +58,7 @@ import javax.naming.Context;
 public class ProcessRunnableService implements IProcessRunnableService {
 
     static final String vmIp = "192.168.3.26";
+    
 
 	@Autowired
 	private IPakSolverControlerService pakSolverControlerService;
@@ -64,6 +68,9 @@ public class ProcessRunnableService implements IProcessRunnableService {
 
 	@Autowired
 	private IDatAndUnvSolverDAOService datAndUnvSolverDAO;
+	
+	@Autowired
+	private SolverResultFilesDAO solverResultFilesDAO;
 
 	@Override
 	public void startAsync(SimulationInstanceTO simulationInstanceTO,
@@ -105,6 +112,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
 			SimulationInstanceTO simulationInstanceTO,
 			SessionIndexTO sessionIndexTO, String commandLineArgument) throws Exception {
 		List<DatAndUnvSolverTO> datAndUnvSolverTOList = new ArrayList<DatAndUnvSolverTO>();
+		List<SolverResultFilesTO> solverResultFilesTO = new ArrayList<SolverResultFilesTO>();
                 
                 int j=0;
 
@@ -152,6 +160,10 @@ public class ProcessRunnableService implements IProcessRunnableService {
 				datAndUnvSolverTO.setUnvFile(unvIs);
 				datAndUnvSolverTOList.add(datAndUnvSolverTO);
 				datAndUnvSolverDAO.insert(datAndUnvSolverTO);
+				
+				//TODO continue from here!
+				//solverResultFilesDAO.insert(datAndUnvSolverTO);
+				
                                 j++;
 			//}
 		}
@@ -230,15 +242,52 @@ public class ProcessRunnableService implements IProcessRunnableService {
             
             InputStream datIS = new ByteArrayInputStream(simulationInstance.getDatFile());
             InputStream unvIS = new ByteArrayInputStream(simulationInstance.getUnvFile());
+            
 
-            //org.apache.commons.io.FileUtils.writeByteArrayToFile(new File("/home/panos/Desktop/test.dat"), simulationInstance.getDatFile());
+            InputStream pImagFile = pImagFile(simulationInstance);
+            InputStream dCenterLineFile  = dCenterLineFile(simulationInstance);
+            InputStream pRealFile  = pRealFile(simulationInstance);
+            InputStream vMagnFile  = vMagnFile(simulationInstance);
+            InputStream vPhaseFile  = vPhaseFile(simulationInstance);
+            
+
             System.out.println(" -------------- Done");
             result.setSessionID(session);
             result.setDatFile(datIS);
             result.setUnvFile(unvIS);
-
+            result.setpImagFile(pImagFile);
+            result.setdCenterLineFile(dCenterLineFile);
+            result.setpRealFile(pRealFile);
+            result.setvMagnFile(vMagnFile);
+            result.setvPhaseFile(vPhaseFile);
+        	//System.out.println(IOUtils.toString(in, "UTF-8"));
             System.out.println(" -------------- Done Result");
             return result;
+	}
+	
+	
+	
+
+	
+	public InputStream pImagFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(PIMAG_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(simulationInstance.getpImagFile(),in);
+	}
+	public InputStream dCenterLineFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(DCENTERLINE_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(simulationInstance.getdCenterLineFile(),in);
+	}
+	public InputStream pRealFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(PREAL_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(simulationInstance.getpRealFile(),in);
+	}
+	public InputStream vMagnFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(VMAGN_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(simulationInstance.getvMagnFile(),in);
+	}
+	public InputStream vPhaseFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(VPHASE_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(simulationInstance.getvPhaseFile(),in);
 	}
 
  public static void subscribeWithTopicLookup(String session)

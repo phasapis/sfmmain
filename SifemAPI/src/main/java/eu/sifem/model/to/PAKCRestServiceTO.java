@@ -10,8 +10,62 @@ public class PAKCRestServiceTO implements AbstractTO{
         private byte[] datFile;
 
         private byte[] unvFile;
+        
+        private byte[] pImagFile;
+        
+        private byte[] dCenterLineFile;
+        
+        private byte[] pRealFile;
+        
+        private byte[] vMagnFile;
+        
+        private byte[] vPhaseFile;
+        
+        
+        
+        
 
-        public byte[] getCfgFile() {
+        public byte[] getpImagFile() {
+			return pImagFile;
+		}
+
+		public void setpImagFile(byte[] pImagFile) {
+			this.pImagFile = pImagFile;
+		}
+
+		public byte[] getdCenterLineFile() {
+			return dCenterLineFile;
+		}
+
+		public void setdCenterLineFile(byte[] dCenterLineFile) {
+			this.dCenterLineFile = dCenterLineFile;
+		}
+
+		public byte[] getpRealFile() {
+			return pRealFile;
+		}
+
+		public void setpRealFile(byte[] pRealFile) {
+			this.pRealFile = pRealFile;
+		}
+
+		public byte[] getvMagnFile() {
+			return vMagnFile;
+		}
+
+		public void setvMagnFile(byte[] vMagnFile) {
+			this.vMagnFile = vMagnFile;
+		}
+
+		public byte[] getvPhaseFile() {
+			return vPhaseFile;
+		}
+
+		public void setvPhaseFile(byte[] vPhaseFile) {
+			this.vPhaseFile = vPhaseFile;
+		}
+
+		public byte[] getCfgFile() {
                 return cfgFile;
         }
 
