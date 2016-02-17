@@ -385,12 +385,12 @@ public class VisualisationOutputController extends GenericMB {
     			
     			
 
-    			while(true){
-    				if(new File(imageLocation).exists()){
-    					//TODO maybe Throw exception... improve it.
-    					break;
-    				}
-    			}
+//    			while(true){
+//    				if(new File(imageLocation).exists()){
+//    					//TODO maybe Throw exception... improve it.
+//    					break;
+//    				}
+//    			}
     			visualisationOutputEB.getVisualisationOutputTO().setLstOfImageLoc(fileDownloader.setPAKOutputLocationPathNameAndExtService(imageLocation, visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc()));
     			renderPAK3D = Boolean.FALSE;
     			renderPAKImages = Boolean.TRUE;
@@ -778,12 +778,15 @@ public class VisualisationOutputController extends GenericMB {
 		this.plyFileLocation = getApplicationUri();
 	}
 
-	private String getShinyHostNameAndParameters(){
+	private String getShinyHostNameAndParameters() throws Exception{
 		//String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
 		//String selectedSolverName = solverSetupEB.getSolverTO().getName();
 		//SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
 		
 		List<TransformationTO> transformations = projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().getTransformations();
+		if(transformations==null || transformations.isEmpty()){
+			transformations = transformationService.findAllService();
+		}
 		StringBuilder sb = new StringBuilder();
 		//List<String> projidList = sessionIndexTO.getProjectIdList();
 		int count = 1;
@@ -794,7 +797,7 @@ public class VisualisationOutputController extends GenericMB {
 			count++;
 		}
 
-		
+		sb.append("&resultGraphID="+projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().getResultGraphID());
                 
 		//TODO FIXME - After tests, we need to use the commented version in place of the version with fixed project and simulation name, below.
 
@@ -821,7 +824,7 @@ public class VisualisationOutputController extends GenericMB {
 	}
 
 
-	public String getShinyAppHostName() {
+	public String getShinyAppHostName() throws Exception {
 		shinyAppHostName = getShinyHostNameAndParameters();
 		return shinyAppHostName;
 	}
@@ -829,7 +832,7 @@ public class VisualisationOutputController extends GenericMB {
 
 
 	//TODO Think about remove or refactoring this method.
-	public void setShinyAppHostName(String shinyAppHostName) {
+	public void setShinyAppHostName(String shinyAppHostName) throws Exception {
 		shinyAppHostName = getShinyHostNameAndParameters();
 		this.shinyAppHostName = shinyAppHostName;
 	}

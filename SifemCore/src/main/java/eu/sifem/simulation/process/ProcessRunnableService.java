@@ -112,7 +112,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
 			SimulationInstanceTO simulationInstanceTO,
 			SessionIndexTO sessionIndexTO, String commandLineArgument) throws Exception {
 		List<DatAndUnvSolverTO> datAndUnvSolverTOList = new ArrayList<DatAndUnvSolverTO>();
-		List<SolverResultFilesTO> solverResultFilesTO = new ArrayList<SolverResultFilesTO>();
+		//List<SolverResultFilesTO> solverResultFilesTOList = new ArrayList<SolverResultFilesTO>();
                 
                 int j=0;
 
@@ -147,6 +147,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
 				PAKCRestServiceWrapperTO result = callService(
 						simulationInstanceTO, sessionIndexTO, cfgIs.get(0), commandLineArgument);
 				DatAndUnvSolverTO datAndUnvSolverTO = new DatAndUnvSolverTO();
+				SolverResultFilesTO solverResultFilesTO = new SolverResultFilesTO();
 				datAndUnvSolverTO.setProjectName(simulationInstanceTO
 						.getProjectName());
 				datAndUnvSolverTO.setSimulationName(simulationInstanceTO
@@ -161,8 +162,12 @@ public class ProcessRunnableService implements IProcessRunnableService {
 				datAndUnvSolverTOList.add(datAndUnvSolverTO);
 				datAndUnvSolverDAO.insert(datAndUnvSolverTO);
 				
-				//TODO continue from here!
-				//solverResultFilesDAO.insert(datAndUnvSolverTO);
+				solverResultFilesTO.setDcenterlineFile(result.getdCenterLineFile());
+				solverResultFilesTO.setPimagFile(result.getpImagFile());
+				solverResultFilesTO.setPrealFile(result.getpRealFile());
+				solverResultFilesTO.setVmagnFile(result.getvMagnFile());
+				solverResultFilesTO.setVphaseFile(result.getvPhaseFile());
+				solverResultFilesDAO.insert(solverResultFilesTO);
 				
                                 j++;
 			//}
@@ -268,7 +273,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
 	
 	
 
-	
+	//TODO could be removed or refactored
 	public InputStream pImagFile(PAKCRestServiceTO simulationInstance) throws Exception{
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream(PIMAG_LOCAL_FILE);
 		return BasicFileTools.getFileAsMock(simulationInstance.getpImagFile(),in);

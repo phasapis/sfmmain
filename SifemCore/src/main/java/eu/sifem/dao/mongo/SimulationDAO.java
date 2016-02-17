@@ -34,6 +34,7 @@ public class SimulationDAO implements ISimulationDAOService{
 	@Override
 	public void insert(ProjectSimulationTO projectSimulationTO) throws Exception {
 		mongoOperations.insert(projectSimulationTO,ProjectSimulationTO.class.getSimpleName());
+		System.out.println(projectSimulationTO.getId());
 	}
 
 	@Override

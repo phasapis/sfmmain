@@ -185,8 +185,10 @@ public class ProjectSimulationController extends GenericMB {
 //				if(simulation==null){
 //					
 //				}
+
+                
 				transformationEB.getTransformationTO().setProjectName(projectName);
-				List<TransformationTO> transformations = transformation.findAllByProjectNameService(projectName);
+				List<TransformationTO> transformations = transformation.findAllService();
 				ProjectSimulationTO projectSimulationTO  = new ProjectSimulationTO();
 				projectSimulationTO.setProjectName(projectName);
 				
@@ -195,8 +197,16 @@ public class ProjectSimulationController extends GenericMB {
 				projectSimulationTO.setTransformations(null);
 				setCurrentSimulationName(projectName);
 				simulationService.insertService(projectSimulationTO);
+				String resultGraphsID = pakSolverControlerService.showResultGraphs(projectSimulationTO.getId());
 				if(transformations!=null && !transformations.isEmpty()){
 					projectSimulationEB.getProjectSimulationTO().setTransformations(transformations);
+					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
+					if (ProjectSimulationTOObj != null && ProjectSimulationTOObj instanceof ProjectSimulationEB) {
+						projectSimulationTO.setResultGraphID(resultGraphsID);
+						((ProjectSimulationEB)ProjectSimulationTOObj).setProjectSimulationTO(projectSimulationTO);
+						putSessionBean("projectSimulationEB",ProjectSimulationTOObj);
+						
+					}
 				}
 
 				if (projectName != null || !"".equals(projectName)) {

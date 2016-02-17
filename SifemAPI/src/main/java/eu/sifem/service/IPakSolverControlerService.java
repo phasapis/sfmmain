@@ -30,10 +30,18 @@ public interface IPakSolverControlerService{
 	static final String INPUT_CFG = "/input.cfg";
 
 	static final String PAKC = "/PAKC";
+	
+	String PIMAG_LOCAL_FILE = "p_imag_.csv";
+	String DCENTERLINE_LOCAL_FILE = "d_centerline_.csv";
+	String PREAL_LOCAL_FILE = "p_real_.csv";
+	String VMAGN_LOCAL_FILE = "v_magn_.csv";
+	String VPHASE_LOCAL_FILE = "v_phase_.csv";
 
 	List<AsyncTripleStoreInsertMessageTO> semantifyOutputService(
 			SimulationInstanceTO simulationInstanceTO, List<DatAndUnvSolverTO> datAndUnvSolverTOList) throws Exception;
 
 	void saveOrUpdateProcessStatus(ProcessTO sifemProcess);
+
+	String showResultGraphs(String projectID) throws Exception;
 
 }

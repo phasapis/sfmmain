@@ -17,16 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eu.sifem.dao.mongo.DatAndUnvSolverDAO;
+import eu.sifem.dao.mongo.SolverResultFilesDAO;
 import eu.sifem.model.to.AsyncTripleStoreInsertMessageTO;
 import eu.sifem.model.to.DatAndUnvSolverTO;
+import eu.sifem.model.to.PAKCRestServiceTO;
 import eu.sifem.model.to.ProcessTO;
 import eu.sifem.model.to.SimulationInstanceTO;
+import eu.sifem.model.to.SolverResultFilesTO;
 import eu.sifem.service.IPakRDFMapperService;
 import eu.sifem.service.IPakSolverControlerService;
 import eu.sifem.service.IResourceInjectionService;
 import eu.sifem.service.dao.IConfigFileDAOService;
 import eu.sifem.service.dao.IDatAndUnvSolverDAOService;
 import eu.sifem.service.dao.IProcessDAOService;
+import eu.sifem.service.dao.ISolverResultFilesDAO;
+import eu.sifem.utils.BasicFileTools;
 
 
 /**
@@ -55,6 +60,9 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	
 	@Autowired
 	private IDatAndUnvSolverDAOService datAndUnvSolverDAO;
+	
+	@Autowired
+	private ISolverResultFilesDAO solverResultFilesDAO;
 	
 	//TODO Deprecating..
 //	@Override
@@ -151,6 +159,42 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	public void saveOrUpdateProcessStatus(ProcessTO sifemProcess) {
 		processDAOService.saveOrUpdate(sifemProcess);
 	}
+	
+	@Override
+	public String showResultGraphs(String projectID) throws Exception {
+		SolverResultFilesTO solverResultFilesTO = new SolverResultFilesTO();
+		solverResultFilesTO.setDcenterlineFile(dCenterLineFile(null));
+		solverResultFilesTO.setPimagFile(pImagFile(null));
+		solverResultFilesTO.setPrealFile(pRealFile(null));
+		solverResultFilesTO.setVmagnFile(vMagnFile(null));
+		solverResultFilesTO.setVphaseFile(vPhaseFile(null));
+		solverResultFilesDAO.insert(solverResultFilesTO);
+		return solverResultFilesTO.get_id().toString();
+	}
+	
+	//TODO could be removed after Panos' service is ready
+	public InputStream pImagFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(PIMAG_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(null,in);
+	}
+	public InputStream dCenterLineFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(DCENTERLINE_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(null,in);
+	}
+	public InputStream pRealFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(PREAL_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(null,in);
+	}
+	public InputStream vMagnFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(VMAGN_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(null,in);
+	}
+	public InputStream vPhaseFile(PAKCRestServiceTO simulationInstance) throws Exception{
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(VPHASE_LOCAL_FILE);
+		return BasicFileTools.getFileAsMock(null,in);
+	}
+
+	
 
 
 

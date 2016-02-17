@@ -17,6 +17,8 @@ public class ProjectSimulationTO implements AbstractTO{
 	private static final long serialVersionUID = 7643849882106237799L;
 	
 	private String id;
+	
+	private String resultGraphID; 
 
 	private String projectName;
 	
@@ -33,6 +35,20 @@ public class ProjectSimulationTO implements AbstractTO{
 	
 	public ProjectSimulationTO() {}
 	
+	
+	
+	public String getResultGraphID() {
+		return resultGraphID;
+	}
+
+
+
+	public void setResultGraphID(String resultGraphID) {
+		this.resultGraphID = resultGraphID;
+	}
+
+
+
 	public ProjectSimulationTO(String projectName) {
 		this.projectName=projectName;
 	}
