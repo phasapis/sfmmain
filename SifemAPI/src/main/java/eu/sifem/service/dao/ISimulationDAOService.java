@@ -2,6 +2,8 @@ package eu.sifem.service.dao;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import eu.sifem.model.to.ProjectSimulationTO;
 
 
@@ -70,8 +72,10 @@ public interface ISimulationDAOService {
 
 
 	ProjectSimulationTO findByName(String name) throws Exception;
+	
+	ProjectSimulationTO findByID(ObjectId objectId) throws Exception;
 
-	void insert(ProjectSimulationTO projectSimulationTO) throws Exception;
+	String insert(ProjectSimulationTO projectSimulationTO) throws Exception;
 
 	List<ProjectSimulationTO> findAll();
 

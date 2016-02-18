@@ -6,17 +6,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 
 /**
  * 
  * @author jbjares
  * 
  */
+@Document
 public class ProjectSimulationTO implements AbstractTO{
 
 	private static final long serialVersionUID = 7643849882106237799L;
 	
-	private String id;
+	private ObjectId _id;
+
+	private String projectSimulationID;
 	
 	private String resultGraphID; 
 
@@ -32,11 +38,50 @@ public class ProjectSimulationTO implements AbstractTO{
 	
 	private List<TransformationTO> transformations = new ArrayList<TransformationTO>();
 
+	private String shinyHost;
 	
 	public ProjectSimulationTO() {}
 	
 	
 	
+	
+	public String getShinyHost() {
+		return shinyHost;
+	}
+
+
+
+
+	public void setShinyHost(String shinyHost) {
+		this.shinyHost = shinyHost;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public String getProjectSimulationID() {
+		return projectSimulationID;
+	}
+
+
+
+
+	public void setProjectSimulationID(String projectSimulationID) {
+		this.projectSimulationID = projectSimulationID;
+	}
+
+
+
+
 	public String getResultGraphID() {
 		return resultGraphID;
 	}
@@ -109,12 +154,16 @@ public class ProjectSimulationTO implements AbstractTO{
 		this.instanceFiles = instanceFiles;
 	}
 
-	public String getId() {
-		return id;
+
+
+	public ObjectId get_id() {
+		return _id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+
+
+	public void set_id(ObjectId _id) {
+		this._id = _id;
 	}
 
 

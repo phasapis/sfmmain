@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import eu.sifem.dao.mongo.ProjectSimulationDAO;
 import eu.sifem.mb.entitybean.BoundaryInternalConditionsEB;
 import eu.sifem.mb.entitybean.DataAnalysisValidationRulesEB;
 import eu.sifem.mb.entitybean.GeometrySetupEB;
@@ -42,7 +43,7 @@ import eu.sifem.service.IPakSolverControlerService;
 import eu.sifem.service.ISimulationService;
 import eu.sifem.service.ISolverConfigCreatorService;
 import eu.sifem.service.ITransformationService;
-
+import eu.sifem.service.dao.ISimulationDAOService;
 
 /**
  * 
@@ -53,22 +54,19 @@ import eu.sifem.service.ITransformationService;
 @ViewScoped
 public class ProjectSimulationController extends GenericMB {
 
-
-
-
 	private static final long serialVersionUID = -7041575044935576065L;
 
-
+	@ManagedProperty(value = "#{simulationDAO}")
+	private ISimulationDAOService simulationDAO;
 
 	@ManagedProperty(value = "#{projectSimulationEB}")
 	private ProjectSimulationEB projectSimulationEB;
 
 	@ManagedProperty(value = "#{dataAnalysisValidationRulesEB}")
 	private DataAnalysisValidationRulesEB dataAnalysisValidationRulesEB;
-	
+
 	@ManagedProperty(value = "#{solverSetupEB}")
 	private SolverSetupEB solverSetupEB;
-
 
 	@ManagedProperty(value = "#{materialPropertyEB}")
 	private MaterialPropertyEB materialPropertyEB;
@@ -90,38 +88,35 @@ public class ProjectSimulationController extends GenericMB {
 
 	@ManagedProperty(value = "#{pakSolverControlerService}")
 	private IPakSolverControlerService pakSolverControlerService;
-	
+
 	@ManagedProperty(value = "#{simulationService}")
 	private ISimulationService simulationService;
-	
+
 	@ManagedProperty(value = "#{transformationEB}")
 	private TransformationEB transformationEB;
-	
+
 	@ManagedProperty(value = "#{transformation}")
 	private ITransformationService transformation;
-	
+
 	@ManagedProperty(value = "#{indexingService}")
 	private IIndexingService indexingService;
 
-
-	@ManagedProperty(value="#{visualisationOutputEB}")
+	@ManagedProperty(value = "#{visualisationOutputEB}")
 	private VisualisationOutputEB visualisationOutputEB;
-	
+
 	private List<String> existentProjectIDList = new ArrayList<String>();
-	
-	
+
 	private Map<String, String> paramsList = new TreeMap<String, String>();
-	
+
 	private Boolean renderPogressBar = Boolean.FALSE;
 
-
-	public void throwException(){
+	public void throwException() {
 		try {
 			throw new RuntimeException("Error!");
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
-		
+
 	}
 
 	public void init() {
@@ -133,92 +128,90 @@ public class ProjectSimulationController extends GenericMB {
 						"Please try File, New Project to Start a Simulation.");
 				if (projectSimulationEB != null) {
 					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
-					if (ProjectSimulationTOObj != null && ProjectSimulationTOObj instanceof ProjectSimulationEB) {
-						((ProjectSimulationEB)ProjectSimulationTOObj).setProjectSimulationTO(new ProjectSimulationTO());
-						fillListOfParams();	//
-						putSessionBean("projectSimulationEB",ProjectSimulationTOObj);
-						
+					if (ProjectSimulationTOObj != null
+							&& ProjectSimulationTOObj instanceof ProjectSimulationEB) {
+						((ProjectSimulationEB) ProjectSimulationTOObj)
+								.setProjectSimulationTO(new ProjectSimulationTO());
+						fillListOfParams(); //
+						String projectID = simulationDAO
+								.insert(((ProjectSimulationEB) ProjectSimulationTOObj)
+										.getProjectSimulationTO());
+						((ProjectSimulationEB) ProjectSimulationTOObj)
+								.getProjectSimulationTO().setProjectSimulationID(projectID);
+						putSessionBean("projectSimulationEB",
+								ProjectSimulationTOObj);
 					}
 				}
-				//fillListOfParams();	
 			}
 
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
-		
+
 	}
-	
-	public void showStatusProcesses(){
+
+	public void showStatusProcesses() {
 		System.out.println("showStatusProcesses...");
 	}
 
 	public void createNewProjectActionListener() {
-		
+
 		try {
 			if (projectSimulationEB != null) {
-				//TODO FIX After presentation
 				String projectName = null;
-//				String workspaceLocation = "/usr/local/SifemResourceFiles/workspace/";
-				if(projectSimulationEB!=null && projectSimulationEB.getProjectSimulationTO()!=null && 
-						projectSimulationEB.getProjectSimulationTO().getProjectName()!=null && !"".equals(projectSimulationEB.getProjectSimulationTO().getProjectName())){
-					projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();					
-				}else{
-					addErrorMessage("ERROR","Project name not defined!");
+				if (projectSimulationEB != null
+						&& projectSimulationEB.getProjectSimulationTO() != null
+						&& projectSimulationEB.getProjectSimulationTO()
+								.getProjectName() != null
+						&& !"".equals(projectSimulationEB
+								.getProjectSimulationTO().getProjectName())) {
+					projectName = projectSimulationEB.getProjectSimulationTO()
+							.getProjectName();
+				} else {
+					addErrorMessage("ERROR", "Project name not defined!");
 				}
-				
-                                System.err.println(" ---- createNewProjectActionListener" + projectSimulationEB.getProjectSimulationTO().getSimulationName());
-                                
-				//TODO Deprecating..
-//				if(projectSimulationEB!=null && projectSimulationEB.getProjectSimulationTO()!=null && 
-//						projectSimulationEB.getProjectSimulationTO().getWorkspace()!=null && !"".equals(projectSimulationEB.getProjectSimulationTO().getWorkspace())){
-//					workspaceLocation = projectSimulationEB.getProjectSimulationTO().getWorkspace();
-//				}
-				
-				//FIXME After presentation
-				//workspaceLocation = workspaceLocation+"\\"+projectName;
-//				workspaceLocation = "/usr/local/SifemResourceFiles/workspace/TheOne/";
-				
-				//File workspaceFile = new File(workspaceLocation);
-//				ProjectSimulationTO simulation = simulationService.findByNameService(projectName);
-//				
-//				if(simulation==null){
-//					
-//				}
 
-                
-				transformationEB.getTransformationTO().setProjectName(projectName);
-				List<TransformationTO> transformations = transformation.findAllService();
-				ProjectSimulationTO projectSimulationTO  = new ProjectSimulationTO();
+				List<TransformationTO> transformations = transformation
+						.findAllService();
+				ProjectSimulationTO projectSimulationTO = simulationDAO
+						.findByID(projectSimulationEB.getProjectSimulationTO().get_id());
 				projectSimulationTO.setProjectName(projectName);
-				
-				//TODO Deprecating..
-				//projectSimulationTO.setWorkspace(workspaceLocation);
+
 				projectSimulationTO.setTransformations(null);
 				setCurrentSimulationName(projectName);
+				projectSimulationTO.setProjectSimulationID(projectSimulationEB.getProjectSimulationTO().get_id().toString());
 				simulationService.insertService(projectSimulationTO);
-				String resultGraphsID = pakSolverControlerService.showResultGraphs(projectSimulationTO.getId());
-				if(transformations!=null && !transformations.isEmpty()){
-					projectSimulationEB.getProjectSimulationTO().setTransformations(transformations);
+				String resultgraphID = pakSolverControlerService
+						.showResultGraphs(projectSimulationTO.getProjectSimulationID());
+				if (transformations != null && !transformations.isEmpty()) {
+					projectSimulationEB.getProjectSimulationTO()
+							.setTransformations(transformations);
 					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
-					if (ProjectSimulationTOObj != null && ProjectSimulationTOObj instanceof ProjectSimulationEB) {
-						projectSimulationTO.setResultGraphID(resultGraphsID);
-						((ProjectSimulationEB)ProjectSimulationTOObj).setProjectSimulationTO(projectSimulationTO);
-						putSessionBean("projectSimulationEB",ProjectSimulationTOObj);
+					if (ProjectSimulationTOObj != null
+							&& ProjectSimulationTOObj instanceof ProjectSimulationEB) {
+						projectSimulationTO.setResultGraphID(resultgraphID);
 						
+						((ProjectSimulationEB) ProjectSimulationTOObj)
+								.setProjectSimulationTO(projectSimulationTO);
+						putSessionBean("projectSimulationEB",
+								ProjectSimulationTOObj);
+						simulationDAO.update(projectSimulationTO);
+
 					}
 				}
 
 				if (projectName != null || !"".equals(projectName)) {
-					addInfoMessage("Good!",
+					addInfoMessage(
+							"Good!",
 							"Try to configure \"Material Property\" and \"Mesh\". Then you can create and run this new simulation through \"Save All\" and \"Run\".");
-					projectSimulationEB.getProjectSimulationTO().setProjectName(projectName);
-					
-					//TODO Deprecating..
-//					projectSimulationEB.getProjectSimulationTO().setWorkspace(workspaceLocation);
+					projectSimulationEB.getProjectSimulationTO()
+							.setProjectName(projectName);
+
+					// TODO Deprecating..
+					// projectSimulationEB.getProjectSimulationTO().setWorkspace(workspaceLocation);
 					return;
 				}
-				
+
 				renderPogressBar = Boolean.TRUE;
 			}
 		} catch (Exception e) {
@@ -226,239 +219,237 @@ public class ProjectSimulationController extends GenericMB {
 		}
 	}
 
-
 	public void run() {
 		try {
 			renderPogressBar = Boolean.TRUE;
 			SimulationInstanceTO simulationInstanceTO = new SimulationInstanceTO();
-			
-			String projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();
-			String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
-			
-                        System.out.println(" --- simulationName upon run() = " + simulationName);
-                        
-			//TODO Deprecating..
-			//String workspaceName = projectSimulationEB.getProjectSimulationTO().getWorkspace();
+
+			String projectName = projectSimulationEB.getProjectSimulationTO()
+					.getProjectName();
+			String simulationName = projectSimulationEB
+					.getProjectSimulationTO().getSimulationName();
+
+			System.out.println(" --- simulationName upon run() = "
+					+ simulationName);
+
+			// TODO Deprecating..
+			// String workspaceName =
+			// projectSimulationEB.getProjectSimulationTO().getWorkspace();
 			simulationInstanceTO.setProjectName(projectName);
 			simulationInstanceTO.setSimulationName(simulationName);
-			
-			//TODO Deprecating..
-			//simulationInstanceTO.setWorkspacebasePath(workspaceName);
-			
+
+			// TODO Deprecating..
+			// simulationInstanceTO.setWorkspacebasePath(workspaceName);
+
 			ProcessTO sifemProcess = new ProcessTO();
 			sifemProcess.setProjectName(projectName);
 			sifemProcess.setSimulationName(simulationName);
-			
-			//TODO Deprecating..
-			//sifemProcess.setWorkspaceName(workspaceName);
+
+			// TODO Deprecating..
+			// sifemProcess.setWorkspaceName(workspaceName);
 			sifemProcess.setIsNotStartedPhase(Boolean.TRUE);
 			pakSolverControlerService.saveOrUpdateProcessStatus(sifemProcess);
-			
-			SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getAttribute(CONFIG_SESSION_OBJ);
-			
 
-			List<AsyncTripleStoreInsertMessageTO> asyncTripleStoreInsertMessageTOList = 
-					simulationService.runSync(simulationInstanceTO,sessionIndexTO, meshSetupEB.getMeshSetupTO().getCommandLineArgument());
-			
-			//PROJECT_SESSION_OBJ <- "projectStreamObj"
-			//getSession().setAttribute(PROJECT_SESSION_OBJ+"_"+projectName+"_"+simulationName,asyncTripleStoreInsertMessageTOList);
-			indexingService.indexStreamService(asyncTripleStoreInsertMessageTOList,projectName,simulationName);
-			
-			if(sessionIndexTO==null){
-				addErrorMessage("ERROR","Session Expired!");
+			SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession()
+					.getAttribute(CONFIG_SESSION_OBJ);
+
+			List<AsyncTripleStoreInsertMessageTO> asyncTripleStoreInsertMessageTOList = simulationService
+					.runSync(simulationInstanceTO, sessionIndexTO, meshSetupEB
+							.getMeshSetupTO().getCommandLineArgument());
+
+			// PROJECT_SESSION_OBJ <- "projectStreamObj"
+			// getSession().setAttribute(PROJECT_SESSION_OBJ+"_"+projectName+"_"+simulationName,asyncTripleStoreInsertMessageTOList);
+			indexingService.indexStreamService(
+					asyncTripleStoreInsertMessageTOList, projectName,
+					simulationName);
+
+			if (sessionIndexTO == null) {
+				addErrorMessage("ERROR", "Session Expired!");
 			}
 
-			
-			
-
-			
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
-				
-		
+
 	}
-	
-	private List<InputStream> retrieveSemantificationFiles(List<AsyncTripleStoreInsertMessageTO> asyncTripleStoreInsertMessageList) {
+
+	private List<InputStream> retrieveSemantificationFiles(
+			List<AsyncTripleStoreInsertMessageTO> asyncTripleStoreInsertMessageList) {
 		List<InputStream> result = new LinkedList<InputStream>();
-		for(AsyncTripleStoreInsertMessageTO asyncTripleStoreInsertMessageTO: asyncTripleStoreInsertMessageList){
-			result.addAll(asyncTripleStoreInsertMessageTO.getSemantificationFiles());
+		for (AsyncTripleStoreInsertMessageTO asyncTripleStoreInsertMessageTO : asyncTripleStoreInsertMessageList) {
+			result.addAll(asyncTripleStoreInsertMessageTO
+					.getSemantificationFiles());
 		}
 		return result;
 	}
 
 	private void cleanCacheEnvironment(SimulationInstanceTO simulationInstanceTO) {
 		simulationService.cleanCacheEnvironmentService(simulationInstanceTO);
-		
+
 	}
 
-	private TransformationTO validateTransformationOrQueryView(TransformationEB transformationEB) throws Exception {
+	private TransformationTO validateTransformationOrQueryView(
+			TransformationEB transformationEB) throws Exception {
 		List<String> inexistentTransformationNameList = new ArrayList<String>();
 		List<TransformationTO> transformationWithoutNecessaryDataList = new ArrayList<TransformationTO>();
 		List<TransformationTO> transformationList = new ArrayList<TransformationTO>();
-		for(String transformationName: transformationEB.getTransformationsTarget()){
-			TransformationTO transformationTO = transformation.findByNameService(transformationName);
-			
-			if(transformationTO==null){	
+		for (String transformationName : transformationEB
+				.getTransformationsTarget()) {
+			TransformationTO transformationTO = transformation
+					.findByNameService(transformationName);
+
+			if (transformationTO == null) {
 				inexistentTransformationNameList.add(transformationName);
 				continue;
 			}
 
-			if(!isPersistedTransformationDataIsCompleted(transformationTO)){
+			if (!isPersistedTransformationDataIsCompleted(transformationTO)) {
 				transformationWithoutNecessaryDataList.add(transformationTO);
 				continue;
 			}
-			
+
 			transformationList.add(transformationTO);
 			continue;
 
 		}
-		if(!inexistentTransformationNameList.isEmpty()){
-			//TODO return a message to final user about this warn!
+		if (!inexistentTransformationNameList.isEmpty()) {
+			// TODO return a message to final user about this warn!
 			return null;
 		}
-		if(!transformationWithoutNecessaryDataList.isEmpty()){
-			//TODO return a message to final user about this warn!
+		if (!transformationWithoutNecessaryDataList.isEmpty()) {
+			// TODO return a message to final user about this warn!
 			return null;
 		}
-		if(transformationList.isEmpty()){
-			//TODO return a message to final user about this warn!
+		if (transformationList.isEmpty()) {
+			// TODO return a message to final user about this warn!
 			return null;
 		}
-		if(transformationList.size()>1){
-			//TODO return a message to final user about this warn!
+		if (transformationList.size() > 1) {
+			// TODO return a message to final user about this warn!
 			return null;
 		}
-		
-		for(TransformationTO transformation:transformationList){
-			if(!transformation.getIsInUse()){
+
+		for (TransformationTO transformation : transformationList) {
+			if (!transformation.getIsInUse()) {
 				continue;
 			}
 			return transformation;
 		}
-		
-		//TODO return a message to final user about this warn!
+
+		// TODO return a message to final user about this warn!
 		return null;
 	}
-	
 
+	private boolean isPersistedTransformationDataIsCompleted(
+			TransformationTO transformationTO) {
 
-	private boolean isPersistedTransformationDataIsCompleted(TransformationTO transformationTO) {
-		
-		if(transformationTO.getName()==null || "".equals(transformationTO.getName())){
-			return Boolean.FALSE;
-		}
-		
-		if(transformationTO.getParameters()==null || transformationTO.getParameters().isEmpty()){
-			return Boolean.FALSE;
-		}
-		
-		if(transformationTO.getProjectName()==null || "".equals(transformationTO.getProjectName())){
-			return Boolean.FALSE;
-		}
-		
-		if(transformationTO.getQueryByteArrayID()==null || "".equals(transformationTO.getQueryByteArrayID())){
+		if (transformationTO.getName() == null
+				|| "".equals(transformationTO.getName())) {
 			return Boolean.FALSE;
 		}
 
-		//script's transformation is optional. Other attributes transients.
-//		if(transformationTO.getScriptByteArrayID()==null || "".equals(transformationTO.getScriptByteArrayID())){
-//			return Boolean.FALSE;
-//		}
+		if (transformationTO.getParameters() == null
+				|| transformationTO.getParameters().isEmpty()) {
+			return Boolean.FALSE;
+		}
+
+		if (transformationTO.getProjectName() == null
+				|| "".equals(transformationTO.getProjectName())) {
+			return Boolean.FALSE;
+		}
+
+		if (transformationTO.getQueryByteArrayID() == null
+				|| "".equals(transformationTO.getQueryByteArrayID())) {
+			return Boolean.FALSE;
+		}
+
 
 		return Boolean.TRUE;
 	}
 
-	private Boolean isValidTransformationTarget(List<String> transformationsTarget) {
-		if(transformationsTarget!=null && transformationsTarget.size()>=0 && !transformationsTarget.isEmpty()){
+	private Boolean isValidTransformationTarget(
+			List<String> transformationsTarget) {
+		if (transformationsTarget != null && transformationsTarget.size() >= 0
+				&& !transformationsTarget.isEmpty()) {
 			return Boolean.TRUE;
 		}
-		//TODO return a message to final user about this warn!
+		// TODO return a message to final user about this warn!
 		return Boolean.FALSE;
-		
+
 	}
-
-
 
 	public void save() {
 		try {
-			if (solverSetupEB != null && solverSetupEB.getSolverTO().getName() != null) {
-				String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
-                                System.err.println(" ----- " + simulationName);
-				String projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();
-				
+			if (solverSetupEB != null
+					&& solverSetupEB.getSolverTO().getName() != null) {
+				String simulationName = projectSimulationEB
+						.getProjectSimulationTO().getSimulationName();
+				System.err.println(" ----- " + simulationName);
+				String projectName = projectSimulationEB
+						.getProjectSimulationTO().getProjectName();
+
 				SolverConfigCreatorTO solverConfigCreatorTO = new SolverConfigCreatorTO();
-				
-				solverConfigCreatorTO.setSolverName(solverSetupEB.getSolverTO().getName());
-				solverConfigCreatorTO.setMeshSetupTO(meshSetupEB.getMeshSetupTO());
-				solverConfigCreatorTO.setGeometrySetupTO(geometrySetupEB.getGeometrySetupTO());
-				solverConfigCreatorTO.setLoadParametersTOList(new ArrayList<ParameterTO>());
-				solverConfigCreatorTO.getLoadParametersTOList().addAll(loadParametersEB.getLoadParametersTOList());
-				solverConfigCreatorTO.setExternalLoadParametersTO(new ExternalLoadParametersTO());
+
+				solverConfigCreatorTO.setSolverName(solverSetupEB.getSolverTO()
+						.getName());
+				solverConfigCreatorTO.setMeshSetupTO(meshSetupEB
+						.getMeshSetupTO());
+				solverConfigCreatorTO.setGeometrySetupTO(geometrySetupEB
+						.getGeometrySetupTO());
+				solverConfigCreatorTO
+						.setLoadParametersTOList(new ArrayList<ParameterTO>());
+				solverConfigCreatorTO.getLoadParametersTOList().addAll(
+						loadParametersEB.getLoadParametersTOList());
+				solverConfigCreatorTO
+						.setExternalLoadParametersTO(new ExternalLoadParametersTO());
 				solverConfigCreatorTO.setSimulationName(simulationName);
 				solverConfigCreatorTO.setProjectName(projectName);
 
-				projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();
+				projectName = projectSimulationEB.getProjectSimulationTO()
+						.getProjectName();
 				SimulationInstanceTO simulationInstanceTO = new SimulationInstanceTO();
 				simulationInstanceTO.setProjectName(projectName);
 				simulationInstanceTO.setSimulationName(simulationName);
-				
-                                System.err.println(" --- " + (solverConfigCreatorTO==null) + " " + (projectName==null));
-				String configSessionID = solverConfigCreator.configFileCreationService(solverConfigCreatorTO,projectName);
-				
-				if(configSessionID==null || "".equals(configSessionID)){
-					addWarnMessage("WARN","The requested operation was aborted due an unexpected attribute value. Please review \"Material Property\" and \"Mesh\" Config sections.");
+
+				System.err.println(" --- " + (solverConfigCreatorTO == null)
+						+ " " + (projectName == null));
+				String configSessionID = solverConfigCreator
+						.configFileCreationService(solverConfigCreatorTO,
+								projectName);
+
+				if (configSessionID == null || "".equals(configSessionID)) {
+					addWarnMessage(
+							"WARN",
+							"The requested operation was aborted due an unexpected attribute value. Please review \"Material Property\" and \"Mesh\" Config sections.");
 					return;
 				}
-				SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getAttribute(CONFIG_SESSION_OBJ);
-				
+				SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession()
+						.getAttribute(CONFIG_SESSION_OBJ);
+
 				List<String> cfgSessionIdList = new ArrayList<String>();
 				cfgSessionIdList.add(configSessionID);
-				if(sessionIndexTO!=null){
+				if (sessionIndexTO != null) {
 					sessionIndexTO.setCfgSessionIdList(cfgSessionIdList);
-					getSession().setAttribute(CONFIG_SESSION_OBJ, sessionIndexTO);
-				}else{
+					getSession().setAttribute(CONFIG_SESSION_OBJ,
+							sessionIndexTO);
+				} else {
 					sessionIndexTO = new SessionIndexTO();
 					sessionIndexTO.setCfgSessionIdList(cfgSessionIdList);
-					getSession().setAttribute(CONFIG_SESSION_OBJ, sessionIndexTO);
+					getSession().setAttribute(CONFIG_SESSION_OBJ,
+							sessionIndexTO);
 				}
-				
-				System.out.println("save DONE -- CONFIG_SESSION_OBJ ID: "+configSessionID);
-                                
-				addInfoMessage("Done!","Project saved with successful!");
-				
-				
-				//TODO Deprecating..
-//				if(transformationEB!=null && transformationEB.getTransformationTO()!=null && 
-//						transformationEB.getTransformationsTarget()!=null && !transformationEB.getTransformationsTarget().isEmpty()){
-//					if(isValidTransformationTarget(transformationEB.getTransformationsTarget())){
-//						TransformationTO transformationTO = validateTransformationOrQueryView(transformationEB);
-//						if(transformationTO!=null){
-//							ProjectSimulationTO projectSimulationTO  = new ProjectSimulationTO();
-//							projectSimulationTO.setWorkspace(workspace);
-//							projectSimulationTO.getTransformations().add(transformationTO);
-//							setCurrentSimulationName(simulationInstanceTO.getSimulationName());
-//							
-//							String namedGraph = "";
-//							transformationTO.getNamedGraphs().clear();
-//							for(int i=0;i<instanceNumber;i++){
-//								namedGraph = "http://www.sifemontologies.com/ontologies/"+
-//										projectName+"_"+simulationName+"_instance_"+i;
-//								transformationTO.getNamedGraphs().add(namedGraph);
-//							}
-//							transformationTO.setSimulationName(simulationName);
-//							transformationTO.setProjectName(projectName);
-//							transformation.saveOrUpdateService(transformationTO, workspace,null);
-//						}
-//					}
-//				}
 
-		}
+				System.out.println("save DONE -- CONFIG_SESSION_OBJ ID: "
+						+ configSessionID);
+
+				addInfoMessage("Done!", "Project saved with successful!");
+
+			}
 
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
-		
+
 	}
 
 	public ProjectSimulationEB getProjectSimulationEB() {
@@ -469,71 +460,59 @@ public class ProjectSimulationController extends GenericMB {
 		this.projectSimulationEB = projectSimulationEB;
 	}
 
-	
-	public void fillListOfParams()  {
+	public void fillListOfParams() {
 		try {
-			List<String> lstOfParams = simulationService.getParameterNamesService();
+			List<String> lstOfParams = simulationService
+					.getParameterNamesService();
 			for (String eachObject : lstOfParams) {
 				paramsList.put(eachObject, eachObject);
 			}
-			
-//			String projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();
-//			if(projectName==null || "".equals(projectName)){
-//				return;
-//			}
-			
-			List<TransformationTO> transformationTOList = transformation.findAllService();
-			for(TransformationTO to:transformationTOList){
-				if(to.getIsInUse()==null){
+
+			List<TransformationTO> transformationTOList = transformation
+					.findAllService();
+			for (TransformationTO to : transformationTOList) {
+				if (to.getIsInUse() == null) {
 					to.setIsInUse(Boolean.FALSE);
-					transformation.saveOrUpdateService(to, null,null);
+					transformation.saveOrUpdateService(to, null, null);
 				}
-				if(to.getIsInUse().booleanValue()){
-					for(String parameter:to.getParameters()){
-						paramsList.put(parameter,parameter);
+				if (to.getIsInUse().booleanValue()) {
+					for (String parameter : to.getParameters()) {
+						paramsList.put(parameter, parameter);
 					}
 				}
-				if(to!=null && to.get_id()!=null){
-					//SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
-//					if(sessionIndexTO==null){
-//						sessionIndexTO = new SessionIndexTO();
-//					}
-					//String id = ((ObjectId) to.get_id()).toString();
-					this.projectSimulationEB.getProjectSimulationTO().getTransformations().add(new TransformationTO(to.get_id()));
-//					sessionIndexTO.getProjectIdList().add(id);
-//					getSession().setAttribute(CONFIG_SESSION_OBJ, sessionIndexTO);
-					
+				if (to != null && to.get_id() != null) {
+					this.projectSimulationEB.getProjectSimulationTO()
+							.getTransformations()
+							.add(new TransformationTO(to.get_id()));
+
 				}
 			}
-	//TODO insertcode here
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
 	}
 
-	//TODO remove
-	public void garbageMessenger(){
+	public void garbageMessenger() {
 		try {
-			String garbageMessengerHelperStr =  (String) getSession().getServletContext().getAttribute(Constants.Global.WEBSESSION_COLLECTOR_BATCH_MSG);
+			String garbageMessengerHelperStr = (String) getSession()
+					.getServletContext().getAttribute(
+							Constants.Global.WEBSESSION_COLLECTOR_BATCH_MSG);
 			System.out.println(garbageMessengerHelperStr);
 			Gson gson = new GsonBuilder().create();
-			MessengerCollectorHelper garbageMessengerHelper = gson.fromJson(garbageMessengerHelperStr, MessengerCollectorHelper.class);
-			if(garbageMessengerHelperStr==null){return;}
+			MessengerCollectorHelper garbageMessengerHelper = gson.fromJson(
+					garbageMessengerHelperStr, MessengerCollectorHelper.class);
+			if (garbageMessengerHelperStr == null) {
+				return;
+			}
 			System.out.println(garbageMessengerHelperStr);
-			
-			//TODO just show the message for the properly simulation session
-//		String currentSimulationNameStr = (String) getSession().getAttribute(Constants.Global.WEBSESSION_SIMULATION_NAME);
-//		if(!StringUtils.equals(currentSimulationNameStr,garbageMessengerHelper.getSimulationName())){
-//			return;
-//		}
-			addInfoMessage(garbageMessengerHelper.getType(),garbageMessengerHelper.getMessage(),Constants.Global.BATCH_DESK_BOARD);
-			//getSession().getServletContext().removeAttribute(Constants.Global.WEBSESSION_COLLECTOR_BATCH_MSG);
-			//TODO insertcode here
+			addInfoMessage(garbageMessengerHelper.getType(),
+					garbageMessengerHelper.getMessage(),
+					Constants.Global.BATCH_DESK_BOARD);
+
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
 	}
-
 
 	public DataAnalysisValidationRulesEB getDataAnalysisValidationRulesEB() {
 		return dataAnalysisValidationRulesEB;
@@ -551,8 +530,6 @@ public class ProjectSimulationController extends GenericMB {
 	public void setSolverSetupEB(SolverSetupEB solverSetupEB) {
 		this.solverSetupEB = solverSetupEB;
 	}
-
-
 
 	public MaterialPropertyEB getMaterialPropertyEB() {
 		return materialPropertyEB;
@@ -636,7 +613,7 @@ public class ProjectSimulationController extends GenericMB {
 	public void setTransformation(ITransformationService transformation) {
 		this.transformation = transformation;
 	}
-	
+
 	public Map<String, String> getParamsList() throws Exception {
 		return paramsList;
 	}
@@ -657,7 +634,8 @@ public class ProjectSimulationController extends GenericMB {
 		return visualisationOutputEB;
 	}
 
-	public void setVisualisationOutputEB(VisualisationOutputEB visualisationOutputEB) {
+	public void setVisualisationOutputEB(
+			VisualisationOutputEB visualisationOutputEB) {
 		this.visualisationOutputEB = visualisationOutputEB;
 	}
 
@@ -677,5 +655,15 @@ public class ProjectSimulationController extends GenericMB {
 		this.existentProjectIDList = existentProjectIDList;
 	}
 
+	public ISimulationDAOService getSimulationDAO() {
+		return simulationDAO;
+	}
 
+	public void setSimulationDAO(ISimulationDAOService simulationDAO) {
+		this.simulationDAO = simulationDAO;
+	}
+
+
+
+	
 }

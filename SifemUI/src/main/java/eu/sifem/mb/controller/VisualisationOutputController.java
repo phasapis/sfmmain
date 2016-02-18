@@ -49,25 +49,24 @@ import eu.sifem.service.ITransformationService;
 import eu.sifem.service.IVisualizationService;
 import eu.sifem.utils.BasicFileTools;
 import eu.sifem.utils.Util;
-//import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
+//import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 /**
  * 
  * @author jbjares
  * 
  */
-@ManagedBean(name = "visualisationOutputController") 
+@ManagedBean(name = "visualisationOutputController")
 @ViewScoped
 public class VisualisationOutputController extends GenericMB {
-	
 
 	private static final String UM = "1";
 
 	private static final String ZERO = "0";
 
 	private static final long serialVersionUID = -7304350271436783287L;
-	
+
 	private static final String VECTOR_FIELD_GRAPH_FILE = "VectorFieldGraphFile";
 
 	private static final String D_LINE_GRAPH_FILE = "DLineGraphFile";
@@ -77,164 +76,165 @@ public class VisualisationOutputController extends GenericMB {
 	private static final String PAK = "PAK";
 
 	private static final String JPEG = ".jpg";
-	
+
 	private static final String _2D_PLOT = "2D plot";
-	
+
 	private static final String _3D_PLOT = "3D plot";
 
 	private static final String VECTOR_FIELD = "Vector Field";
 
 	private static final String STREAMLINE = "Streamline";
 
-	//private static final String PAK_3D = "PAK 3D";
+	// private static final String PAK_3D = "PAK 3D";
 
-	private Map<String,String> visualisationAndOutputlist = new HashMap<String, String>();
-	
+	private Map<String, String> visualisationAndOutputlist = new HashMap<String, String>();
+
 	private Boolean render2Dplot = Boolean.FALSE;
-	
+
 	private Boolean render3Dplot = Boolean.FALSE;
-	
+
 	private Boolean rendervectorfield = Boolean.FALSE;
-	
+
 	private Boolean renderstreamline = Boolean.FALSE;
-	
+
 	private Boolean outputAvail = Boolean.FALSE;
-	
-	private Boolean renderPAKImages = Boolean.FALSE; 
-	
+
+	private Boolean renderPAKImages = Boolean.FALSE;
+
 	private Map<String, String> paramsList = new TreeMap<String, String>();
-	
+
 	private Properties config = new Properties();
-	
+
 	private Boolean filterAttributesByTransformation = Boolean.FALSE;
-	
+
 	private String selectedTransformationName = new String();
-	
+
 	private Boolean renderPAK3D = Boolean.FALSE;
-	
+
 	private Boolean renderGreenWoodsemanticInterpretation;
-	
+
 	private Boolean renderDisplacementsemanticInterpretation;
 
 	private String plyFileLocation;
-	
+
 	private String shinyAppHostName;
-	
-	
-	@ManagedProperty(value="#{projectSimulationController}")
+
+	@ManagedProperty(value = "#{projectSimulationController}")
 	private ProjectSimulationController projectSimulationController;
-	
-	@ManagedProperty(value="#{projectSimulationEB}")
+
+	@ManagedProperty(value = "#{projectSimulationEB}")
 	private ProjectSimulationEB projectSimulationEB;
-	
-	@ManagedProperty(value="#{visualisationOutputEB}")
+
+	@ManagedProperty(value = "#{visualisationOutputEB}")
 	private VisualisationOutputEB visualisationOutputEB;
-	
-	@ManagedProperty(value="#{solverSetupEB}")
+
+	@ManagedProperty(value = "#{solverSetupEB}")
 	private SolverSetupEB solverSetupEB;
-	
-	@ManagedProperty(value="#{resourceInjectionService}")
+
+	@ManagedProperty(value = "#{resourceInjectionService}")
 	private IResourceInjectionService resourceInjectionService;
-	
-	@ManagedProperty(value="#{fileDownloader}")
+
+	@ManagedProperty(value = "#{fileDownloader}")
 	private IFileDownloaderService fileDownloader;
-	
-	@ManagedProperty(value="#{boundaryInternalConditionsEB}")
+
+	@ManagedProperty(value = "#{boundaryInternalConditionsEB}")
 	private BoundaryInternalConditionsEB boundaryInternalConditionsEB;
-	
-	@ManagedProperty(value="#{loadParametersEB}")
+
+	@ManagedProperty(value = "#{loadParametersEB}")
 	private LoadParametersEB loadParametersEB;
-	
+
 	private List<ImageLocationTO> pakImagesStreamedContentList = new ArrayList<ImageLocationTO>();
 
-	
-	@ManagedProperty(value="#{featureExtractor}")
+	@ManagedProperty(value = "#{featureExtractor}")
 	private IFeatureExtractorService featureExtractor;
-	
-	@ManagedProperty(value="#{simulationService}")
+
+	@ManagedProperty(value = "#{simulationService}")
 	private ISimulationService simulationService;
-	
-	@ManagedProperty(value="#{transformationEB}")
+
+	@ManagedProperty(value = "#{transformationEB}")
 	private TransformationEB transformationEB;
-	
-	@ManagedProperty(value="#{transformation}")
+
+	@ManagedProperty(value = "#{transformation}")
 	private ITransformationService transformationService;
-	
-	@ManagedProperty(value="#{visualizationService}")
+
+	@ManagedProperty(value = "#{visualizationService}")
 	private IVisualizationService visualizationService;
-	
-	@ManagedProperty(value="#{dataAnalysisController}")
+
+	@ManagedProperty(value = "#{dataAnalysisController}")
 	private DataAnalysisController dataAnalysisController;
-	
-	
-	private Map<String,String> transformationsBySimulation = new TreeMap<String,String>();
-	
-    public void handleVisualizationAndOutputListChange()  {
-    	try {
-    		dataAnalysisController.setRenderSemanticIntepretation(Boolean.FALSE);
-        	if (_2D_PLOT.equals(visualisationOutputEB.getVisualisationOutputTO().getGraphType())) {
-        		fillListOfParams();
-        		this.render2Dplot = Boolean.TRUE;
-        		this.rendervectorfield = Boolean.FALSE;
-        		this.renderstreamline = Boolean.FALSE;
-        		this.render3Dplot = Boolean.FALSE;
-        	}
-        	if (VECTOR_FIELD.equals(visualisationOutputEB.getVisualisationOutputTO().getGraphType())) {
-        		this.render2Dplot = Boolean.FALSE;
-        		this.rendervectorfield = Boolean.TRUE;
-        		this.renderstreamline = Boolean.FALSE;
-        		this.render3Dplot = Boolean.FALSE;
-        	}
-        	if (STREAMLINE.equals(visualisationOutputEB.getVisualisationOutputTO().getGraphType())) {
-        		this.render2Dplot = Boolean.FALSE;
-        		this.rendervectorfield = Boolean.FALSE;
-        		this.renderstreamline = Boolean.TRUE;
-        		this.render3Dplot = Boolean.FALSE;
-        	}
-        	if (_3D_PLOT.equals(visualisationOutputEB.getVisualisationOutputTO().getGraphType())) {
-        		this.render3Dplot = Boolean.TRUE;
-        		this.render2Dplot = Boolean.FALSE;
-        		this.rendervectorfield = Boolean.FALSE;
-        		this.renderstreamline = Boolean.FALSE;
-        	}
-        	this.filterAttributesByTransformation = Boolean.FALSE;
-        	fillListOfParams();
+
+	private Map<String, String> transformationsBySimulation = new TreeMap<String, String>();
+
+	public void handleVisualizationAndOutputListChange() {
+		try {
+			dataAnalysisController
+					.setRenderSemanticIntepretation(Boolean.FALSE);
+			if (_2D_PLOT.equals(visualisationOutputEB
+					.getVisualisationOutputTO().getGraphType())) {
+				fillListOfParams();
+				this.render2Dplot = Boolean.TRUE;
+				this.rendervectorfield = Boolean.FALSE;
+				this.renderstreamline = Boolean.FALSE;
+				this.render3Dplot = Boolean.FALSE;
+			}
+			if (VECTOR_FIELD.equals(visualisationOutputEB
+					.getVisualisationOutputTO().getGraphType())) {
+				this.render2Dplot = Boolean.FALSE;
+				this.rendervectorfield = Boolean.TRUE;
+				this.renderstreamline = Boolean.FALSE;
+				this.render3Dplot = Boolean.FALSE;
+			}
+			if (STREAMLINE.equals(visualisationOutputEB
+					.getVisualisationOutputTO().getGraphType())) {
+				this.render2Dplot = Boolean.FALSE;
+				this.rendervectorfield = Boolean.FALSE;
+				this.renderstreamline = Boolean.TRUE;
+				this.render3Dplot = Boolean.FALSE;
+			}
+			if (_3D_PLOT.equals(visualisationOutputEB
+					.getVisualisationOutputTO().getGraphType())) {
+				this.render3Dplot = Boolean.TRUE;
+				this.render2Dplot = Boolean.FALSE;
+				this.rendervectorfield = Boolean.FALSE;
+				this.renderstreamline = Boolean.FALSE;
+			}
+			this.filterAttributesByTransformation = Boolean.FALSE;
+			fillListOfParams();
 
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
-    }
-
-    
-
+	}
 
 	public void fillListOfParams() {
 		try {
-			if(paramsList==null){
+			if (paramsList == null) {
 				return;
 			}
 			paramsList.clear();
-			List<String> lstOfParams = simulationService.getParameterNamesService();
+			List<String> lstOfParams = simulationService
+					.getParameterNamesService();
 			for (String eachObject : lstOfParams) {
 				paramsList.put(eachObject, eachObject);
 			}
 			for (String eachObject : simulationService.findAllTempParameters()) {
 				paramsList.put(eachObject, eachObject);
 			}
-			List<TransformationTO> transformationTOList = transformationService.findAllService();
-			for(TransformationTO to:transformationTOList){
-				if(to.getIsInUse().booleanValue()){
-					for(String parameter:to.getParameters()){
-						if(parameter.contains(";")){
-							String[] paramsArr =  parameter.split(";");
-							for(String paramStr:paramsArr){
-								paramsList.put(paramStr,paramStr);							
+			List<TransformationTO> transformationTOList = transformationService
+					.findAllService();
+			for (TransformationTO to : transformationTOList) {
+				if (to.getIsInUse().booleanValue()) {
+					for (String parameter : to.getParameters()) {
+						if (parameter.contains(";")) {
+							String[] paramsArr = parameter.split(";");
+							for (String paramStr : paramsArr) {
+								paramsList.put(paramStr, paramStr);
 							}
-						}else{
+						} else {
 							paramsList.put(parameter, parameter);
 							continue;
 						}
-						
+
 					}
 				}
 			}
@@ -246,11 +246,13 @@ public class VisualisationOutputController extends GenericMB {
 
 	public void handlerAttributesByTransformation(AjaxBehaviorEvent event) {
 		try {
-			if(selectedTransformationName==null || "".equals(selectedTransformationName)){
-	    		return;
-	    	}
-			List<String> lstOfParams = simulationService.findAllParametersByTransformationNameService(selectedTransformationName);
-			if(lstOfParams==null || lstOfParams.isEmpty()){
+			if (selectedTransformationName == null
+					|| "".equals(selectedTransformationName)) {
+				return;
+			}
+			List<String> lstOfParams = simulationService
+					.findAllParametersByTransformationNameService(selectedTransformationName);
+			if (lstOfParams == null || lstOfParams.isEmpty()) {
 				return;
 			}
 			for (String eachObject : lstOfParams) {
@@ -259,34 +261,36 @@ public class VisualisationOutputController extends GenericMB {
 			for (String eachObject : simulationService.findAllTempParameters()) {
 				paramsList.put(eachObject, eachObject);
 			}
-			
-	    
+
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
-    		
-    	
-    }
-	
+
+	}
+
 	@SuppressWarnings("unchecked")
-	public List<String> transformationAutoCompleteComboBox(String query)  {
+	public List<String> transformationAutoCompleteComboBox(String query) {
 		List<String> result = new ArrayList<String>();
 		try {
 			String name = "";
-			if(query==null || "".equals(query)){
-				List<TransformationTO> resultList = transformationService.findAllService();
+			if (query == null || "".equals(query)) {
+				List<TransformationTO> resultList = transformationService
+						.findAllService();
 				resultList = transformationService.findAllService();
-				for(TransformationTO transformationTO:resultList){
+				for (TransformationTO transformationTO : resultList) {
 					name = transformationTO.getName();
 					name = new Util().replaceUnderlinesForSpace(name);
 					result.add(name);
 				}
 				return result;
 			}
-			
-			List<TransformationTO> resultList = transformationService.findAllByPartialNameService(query);
-			if(resultList==null || resultList.isEmpty()){return Collections.EMPTY_LIST;}
-			for(TransformationTO transformationTO:resultList){
+
+			List<TransformationTO> resultList = transformationService
+					.findAllByPartialNameService(query);
+			if (resultList == null || resultList.isEmpty()) {
+				return Collections.EMPTY_LIST;
+			}
+			for (TransformationTO transformationTO : resultList) {
 				name = transformationTO.getName();
 				name = new Util().replaceUnderlinesForSpace(name);
 				result.add(name);
@@ -298,160 +302,227 @@ public class VisualisationOutputController extends GenericMB {
 		return result;
 	}
 
-	
-    
-    public void showOutput() {
-    	try {
-    		String projectName = projectSimulationEB.getProjectSimulationTO().getProjectName();
-        	String selectedSolverName = solverSetupEB.getSolverTO().getName();
-        	
-                System.err.println("InShow");
-        	if(selectedSolverName==null || "".equalsIgnoreCase(selectedSolverName)){
-        		addWarnMessage("Warn","This feature can't work without the solver name selection.");
-        	}
+	public void showOutput() {
+		try {
+			String projectName = projectSimulationEB.getProjectSimulationTO()
+					.getProjectName();
+			String selectedSolverName = solverSetupEB.getSolverTO().getName();
 
-    		outputAvail = Boolean.TRUE;
-    		Boolean isSelectedSolverPAK = PAK.equalsIgnoreCase(selectedSolverName);
-    		TransformationTO transformationTO = transformationEB.getTransformationTO();
-    		//String workspacePath = projectSimulationEB.getProjectSimulationTO().getWorkspace();
-    		
-    		//TODO refactoring after presentation
-    		//String transformationName = transformationEB.getTransformationsTarget().get(0); //uncomment
-    		//transformationTO = transformationService.findByNameService(transformationName); //uncomment
-    		String transformationName = "newTransformation"; //remove it
-    		transformationTO = transformationService.findByNameService(transformationName);
-    		
-    		renderPAK3D = Boolean.FALSE;
-    		renderPAKImages = Boolean.FALSE;
-    		visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc().clear();
-    		
-    		if(isSelectedSolverPAK && _2D_PLOT.equals(visualisationOutputEB.getVisualisationOutputTO().getGraphType())){
-    			
+			System.err.println("InShow");
+			if (selectedSolverName == null
+					|| "".equalsIgnoreCase(selectedSolverName)) {
+				addWarnMessage("Warn",
+						"This feature can't work without the solver name selection.");
+			}
 
-    			String xName = visualisationOutputEB.getVisualisationOutputTO().getPlot2DX();
-    			String yName = visualisationOutputEB.getVisualisationOutputTO().getPlot2DY();
-    			
-    			
-    			ProjectSimulationTO projectSimulation = projectSimulationEB.getProjectSimulationTO();
+			outputAvail = Boolean.TRUE;
+			Boolean isSelectedSolverPAK = PAK
+					.equalsIgnoreCase(selectedSolverName);
+			TransformationTO transformationTO = transformationEB
+					.getTransformationTO();
+			// String workspacePath =
+			// projectSimulationEB.getProjectSimulationTO().getWorkspace();
 
-    			String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
-    			if(transformationTO==null || StringUtils.equalsIgnoreCase(transformationTO.getName(),"")){
-    				System.err.println("ERROR! SimulatioName/Transformation not defined.");
-    			}else{
-    				simulationName = transformationTO.getName();
-    			}
+			// TODO refactoring after presentation
+			// String transformationName =
+			// transformationEB.getTransformationsTarget().get(0); //uncomment
+			// transformationTO =
+			// transformationService.findByNameService(transformationName);
+			// //uncomment
+			String transformationName = "newTransformation"; // remove it
+			transformationTO = transformationService
+					.findByNameService(transformationName);
 
-//    			visualizationService
-//    			ViewTO dataView = transformationService.retrieveDataViewService(transformationTO,projectSimulation.getWorkspace(),projectName,simulationName,xName,yName,null);
-    																		//(DataSetTO dataSetTO,String sparqlView, List<File> semantificationFiles,String workspace, String projectName, String simulationName) throws Exception{
-    			DataSetTO dataSetHashCacheTO =  new DataSetTO(new DataSetHashCacheTO(projectName,simulationName,xName,yName,""),"");
-    			
-    			String frequencyValue = "";
-    			if(loadParametersEB!=null && loadParametersEB.getLoadParametersTOList()!=null 
-    					&& !loadParametersEB.getLoadParametersTOList().isEmpty()){
-    				for(ParameterTO parameter:loadParametersEB.getLoadParametersTOList()){
-    					if(StringUtils.equalsIgnoreCase(parameter.getName(),"frequency")){
-    						if(parameter.getParameterUniqueValue()==null || "".equals(parameter.getParameterUniqueValue())){
-    							continue;
-    						}
-    						frequencyValue = parameter.getParameterUniqueValue();
-    					}
-    				}
-    			}
-    			
-    			dataSetHashCacheTO.getCache().setFrequency(frequencyValue);
-    			ViewTO dataView = visualizationService.retrieveDataViewService(dataSetHashCacheTO,null,Collections.EMPTY_LIST,null,projectName,simulationName);
-    			if(dataView==null){
-    				dataView = transformationService.retrieveDataViewService(transformationTO,null,projectName,simulationName,xName,yName,null);
-    			}
-    			File imageFile = new BasicFileTools().getImagePath(null, projectName, simulationName, transformationName);
-    			
-    			String imageLocation = null;
-    			
-    			// if datax and datay are not empty: OK			
-    			if(dataView!=null && dataView.getxView()!=null && !dataView.getxView().isEmpty() && !dataView.getyView().isEmpty()){
-    				//(List<Double> datax, String varNamx, List<Double> datay, String varNamy, String plotName,String basePath)
-    				imageLocation = transformationService.generateGraphicService(dataView.getxView(),xName,dataView.getyView(),yName,transformationName,imageFile.getCanonicalPath());				
-    			}
-    			// If datax and datay are empty try to get the map from dataView, check x and y attributes then convert it (if a script.py file exists)  
-    			if(!dataView.getDimValMap().isEmpty()){
-    				//(List<Double> datax, String varNamx, List<Double> datay, String varNamy, String plotName,String basePath)
-    				imageLocation = transformationService.generateGraphicService(dataView.getDimValMap(),imageFile.getCanonicalPath(),transformationName,xName,yName);
-    			}
-    			if((dataView.getxView().isEmpty() && dataView.getyView().isEmpty())&& dataView.getDimValMap().isEmpty()){
-    				//TODO throw exception
-    				System.err.println("(datax.isEmpty() && datay.isEmpty())&& dataView.getDimValMap().isEmpty()");
-    			}
-    			
-    			
+			renderPAK3D = Boolean.FALSE;
+			renderPAKImages = Boolean.FALSE;
+			visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc()
+					.clear();
 
-//    			while(true){
-//    				if(new File(imageLocation).exists()){
-//    					//TODO maybe Throw exception... improve it.
-//    					break;
-//    				}
-//    			}
-    			visualisationOutputEB.getVisualisationOutputTO().setLstOfImageLoc(fileDownloader.setPAKOutputLocationPathNameAndExtService(imageLocation, visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc()));
-    			renderPAK3D = Boolean.FALSE;
-    			renderPAKImages = Boolean.TRUE;
-    			return;
-    			
-    		}			
+			if (isSelectedSolverPAK
+					&& _2D_PLOT.equals(visualisationOutputEB
+							.getVisualisationOutputTO().getGraphType())) {
 
-    		if(PAK.equalsIgnoreCase(solverSetupEB.getSolverTO().getName()) && _3D_PLOT.equals(visualisationOutputEB.getVisualisationOutputTO().getGraphType())){
-    				InputStream datFileIs = visualizationService.retrieveFirstDatFileByProjectName(projectSimulationEB.getProjectSimulationTO().getProjectName());
-    				byte[] datFileByteArr = IOUtils.toByteArray(datFileIs);
-    				PlyConverterTO plyConverterTO = new PlyConverterTO();
-    				plyConverterTO.setInputDatFile(datFileByteArr);
-    				
-    				//FIXME Find other way to get the id
-    				plyConverterTO.setHash(UUID.randomUUID().toString());
-    				String parameter = Util.getJsonStrFromObject(plyConverterTO);
+				String xName = visualisationOutputEB.getVisualisationOutputTO()
+						.getPlot2DX();
+				String yName = visualisationOutputEB.getVisualisationOutputTO()
+						.getPlot2DY();
 
-    				//FIXME fixed this url below
-    				String responseContentStr = Request.Post("http://localhost:8080/SifemPlyConverter/rest/PlyConverterService/converter")
-    				.bodyForm(Form.form().add("plyConverterTO",parameter).build()).execute().returnContent().asString();
+				ProjectSimulationTO projectSimulation = projectSimulationEB
+						.getProjectSimulationTO();
 
-    				Gson gson = new GsonBuilder().create();
-    				plyConverterTO  = gson.fromJson(responseContentStr, PlyConverterTO.class);
-    				plyFileLocation = plyConverterTO.getPlyName();
-                                System.err.println(plyFileLocation);
-        			renderPAKImages = Boolean.FALSE;
-    				renderPAK3D = Boolean.TRUE;
-    		}		
-    	}
-    	catch(Exception e){
-    			throw new RuntimeException(e.getMessage(),e);
-    	}
-    	
-    	clear();
+				String simulationName = projectSimulationEB
+						.getProjectSimulationTO().getSimulationName();
+				if (transformationTO == null
+						|| StringUtils.equalsIgnoreCase(
+								transformationTO.getName(), "")) {
+					System.err
+							.println("ERROR! SimulatioName/Transformation not defined.");
+				} else {
+					simulationName = transformationTO.getName();
+				}
 
-    	
+				// visualizationService
+				// ViewTO dataView =
+				// transformationService.retrieveDataViewService(transformationTO,projectSimulation.getWorkspace(),projectName,simulationName,xName,yName,null);
+				// (DataSetTO dataSetTO,String sparqlView, List<File>
+				// semantificationFiles,String workspace, String projectName,
+				// String simulationName) throws Exception{
+				DataSetTO dataSetHashCacheTO = new DataSetTO(
+						new DataSetHashCacheTO(projectName, simulationName,
+								xName, yName, ""), "");
+
+				String frequencyValue = "";
+				if (loadParametersEB != null
+						&& loadParametersEB.getLoadParametersTOList() != null
+						&& !loadParametersEB.getLoadParametersTOList()
+								.isEmpty()) {
+					for (ParameterTO parameter : loadParametersEB
+							.getLoadParametersTOList()) {
+						if (StringUtils.equalsIgnoreCase(parameter.getName(),
+								"frequency")) {
+							if (parameter.getParameterUniqueValue() == null
+									|| "".equals(parameter
+											.getParameterUniqueValue())) {
+								continue;
+							}
+							frequencyValue = parameter
+									.getParameterUniqueValue();
+						}
+					}
+				}
+
+				dataSetHashCacheTO.getCache().setFrequency(frequencyValue);
+				ViewTO dataView = visualizationService.retrieveDataViewService(
+						dataSetHashCacheTO, null, Collections.EMPTY_LIST, null,
+						projectName, simulationName);
+				if (dataView == null) {
+					dataView = transformationService.retrieveDataViewService(
+							transformationTO, null, projectName,
+							simulationName, xName, yName, null);
+				}
+				File imageFile = new BasicFileTools().getImagePath(null,
+						projectName, simulationName, transformationName);
+
+				String imageLocation = null;
+
+				// if datax and datay are not empty: OK
+				if (dataView != null && dataView.getxView() != null
+						&& !dataView.getxView().isEmpty()
+						&& !dataView.getyView().isEmpty()) {
+					// (List<Double> datax, String varNamx, List<Double> datay,
+					// String varNamy, String plotName,String basePath)
+					imageLocation = transformationService
+							.generateGraphicService(dataView.getxView(), xName,
+									dataView.getyView(), yName,
+									transformationName,
+									imageFile.getCanonicalPath());
+				}
+				// If datax and datay are empty try to get the map from
+				// dataView, check x and y attributes then convert it (if a
+				// script.py file exists)
+				if (!dataView.getDimValMap().isEmpty()) {
+					// (List<Double> datax, String varNamx, List<Double> datay,
+					// String varNamy, String plotName,String basePath)
+					imageLocation = transformationService
+							.generateGraphicService(dataView.getDimValMap(),
+									imageFile.getCanonicalPath(),
+									transformationName, xName, yName);
+				}
+				if ((dataView.getxView().isEmpty() && dataView.getyView()
+						.isEmpty()) && dataView.getDimValMap().isEmpty()) {
+					// TODO throw exception
+					System.err
+							.println("(datax.isEmpty() && datay.isEmpty())&& dataView.getDimValMap().isEmpty()");
+				}
+
+				// while(true){
+				// if(new File(imageLocation).exists()){
+				// //TODO maybe Throw exception... improve it.
+				// break;
+				// }
+				// }
+				visualisationOutputEB
+						.getVisualisationOutputTO()
+						.setLstOfImageLoc(
+								fileDownloader
+										.setPAKOutputLocationPathNameAndExtService(
+												imageLocation,
+												visualisationOutputEB
+														.getVisualisationOutputTO()
+														.getLstOfImageLoc()));
+				renderPAK3D = Boolean.FALSE;
+				renderPAKImages = Boolean.TRUE;
+				return;
+
+			}
+
+			if (PAK.equalsIgnoreCase(solverSetupEB.getSolverTO().getName())
+					&& _3D_PLOT.equals(visualisationOutputEB
+							.getVisualisationOutputTO().getGraphType())) {
+				InputStream datFileIs = visualizationService
+						.retrieveFirstDatFileByProjectName(projectSimulationEB
+								.getProjectSimulationTO().getProjectName());
+				byte[] datFileByteArr = IOUtils.toByteArray(datFileIs);
+				PlyConverterTO plyConverterTO = new PlyConverterTO();
+				plyConverterTO.setInputDatFile(datFileByteArr);
+
+				// FIXME Find other way to get the id
+				plyConverterTO.setHash(UUID.randomUUID().toString());
+				String parameter = Util.getJsonStrFromObject(plyConverterTO);
+
+				// FIXME fixed this url below
+				String responseContentStr = Request
+						.Post("http://localhost:8080/SifemPlyConverter/rest/PlyConverterService/converter")
+						.bodyForm(
+								Form.form().add("plyConverterTO", parameter)
+										.build()).execute().returnContent()
+						.asString();
+
+				Gson gson = new GsonBuilder().create();
+				plyConverterTO = gson.fromJson(responseContentStr,
+						PlyConverterTO.class);
+				plyFileLocation = plyConverterTO.getPlyName();
+				System.err.println(plyFileLocation);
+				renderPAKImages = Boolean.FALSE;
+				renderPAK3D = Boolean.TRUE;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+
+		clear();
+
 	}
 
-
-
-
-	private boolean isListContainsTwoSelectedAttributes(List<TransformationTO> transformationTOList, String param1, String param2) {
-		for(TransformationTO to : transformationTOList){
+	private boolean isListContainsTwoSelectedAttributes(
+			List<TransformationTO> transformationTOList, String param1,
+			String param2) {
+		for (TransformationTO to : transformationTOList) {
 			String strList = Arrays.deepToString(to.getParameters().toArray());
-			if(StringUtils.containsIgnoreCase(strList,param1) &&
-			StringUtils.containsIgnoreCase(strList,param2)){
+			if (StringUtils.containsIgnoreCase(strList, param1)
+					&& StringUtils.containsIgnoreCase(strList, param2)) {
 				return Boolean.TRUE;
 			}
 		}
 		return Boolean.FALSE;
 	}
-    
+
 	private void clearSessionImages() {
-		if(visualisationOutputEB.getVisualisationOutputTO()!=null && visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc()!=null && visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc().isEmpty()){
-			visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc().clear();
-			if(visualisationOutputEB!=null){
+		if (visualisationOutputEB.getVisualisationOutputTO() != null
+				&& visualisationOutputEB.getVisualisationOutputTO()
+						.getLstOfImageLoc() != null
+				&& visualisationOutputEB.getVisualisationOutputTO()
+						.getLstOfImageLoc().isEmpty()) {
+			visualisationOutputEB.getVisualisationOutputTO().getLstOfImageLoc()
+					.clear();
+			if (visualisationOutputEB != null) {
 				Object visualisationOutputEBTOObj = getSessionBean(VISUALISATION_OUTPUT_EB);
-				if(visualisationOutputEBTOObj!=null && visualisationOutputEBTOObj instanceof VisualisationOutputEB){
-					putSessionBean(VISUALISATION_OUTPUT_EB, new VisualisationOutputEB());
+				if (visualisationOutputEBTOObj != null
+						&& visualisationOutputEBTOObj instanceof VisualisationOutputEB) {
+					putSessionBean(VISUALISATION_OUTPUT_EB,
+							new VisualisationOutputEB());
 				}
-			}			
+			}
 		}
 	}
 
@@ -459,49 +530,47 @@ public class VisualisationOutputController extends GenericMB {
 		visualisationOutputEB.getVisualisationOutputTO().setPlot2DY(null);
 		visualisationOutputEB.getVisualisationOutputTO().setGraphType(null);
 		visualisationOutputEB.getVisualisationOutputTO().setPlot2DX(null);
-		visualisationOutputEB.getVisualisationOutputTO().setVectorFieldVelocity(null);	
+		visualisationOutputEB.getVisualisationOutputTO()
+				.setVectorFieldVelocity(null);
 	}
 
-	public Map<String, String> getVisualisationAndOutputlist(){
+	public Map<String, String> getVisualisationAndOutputlist() {
 		List<String> lstOfGraphTypes = Collections.EMPTY_LIST;
-//		try {
-//			lstOfGraphTypes = simulationService.getGraphTypesService();
-//			for (String eachObject : lstOfGraphTypes) {
-//				if (eachObject.equalsIgnoreCase(D_LINE_GRAPH_FILE)) {
-//					visualisationAndOutputlist.put(_2D_PLOT, _2D_PLOT);
-//					continue;
-//				} 
-//				
-//				if (eachObject.equalsIgnoreCase(VECTOR_FIELD_GRAPH_FILE)) {
-//					visualisationAndOutputlist.put(VECTOR_FIELD, VECTOR_FIELD);
-//					continue;
-//				} 
-//				
-//				if ("".equalsIgnoreCase(eachObject)) {
-//					visualisationAndOutputlist.put(STREAMLINE, STREAMLINE);
-//					continue;
-//				}
-//				
-//				visualisationAndOutputlist.put(_3D_PLOT,_3D_PLOT);
-//				continue;
-//			}
-//
-//		} catch (Exception e) {
-//			addExceptionMessage(e);
-//		}
-		
+		// try {
+		// lstOfGraphTypes = simulationService.getGraphTypesService();
+		// for (String eachObject : lstOfGraphTypes) {
+		// if (eachObject.equalsIgnoreCase(D_LINE_GRAPH_FILE)) {
+		// visualisationAndOutputlist.put(_2D_PLOT, _2D_PLOT);
+		// continue;
+		// }
+		//
+		// if (eachObject.equalsIgnoreCase(VECTOR_FIELD_GRAPH_FILE)) {
+		// visualisationAndOutputlist.put(VECTOR_FIELD, VECTOR_FIELD);
+		// continue;
+		// }
+		//
+		// if ("".equalsIgnoreCase(eachObject)) {
+		// visualisationAndOutputlist.put(STREAMLINE, STREAMLINE);
+		// continue;
+		// }
+		//
+		// visualisationAndOutputlist.put(_3D_PLOT,_3D_PLOT);
+		// continue;
+		// }
+		//
+		// } catch (Exception e) {
+		// addExceptionMessage(e);
+		// }
+
 		try {
 			visualisationAndOutputlist.put(_2D_PLOT, _2D_PLOT);
-			visualisationAndOutputlist.put(_3D_PLOT,_3D_PLOT);
+			visualisationAndOutputlist.put(_3D_PLOT, _3D_PLOT);
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
 		return visualisationAndOutputlist;
 	}
 
-	
-	
-	
 	public Boolean getRenderPAK3D() {
 		return renderPAK3D;
 	}
@@ -539,7 +608,6 @@ public class VisualisationOutputController extends GenericMB {
 		this.renderstreamline = renderstreamline;
 	}
 
-
 	public Map<String, String> getParamsList() throws Exception {
 		return paramsList;
 	}
@@ -573,12 +641,12 @@ public class VisualisationOutputController extends GenericMB {
 		this.fileDownloader = fileDownloader;
 	}
 
-
 	public VisualisationOutputEB getVisualisationOutputEB() {
 		return visualisationOutputEB;
 	}
 
-	public void setVisualisationOutputEB(VisualisationOutputEB visualisationOutputEB) {
+	public void setVisualisationOutputEB(
+			VisualisationOutputEB visualisationOutputEB) {
 		this.visualisationOutputEB = visualisationOutputEB;
 	}
 
@@ -625,7 +693,6 @@ public class VisualisationOutputController extends GenericMB {
 		this.projectSimulationController = projectSimulationController;
 	}
 
-
 	public IFeatureExtractorService getFeatureExtractor() {
 		return featureExtractor;
 	}
@@ -633,7 +700,7 @@ public class VisualisationOutputController extends GenericMB {
 	public void setFeatureExtractor(IFeatureExtractorService featureExtractor) {
 		this.featureExtractor = featureExtractor;
 	}
-	
+
 	public ISimulationService getSimulationService() {
 		return simulationService;
 	}
@@ -711,133 +778,88 @@ public class VisualisationOutputController extends GenericMB {
 		this.renderDisplacementsemanticInterpretation = renderDisplacementsemanticInterpretation;
 	}
 
-
 	public DataAnalysisController getDataAnalysisController() {
 		return dataAnalysisController;
 	}
-
 
 	public void setDataAnalysisController(
 			DataAnalysisController dataAnalysisController) {
 		this.dataAnalysisController = dataAnalysisController;
 	}
 
-
-
-
 	public IVisualizationService getVisualizationService() {
 		return visualizationService;
 	}
 
-
-
-
-	public void setVisualizationService(IVisualizationService visualizationService) {
+	public void setVisualizationService(
+			IVisualizationService visualizationService) {
 		this.visualizationService = visualizationService;
 	}
-
-
-
 
 	public LoadParametersEB getLoadParametersEB() {
 		return loadParametersEB;
 	}
 
-
-
-
 	public void setLoadParametersEB(LoadParametersEB loadParametersEB) {
 		this.loadParametersEB = loadParametersEB;
 	}
-
-
-
 
 	public Boolean getRender3Dplot() {
 		return render3Dplot;
 	}
 
-
-
-
 	public void setRender3Dplot(Boolean render3Dplot) {
 		this.render3Dplot = render3Dplot;
 	}
-
-
-
 
 	public String getPlyFileLocation() {
 		return getApplicationUri();
 	}
 
-
-
-
 	public void setPlyFileLocation(String plyFileLocation) {
 		this.plyFileLocation = getApplicationUri();
 	}
 
-	private String getShinyHostNameAndParameters() throws Exception{
-		//String simulationName = projectSimulationEB.getProjectSimulationTO().getSimulationName();
-		//String selectedSolverName = solverSetupEB.getSolverTO().getName();
-		//SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession().getServletContext().getAttribute(CONFIG_SESSION_OBJ);
-		
-		List<TransformationTO> transformations = projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().getTransformations();
-		if(transformations==null || transformations.isEmpty()){
-			transformations = transformationService.findAllService();
-		}
-		StringBuilder sb = new StringBuilder();
-		//List<String> projidList = sessionIndexTO.getProjectIdList();
-		int count = 1;
-		for(TransformationTO trans:transformations){
-			String transID = ((ObjectId)trans.get_id()).toString();
-			sb.append("&id_"+count+"=");
-			sb.append(transID);
-			count++;
-		}
+	private String getShinyHostNameAndParameters() throws Exception {
 
-		sb.append("&resultGraphID="+projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().getResultGraphID());
-                
-		//TODO FIXME - After tests, we need to use the commented version in place of the version with fixed project and simulation name, below.
+//		List<TransformationTO> transformations = projectSimulationController
+//				.getProjectSimulationEB().getProjectSimulationTO()
+//				.getTransformations();
+//		if (transformations == null || transformations.isEmpty()) {
+//			transformations = transformationService.findAllService();
+//		}
+//		StringBuilder sb = new StringBuilder();
+//		int count = 1;
+//		for (TransformationTO trans : transformations) {
+//			String transID = ((ObjectId) trans.get_id()).toString();
+//			sb.append("&id_" + count + "=");
+//			sb.append(transID);
+//			count++;
+//		}
+//
+//		sb.append("&resultGraphID="
+//				+ projectSimulationController.getProjectSimulationEB()
+//						.getProjectSimulationTO().getResultGraphID());
 
-//		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()
-//				+"?interpretationHostName="+resourceInjectionService.getApplicationServerURL()+
-//				"&workspacePath=NULL&getProjectName="+projectName+"&simulationName="+simulationName+"".trim();
-		
-		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()+"?interpretationHostName="+resourceInjectionService.getApplicationServerURL()+sb.toString().trim();
-                   
-                
-/*                
-		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()
-				+"?interpretationHostName=192.168.7.146:8080"+
-				"&workspacePath=NULL&getProjectName="+projectName+"&simulationName="+simulationName+"".trim();
-                
-		shinyAppHostName = resourceInjectionService.getShinyVisualizationAppHostName()
-				+"?interpretationHostName="+getApplicationUri()+
-				"&workspacePath=NULL&getProjectName=PROJECTTEST&simulationName=SIMULATIONUNITTEST".trim();
- */
-		//Eg.:http://127.0.0.1:9876/?interpretationHostName=localhost:8080&workspacePath=NULL&getProjectName=PROJECTTEST&simulationName=SIMULATIONUNITTEST
-                System.err.println("  shinyAppHostName = " + shinyAppHostName);
-                
+		shinyAppHostName = resourceInjectionService
+				.getShinyVisualizationAppHostName()
+				+ "?projectID="+projectSimulationEB.getProjectSimulationTO().getProjectSimulationID();
+//				+ resourceInjectionService.getApplicationServerURL()
+//				+ sb.toString().trim();
+		System.out.println(shinyAppHostName);
+		projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().setShinyHost(shinyAppHostName);
 		return shinyAppHostName;
 	}
-
 
 	public String getShinyAppHostName() throws Exception {
 		shinyAppHostName = getShinyHostNameAndParameters();
 		return shinyAppHostName;
 	}
 
-
-
-	//TODO Think about remove or refactoring this method.
+	// TODO Think about remove or refactoring this method.
 	public void setShinyAppHostName(String shinyAppHostName) throws Exception {
 		shinyAppHostName = getShinyHostNameAndParameters();
 		this.shinyAppHostName = shinyAppHostName;
 	}
 
-	
-
-	
 }
