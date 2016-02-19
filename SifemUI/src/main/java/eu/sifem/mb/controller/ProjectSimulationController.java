@@ -181,15 +181,15 @@ public class ProjectSimulationController extends GenericMB {
 				setCurrentSimulationName(projectName);
 				projectSimulationTO.setProjectSimulationID(projectSimulationEB.getProjectSimulationTO().get_id().toString());
 				simulationService.insertService(projectSimulationTO);
-				String resultgraphID = pakSolverControlerService
-						.showResultGraphs(projectSimulationTO.getProjectSimulationID());
+//				String resultgraphID = pakSolverControlerService
+//						.showResultGraphs(projectSimulationTO.getProjectSimulationID());
 				if (transformations != null && !transformations.isEmpty()) {
 					projectSimulationEB.getProjectSimulationTO()
 							.setTransformations(transformations);
 					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
 					if (ProjectSimulationTOObj != null
 							&& ProjectSimulationTOObj instanceof ProjectSimulationEB) {
-						projectSimulationTO.setResultGraphID(resultgraphID);
+//						projectSimulationTO.setResultGraphID(resultgraphID);
 						
 						((ProjectSimulationEB) ProjectSimulationTOObj)
 								.setProjectSimulationTO(projectSimulationTO);
@@ -232,21 +232,10 @@ public class ProjectSimulationController extends GenericMB {
 			System.out.println(" --- simulationName upon run() = "
 					+ simulationName);
 
-			// TODO Deprecating..
-			// String workspaceName =
-			// projectSimulationEB.getProjectSimulationTO().getWorkspace();
-			simulationInstanceTO.setProjectName(projectName);
-			simulationInstanceTO.setSimulationName(simulationName);
-
-			// TODO Deprecating..
-			// simulationInstanceTO.setWorkspacebasePath(workspaceName);
-
 			ProcessTO sifemProcess = new ProcessTO();
 			sifemProcess.setProjectName(projectName);
 			sifemProcess.setSimulationName(simulationName);
 
-			// TODO Deprecating..
-			// sifemProcess.setWorkspaceName(workspaceName);
 			sifemProcess.setIsNotStartedPhase(Boolean.TRUE);
 			pakSolverControlerService.saveOrUpdateProcessStatus(sifemProcess);
 
@@ -257,8 +246,7 @@ public class ProjectSimulationController extends GenericMB {
 					.runSync(simulationInstanceTO, sessionIndexTO, meshSetupEB
 							.getMeshSetupTO().getCommandLineArgument());
 
-			// PROJECT_SESSION_OBJ <- "projectStreamObj"
-			// getSession().setAttribute(PROJECT_SESSION_OBJ+"_"+projectName+"_"+simulationName,asyncTripleStoreInsertMessageTOList);
+
 			indexingService.indexStreamService(
 					asyncTripleStoreInsertMessageTOList, projectName,
 					simulationName);

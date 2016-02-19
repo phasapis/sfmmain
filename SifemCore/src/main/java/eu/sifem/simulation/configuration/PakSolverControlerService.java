@@ -3,27 +3,29 @@ package eu.sifem.simulation.configuration;
 
 
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.sifem.dao.mongo.DatAndUnvSolverDAO;
-import eu.sifem.dao.mongo.SolverResultFilesDAO;
 import eu.sifem.model.to.AsyncTripleStoreInsertMessageTO;
+import eu.sifem.model.to.CenterlineTO;
 import eu.sifem.model.to.DatAndUnvSolverTO;
 import eu.sifem.model.to.PAKCRestServiceTO;
+import eu.sifem.model.to.PimagTO;
+import eu.sifem.model.to.PrealTO;
 import eu.sifem.model.to.ProcessTO;
+import eu.sifem.model.to.Simple2DGraphTO;
 import eu.sifem.model.to.SimulationInstanceTO;
 import eu.sifem.model.to.SolverResultFilesTO;
+import eu.sifem.model.to.SolverResultXYGraphTO;
+import eu.sifem.model.to.VmagnTO;
+import eu.sifem.model.to.VphaseTO;
 import eu.sifem.service.IPakRDFMapperService;
 import eu.sifem.service.IPakSolverControlerService;
 import eu.sifem.service.IResourceInjectionService;
@@ -63,6 +65,7 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	
 	@Autowired
 	private ISolverResultFilesDAO solverResultFilesDAO;
+	
 	
 	//TODO Deprecating..
 //	@Override
@@ -161,17 +164,96 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	}
 	
 	@Override
-	public String showResultGraphs(String projectID) throws Exception {
-		SolverResultFilesTO solverResultFilesTO = new SolverResultFilesTO();
-		solverResultFilesTO.setDcenterlineFile(dCenterLineFile(null));
-		solverResultFilesTO.setPimagFile(pImagFile(null));
-		solverResultFilesTO.setPrealFile(pRealFile(null));
-		solverResultFilesTO.setVmagnFile(vMagnFile(null));
-		solverResultFilesTO.setVphaseFile(vPhaseFile(null));
-		solverResultFilesDAO.insert(solverResultFilesTO);
-		return solverResultFilesTO.get_id().toString();
+	public SolverResultXYGraphTO showResultGraphs(String projectID) throws Exception {
+		SolverResultFilesTO solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
+
+
+		
+		SolverResultXYGraphTO  solverResultXYGraphTO = parseStreamsToWrapperObjects(solverResultFilesTO);
+
+		return solverResultXYGraphTO;
 	}
 	
+	@Override
+	public SolverResultXYGraphTO parseStreamsToWrapperObjects(SolverResultFilesTO solverResultFilesTO) throws Exception {
+		if(solverResultFilesTO==null || solverResultFilesTO.get_id()==null || 
+				solverResultFilesTO.getDcenterlineFile()==null ||
+				solverResultFilesTO.getPimagFile()==null || 
+				solverResultFilesTO.getPrealFile()==null || 
+				solverResultFilesTO.getVmagnFile()==null || 
+				solverResultFilesTO.getVphaseFile()==null){
+			solverResultFilesTO = new SolverResultFilesTO();
+			solverResultFilesTO.setDcenterlineFile(dCenterLineFile(null));
+			solverResultFilesTO.setPimagFile(pImagFile(null));
+			solverResultFilesTO.setPrealFile(pRealFile(null));
+			solverResultFilesTO.setVmagnFile(vMagnFile(null));
+			solverResultFilesTO.setVphaseFile(vPhaseFile(null));
+		}
+		
+		//String dcenterStr = IOUtils.toString(solverResultFilesTO.getDcenterlineFile(),"UTF-8");
+		String dcenterStr = BasicFileTools.extractText(solverResultFilesTO.getDcenterlineFile());
+		String pimagStr = BasicFileTools.extractText(solverResultFilesTO.getPimagFile());
+		String prealStr = BasicFileTools.extractText(solverResultFilesTO.getPrealFile());
+		String vmagnStr = BasicFileTools.extractText(solverResultFilesTO.getVmagnFile());
+		String vphaseStr = BasicFileTools.extractText(solverResultFilesTO.getVphaseFile());
+		
+		Simple2DGraphTO centerlineTO = graphWrapper(dcenterStr.trim());
+		Simple2DGraphTO pimagTO = graphWrapper(pimagStr.trim());
+		Simple2DGraphTO prealTO = graphWrapper(prealStr.trim());
+		Simple2DGraphTO vmagnTO = graphWrapper(vmagnStr.trim());
+		Simple2DGraphTO vphaseTO = graphWrapper(vphaseStr.trim());
+
+		SolverResultXYGraphTO solverResultXYGraphTO = new SolverResultXYGraphTO();
+		solverResultXYGraphTO.setProjectID(solverResultFilesTO.getProjectID());
+		
+		solverResultXYGraphTO.setCenterlineTO(new CenterlineTO(centerlineTO));
+		solverResultXYGraphTO.setPimagTO(new PimagTO(pimagTO));
+		solverResultXYGraphTO.setPrealTO(new PrealTO(prealTO));
+		solverResultXYGraphTO.setVmagnTO(new VmagnTO(vmagnTO));
+		solverResultXYGraphTO.setVphaseTO(new VphaseTO(vphaseTO));
+		
+		
+		return solverResultXYGraphTO;
+	}
+	
+	private Simple2DGraphTO graphWrapper(String graphStr) {
+		Simple2DGraphTO simple2DGraphTO = new Simple2DGraphTO();
+		graphStr = graphStr.trim();
+		int count = 1;
+		List<String> items = Arrays.asList(graphStr.split("\\s*,\\s*"));
+		
+		for(String value:items){
+			if(!isNum(value)){
+				continue;
+			}
+			if((count%2)==0){
+				simple2DGraphTO.getxView().add(Double.parseDouble(value));
+			}else{
+				simple2DGraphTO.getyView().add(Double.parseDouble(value));
+			}
+			
+			count++;
+		}
+
+		return simple2DGraphTO;
+	}
+
+	public static boolean isNum(String strNum) {
+	    boolean ret = true;
+	    try {
+
+	        Double.parseDouble(strNum);
+
+	    }catch (NumberFormatException e) {
+	        ret = false;
+	    }
+	    return ret;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		new PakSolverControlerService().parseStreamsToWrapperObjects(null);
+	}
+
 	//TODO could be removed after Panos' service is ready
 	public InputStream pImagFile(PAKCRestServiceTO simulationInstance) throws Exception{
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream(PIMAG_LOCAL_FILE);

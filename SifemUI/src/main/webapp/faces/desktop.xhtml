@@ -99,10 +99,7 @@ function cancel() {
 				<p:menuitem value="Show Batch Processes" icon="ui-icon-search" 
 				actionListener="#{projectSimulationController.showStatusProcesses}" oncomplete="PF('showStatusProcessesDialog').show();" />
 
-				<p:menuitem value="Show Results" action="#{visualisationOutputController.shinyAppHostName}" />
-
 				<p:menuitem value="Cancel Session" icon="ui-icon-extlink" actionListener="#{userManagerController.logout}" ajax="false"/>
-
                                 
 				<f:facet name="options">
 					<h:commandLink>

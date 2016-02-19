@@ -1,5 +1,6 @@
 package eu.sifem.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import eu.sifem.model.to.AsyncTripleStoreInsertMessageTO;
@@ -7,6 +8,8 @@ import eu.sifem.model.to.DatAndUnvSolverTO;
 import eu.sifem.model.to.ProcessTO;
 import eu.sifem.model.to.SessionIndexTO;
 import eu.sifem.model.to.SimulationInstanceTO;
+import eu.sifem.model.to.SolverResultFilesTO;
+import eu.sifem.model.to.SolverResultXYGraphTO;
 
 /**
  * 
@@ -42,6 +45,9 @@ public interface IPakSolverControlerService{
 
 	void saveOrUpdateProcessStatus(ProcessTO sifemProcess);
 
-	String showResultGraphs(String projectID) throws Exception;
+	SolverResultXYGraphTO showResultGraphs(String projectID) throws Exception;
+
+	SolverResultXYGraphTO parseStreamsToWrapperObjects(
+			SolverResultFilesTO solverResultFilesTO) throws IOException, Exception;
 
 }

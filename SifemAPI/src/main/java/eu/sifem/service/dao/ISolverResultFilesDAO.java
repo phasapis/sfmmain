@@ -6,4 +6,6 @@ public interface ISolverResultFilesDAO {
 
 	void insert(SolverResultFilesTO solverResultFilesTO) throws Exception;
 
+	SolverResultFilesTO findByProjectID(String projectID);
+
 }

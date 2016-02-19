@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.jms.JMSException;
@@ -177,8 +178,19 @@ public class ProcessRunnableService implements IProcessRunnableService {
 		return datAndUnvSolverTOList;
 	}
 
+	
+	
 
-        private static String topicName = "Job.queue";
+        private Map<List<String>, List<String>> parseAndSaveStreamAsXandYList(SolverResultFilesTO solverResultFilesTO) {
+       
+        	
+		return null;
+       }
+
+
+
+
+		private static String topicName = "Job.queue";
         private static String initialContextFactory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory";
         private static String connectionString = "tcp://"+vmIp+":61616";
         private static boolean messageReceived = false;    

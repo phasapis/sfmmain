@@ -11,7 +11,10 @@
 	<ui:composition>
 		<p:layoutUnit position="center" resizable="true" minSize="20"
 			size="40">
-			<p:panel id="visualisationandoutput" style="margin-bottom:10px;">
+			
+			<p:tabView dynamic="true">
+			<p:tab title="Visualisation">
+			<p:panel id="visualisationandoutput" style="margin-bottom:10px;height:630px;width:1440px">
 				<h:panelGrid columns="6" id="imagePanel3D">
 					<f:view>
 						<iframe src="#{visualisationOutputController.shinyAppHostName}"
@@ -19,6 +22,40 @@
 					</f:view>
 				</h:panelGrid>
 			</p:panel>
+			</p:tab>
+			
+			
+			<p:tab title="Results">
+			<p:panel id="graphPanel" style="margin-bottom:10px;height:630px;width:1440px;text-align: center">
+			<h:panelGrid columns="6" cellpadding="5" id="visualisationButtons" style="text-align: center">
+			
+			<p:commandButton value="BM Velocity Magnitude" id="bvm">
+				<f:ajax listener="#{chartViewController.plotChartActionListner}" process="@this csvLineChart" render="@this csvLineChart" />
+			</p:commandButton>
+			<p:commandButton value="BM Velocity Phase" id="bvp">
+				<f:ajax listener="#{chartViewController.plotChartActionListner}" process="@this csvLineChart" render="@this csvLineChart" />
+			</p:commandButton>
+			<p:commandButton value="Pressure - Real Part" id="prp">
+				<f:ajax listener="#{chartViewController.plotChartActionListner}" process="@this csvLineChart" render="@this csvLineChart" />
+			</p:commandButton>
+			<p:commandButton value="Pressure - Imaginary Part" id="pip">
+				<f:ajax listener="#{chartViewController.plotChartActionListner}" process="@this csvLineChart" render="@this csvLineChart" />
+			</p:commandButton>
+			<p:commandButton value="Centerline" id="cl">
+				<f:ajax listener="#{chartViewController.plotChartActionListner}" process="@this csvLineChart" render="@this csvLineChart" />
+			</p:commandButton>
+			
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1" id="graphs">
+				<p:chart id="csvLineChart" type="line" model="#{chartViewController.lineModel}" style="height:550px;width:1400px;"/>
+			</h:panelGrid>
+			</p:panel>
+			
+			</p:tab>
+			
+			</p:tabView>
+			
 		</p:layoutUnit>
 	</ui:composition>
 </body>

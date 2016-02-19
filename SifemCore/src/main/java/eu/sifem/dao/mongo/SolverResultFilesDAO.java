@@ -1,18 +1,23 @@
 package eu.sifem.dao.mongo;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSFile;
 
 import eu.sifem.model.to.DatAndUnvSolverTO;
+import eu.sifem.model.to.DatAndUnvTTLTO;
 import eu.sifem.model.to.SolverResultFilesTO;
 import eu.sifem.service.dao.IGenericJenaQueryDAOService;
 import eu.sifem.service.dao.ISolverResultFilesDAO;
@@ -87,6 +92,50 @@ public class SolverResultFilesDAO implements ISolverResultFilesDAO{
 
 			 	 
 			mongoOperations.insert(solverResultFilesTO,SolverResultFilesTO.class.getSimpleName());
+		}
+
+
+		@Override
+		public SolverResultFilesTO findByProjectID(String projectID) {
+			
+				Query query = new Query();
+				query.addCriteria(Criteria.where("projectID").is(projectID));
+				SolverResultFilesTO solverResultTO = mongoOperations.findOne(query, SolverResultFilesTO.class,SolverResultFilesTO.class.getSimpleName());
+				if(solverResultTO==null){
+					return null;
+				}
+		                
+				
+				ObjectId dcenterlineFileID = solverResultTO.getDcenterlineFileID();
+				GridFSDBFile dcenterlineFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(dcenterlineFileID)));
+				InputStream dcenterlineIS = dcenterlineFile.getInputStream();
+				solverResultTO.setDcenterlineFile(dcenterlineIS);
+				
+				ObjectId pimagFileID = solverResultTO.getPimagFileID();
+				GridFSDBFile pimagFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(pimagFileID)));
+				InputStream pimagIS = dcenterlineFile.getInputStream();
+				solverResultTO.setPimagFile(pimagIS);
+				
+				ObjectId prealFileID = solverResultTO.getPrealFileID();
+				GridFSDBFile prealFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(prealFileID)));
+				InputStream prealIS = prealFile.getInputStream();
+				solverResultTO.setPrealFile(prealIS);
+				
+				
+				ObjectId vmagnFileID = solverResultTO.getVmagnFileID();
+				GridFSDBFile vmagnFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(vmagnFileID)));
+				InputStream vmagnIS = vmagnFile.getInputStream();
+				solverResultTO.setVmagnFile(vmagnIS);
+				
+				
+				ObjectId vphaseFileID = solverResultTO.getVphaseFileID();
+				GridFSDBFile vphaseFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(vphaseFileID)));
+				InputStream vphaseIS = vphaseFile.getInputStream();
+				solverResultTO.setVmagnFile(vphaseIS);
+				
+				
+			
+			return solverResultTO;
 		}
 	
 }
