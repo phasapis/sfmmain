@@ -113,7 +113,7 @@ public class SolverResultFilesDAO implements ISolverResultFilesDAO{
 				
 				ObjectId pimagFileID = solverResultTO.getPimagFileID();
 				GridFSDBFile pimagFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(pimagFileID)));
-				InputStream pimagIS = dcenterlineFile.getInputStream();
+				InputStream pimagIS = pimagFile.getInputStream();
 				solverResultTO.setPimagFile(pimagIS);
 				
 				ObjectId prealFileID = solverResultTO.getPrealFileID();
@@ -131,7 +131,7 @@ public class SolverResultFilesDAO implements ISolverResultFilesDAO{
 				ObjectId vphaseFileID = solverResultTO.getVphaseFileID();
 				GridFSDBFile vphaseFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(vphaseFileID)));
 				InputStream vphaseIS = vphaseFile.getInputStream();
-				solverResultTO.setVmagnFile(vphaseIS);
+				solverResultTO.setVphaseFile(vphaseIS);
 				
 				
 			

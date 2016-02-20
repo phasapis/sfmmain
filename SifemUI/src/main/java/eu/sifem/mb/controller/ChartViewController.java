@@ -1,9 +1,9 @@
 package eu.sifem.mb.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -67,7 +67,7 @@ public class ChartViewController extends GenericMB {
 	}
 	
 	
-	private void createLineModels() throws Exception {
+	private void createLineModels() {
         try {
 			lineModel = initLinearModel();
 			lineModel.setTitle("Linear Chart");
@@ -75,8 +75,6 @@ public class ChartViewController extends GenericMB {
 			Axis yAxis = lineModel.getAxis(AxisType.Y);
 			yAxis.setMin(0);
 			yAxis.setMax(10);
-			this.setProjectID(projectSimulationEB.getProjectSimulationTO().getProjectSimulationID());
-			solverResultXYGraphTO = pakSolverControlerService.showResultGraphs(this.getProjectID());
 		} catch (Exception e) {
 			addErrorMessage("Error!",e.getMessage());
 		}
@@ -116,52 +114,44 @@ public class ChartViewController extends GenericMB {
         return model;
     }
 	
-	public void plotChartActionListner(AjaxBehaviorEvent event) {
+	public void plotChartActionListner(AjaxBehaviorEvent event) throws Exception {
 		String buttonID = event.getComponent().getId();
 		HashMap<Double, Double> xyMap = new HashMap<Double, Double>();
 		
+		this.setProjectID(projectSimulationEB.getProjectSimulationTO().getProjectSimulationID());
+		solverResultXYGraphTO = pakSolverControlerService.showResultGraphs(this.getProjectID(),Boolean.TRUE);
+		
 		try {
 			if(buttonID.equals(new String("bvm"))) {
-				List<Double> xlist = solverResultXYGraphTO.getVmagnTO().getxView();
-				List<Double> ylist = solverResultXYGraphTO.getVmagnTO().getyView();
-				
-				for(int count=0;count<xlist.size();count++){
-					xyMap.put(xlist.get(count), ylist.get(count));
+			
+				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getVmagnTO().getXyMap().entrySet()) {
+					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("bvp"))) {
 				
-				List<Double> xlist = solverResultXYGraphTO.getVphaseTO().getxView();
-				List<Double> ylist = solverResultXYGraphTO.getVphaseTO().getyView();
-				
-				for(int count=0;count<xlist.size();count++){
-					xyMap.put(xlist.get(count), ylist.get(count));
+				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getVphaseTO().getXyMap().entrySet()) {
+					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("prp"))) {
 				
-				List<Double> xlist = solverResultXYGraphTO.getPrealTO().getxView();
-				List<Double> ylist = solverResultXYGraphTO.getPrealTO().getyView();
-				for(int count=0;count<xlist.size();count++){
-					xyMap.put(xlist.get(count), ylist.get(count));
+				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getPrealTO().getXyMap().entrySet()) {
+					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("pip"))) {
-				List<Double> xlist = solverResultXYGraphTO.getPimagTO().getxView();
-				List<Double> ylist = solverResultXYGraphTO.getPimagTO().getyView();
-				for(int count=0;count<xlist.size();count++){
-					xyMap.put(xlist.get(count), ylist.get(count));
+				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getPimagTO().getXyMap().entrySet()) {
+					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("cl"))) {
-				List<Double> xlist = solverResultXYGraphTO.getCenterlineTO().getxView();
-				List<Double> ylist = solverResultXYGraphTO.getCenterlineTO().getyView();
-				for(int count=0;count<xlist.size();count++){
-					xyMap.put(xlist.get(count), ylist.get(count));
+				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getCenterlineTO().getXyMap().entrySet()) {
+					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				
 				lineModel = initLinearModel(xyMap);

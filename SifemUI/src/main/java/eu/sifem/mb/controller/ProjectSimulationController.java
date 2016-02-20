@@ -37,6 +37,7 @@ import eu.sifem.model.to.ProjectSimulationTO;
 import eu.sifem.model.to.SessionIndexTO;
 import eu.sifem.model.to.SimulationInstanceTO;
 import eu.sifem.model.to.SolverConfigCreatorTO;
+import eu.sifem.model.to.SolverResultXYGraphTO;
 import eu.sifem.model.to.TransformationTO;
 import eu.sifem.service.IIndexingService;
 import eu.sifem.service.IPakSolverControlerService;
@@ -177,19 +178,19 @@ public class ProjectSimulationController extends GenericMB {
 						.findByID(projectSimulationEB.getProjectSimulationTO().get_id());
 				projectSimulationTO.setProjectName(projectName);
 
-				projectSimulationTO.setTransformations(null);
+				//projectSimulationTO.setTransformations(null);
 				setCurrentSimulationName(projectName);
 				projectSimulationTO.setProjectSimulationID(projectSimulationEB.getProjectSimulationTO().get_id().toString());
 				simulationService.insertService(projectSimulationTO);
-//				String resultgraphID = pakSolverControlerService
-//						.showResultGraphs(projectSimulationTO.getProjectSimulationID());
+//				SolverResultXYGraphTO solverResultXYGraphTO = pakSolverControlerService
+//						.showResultGraphs(projectSimulationTO.getProjectSimulationID(),Boolean.TRUE);
 				if (transformations != null && !transformations.isEmpty()) {
 					projectSimulationEB.getProjectSimulationTO()
 							.setTransformations(transformations);
 					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
 					if (ProjectSimulationTOObj != null
 							&& ProjectSimulationTOObj instanceof ProjectSimulationEB) {
-//						projectSimulationTO.setResultGraphID(resultgraphID);
+//						projectSimulationTO.setResultGraphID(solverResultXYGraphTO.get_id().toString());
 						
 						((ProjectSimulationEB) ProjectSimulationTOObj)
 								.setProjectSimulationTO(projectSimulationTO);

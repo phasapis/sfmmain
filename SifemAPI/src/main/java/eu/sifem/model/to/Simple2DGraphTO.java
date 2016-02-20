@@ -1,5 +1,6 @@
 package eu.sifem.model.to;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,24 +11,14 @@ public class Simple2DGraphTO implements AbstractTO{
 
 	private static final long serialVersionUID = -3372687427730611070L;
 
-	private List<Double> xView = new LinkedList<Double>();
-	
-	private List<Double> yView = new LinkedList<Double>();
+	private HashMap<Double, Double> xyMap = new HashMap<Double, Double>();
 
-	public List<Double> getxView() {
-		return xView;
+	public HashMap<Double, Double> getXyMap() {
+		return xyMap;
 	}
 
-	public void setxView(List<Double> xView) {
-		this.xView = xView;
-	}
-
-	public List<Double> getyView() {
-		return yView;
-	}
-
-	public void setyView(List<Double> yView) {
-		this.yView = yView;
+	public void setXyMap(HashMap<Double, Double> xyMap) {
+		this.xyMap = xyMap;
 	}
 
 	

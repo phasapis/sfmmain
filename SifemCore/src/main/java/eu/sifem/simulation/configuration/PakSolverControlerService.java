@@ -6,10 +6,13 @@ package eu.sifem.simulation.configuration;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -164,18 +167,21 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	}
 	
 	@Override
-	public SolverResultXYGraphTO showResultGraphs(String projectID) throws Exception {
+	public SolverResultXYGraphTO showResultGraphs(String projectID,Boolean isInsert) throws Exception {
 		SolverResultFilesTO solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
 
 
 		
-		SolverResultXYGraphTO  solverResultXYGraphTO = parseStreamsToWrapperObjects(solverResultFilesTO);
+		SolverResultXYGraphTO  solverResultXYGraphTO = parseStreamsToWrapperObjects(solverResultFilesTO,isInsert,projectID);
 
 		return solverResultXYGraphTO;
 	}
 	
 	@Override
-	public SolverResultXYGraphTO parseStreamsToWrapperObjects(SolverResultFilesTO solverResultFilesTO) throws Exception {
+	public SolverResultXYGraphTO parseStreamsToWrapperObjects(SolverResultFilesTO solverResultFilesTO,Boolean isInsert, String projectID) throws Exception {
+		
+
+		
 		if(solverResultFilesTO==null || solverResultFilesTO.get_id()==null || 
 				solverResultFilesTO.getDcenterlineFile()==null ||
 				solverResultFilesTO.getPimagFile()==null || 
@@ -183,13 +189,25 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 				solverResultFilesTO.getVmagnFile()==null || 
 				solverResultFilesTO.getVphaseFile()==null){
 			solverResultFilesTO = new SolverResultFilesTO();
-			solverResultFilesTO.setDcenterlineFile(dCenterLineFile(null));
-			solverResultFilesTO.setPimagFile(pImagFile(null));
-			solverResultFilesTO.setPrealFile(pRealFile(null));
-			solverResultFilesTO.setVmagnFile(vMagnFile(null));
-			solverResultFilesTO.setVphaseFile(vPhaseFile(null));
+			
+			InputStream dcenterlineIS = dCenterLineFile(null);
+			InputStream pImagIS = pImagFile(null);
+			InputStream pRealIS = pRealFile(null);
+			InputStream vMagnIS = vMagnFile(null);
+			InputStream vPhaseIS = vPhaseFile(null);
+			
+			solverResultFilesTO.setDcenterlineFile(dcenterlineIS);
+			solverResultFilesTO.setPimagFile(pImagIS);
+			solverResultFilesTO.setPrealFile(pRealIS);
+			solverResultFilesTO.setVmagnFile(vMagnIS);
+			solverResultFilesTO.setVphaseFile(vPhaseIS);
+			
+			if(isInsert){
+				solverResultFilesTO.setProjectID(projectID);
+				solverResultFilesDAO.insert(solverResultFilesTO);				
+			}
 		}
-		
+		solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
 		//String dcenterStr = IOUtils.toString(solverResultFilesTO.getDcenterlineFile(),"UTF-8");
 		String dcenterStr = BasicFileTools.extractText(solverResultFilesTO.getDcenterlineFile());
 		String pimagStr = BasicFileTools.extractText(solverResultFilesTO.getPimagFile());
@@ -197,45 +215,52 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 		String vmagnStr = BasicFileTools.extractText(solverResultFilesTO.getVmagnFile());
 		String vphaseStr = BasicFileTools.extractText(solverResultFilesTO.getVphaseFile());
 		
-		Simple2DGraphTO centerlineTO = graphWrapper(dcenterStr.trim());
-		Simple2DGraphTO pimagTO = graphWrapper(pimagStr.trim());
-		Simple2DGraphTO prealTO = graphWrapper(prealStr.trim());
-		Simple2DGraphTO vmagnTO = graphWrapper(vmagnStr.trim());
-		Simple2DGraphTO vphaseTO = graphWrapper(vphaseStr.trim());
+		CenterlineTO centerlineTO = (CenterlineTO) graphWrapper(dcenterStr.trim(),CenterlineTO.class.getCanonicalName());
+		PimagTO pimagTO = (PimagTO) graphWrapper(pimagStr.trim(),PimagTO.class.getCanonicalName());
+		PrealTO prealTO = (PrealTO) graphWrapper(prealStr.trim(),PrealTO.class.getCanonicalName());
+		VmagnTO vmagnTO = (VmagnTO) graphWrapper(vmagnStr.trim(),VmagnTO.class.getCanonicalName());
+		VphaseTO vphaseTO = (VphaseTO) graphWrapper(vphaseStr.trim(),VphaseTO.class.getCanonicalName());
 
 		SolverResultXYGraphTO solverResultXYGraphTO = new SolverResultXYGraphTO();
 		solverResultXYGraphTO.setProjectID(solverResultFilesTO.getProjectID());
 		
-		solverResultXYGraphTO.setCenterlineTO(new CenterlineTO(centerlineTO));
-		solverResultXYGraphTO.setPimagTO(new PimagTO(pimagTO));
-		solverResultXYGraphTO.setPrealTO(new PrealTO(prealTO));
-		solverResultXYGraphTO.setVmagnTO(new VmagnTO(vmagnTO));
-		solverResultXYGraphTO.setVphaseTO(new VphaseTO(vphaseTO));
+		solverResultXYGraphTO.setCenterlineTO(centerlineTO);
+		solverResultXYGraphTO.setPimagTO(pimagTO);
+		solverResultXYGraphTO.setPrealTO(prealTO);
+		solverResultXYGraphTO.setVmagnTO(vmagnTO);
+		solverResultXYGraphTO.setVphaseTO(vphaseTO);
 		
 		
 		return solverResultXYGraphTO;
 	}
 	
-	private Simple2DGraphTO graphWrapper(String graphStr) {
-		Simple2DGraphTO simple2DGraphTO = new Simple2DGraphTO();
+	private Object graphWrapper(String graphStr,String clazz) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Object obj = Class.forName(clazz).newInstance();
 		graphStr = graphStr.trim();
 		int count = 1;
 		List<String> items = Arrays.asList(graphStr.split("\\s*,\\s*"));
-		
+		HashMap<Double, Double> xyMap = new HashMap<Double, Double>();
+		Double previousKey = null;
 		for(String value:items){
 			if(!isNum(value)){
 				continue;
 			}
-			if((count%2)==0){
-				simple2DGraphTO.getxView().add(Double.parseDouble(value));
+			Boolean isX = (count%2)==0;
+			if(!isX){
+				previousKey = Double.parseDouble(value);
+				xyMap.put(Double.parseDouble(value),null);
 			}else{
-				simple2DGraphTO.getyView().add(Double.parseDouble(value));
+				Double previousValue = xyMap.get(previousKey);
+				if(previousKey!=null || previousValue==null){
+					xyMap.put(previousKey,Double.parseDouble(value));
+				}
 			}
-			
+
 			count++;
 		}
+		((Simple2DGraphTO)obj).getXyMap().putAll(xyMap);
 
-		return simple2DGraphTO;
+		return obj;
 	}
 
 	public static boolean isNum(String strNum) {
@@ -250,9 +275,6 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	    return ret;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		new PakSolverControlerService().parseStreamsToWrapperObjects(null);
-	}
 
 	//TODO could be removed after Panos' service is ready
 	public InputStream pImagFile(PAKCRestServiceTO simulationInstance) throws Exception{
