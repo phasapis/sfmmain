@@ -29,7 +29,7 @@ http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 	<context:spring-configured />
 
 	<context:property-placeholder
-		location="classpath:SifemLinuxPathResource.properties" />
+		location="classpath:SifemLinuxPathResource_out.properties" />
 
 <!-- 213.249.38.66 8890 and 1111 virtuoso -->
 	<bean id="virtDataset" class="virtuoso.jena.driver.VirtDataset"
@@ -75,7 +75,8 @@ http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 		<property name="runProcessQueueEnt" value="${RUN_PROCESS_QUEUE_ENT}" />
 	</bean>
 
-	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" p:brokerURL="tcp://192.168.3.26:61616" />
+<!-- 213.249.38.66:61617 -->
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory" p:brokerURL="tcp://213.249.38.66:61617" />
 
 	<bean id="simulationRunnableListener" class="eu.sifem.simulation.async.SimulationRunnableListener" />
 	<jms:listener-container container-type="default" connection-factory="connectionFactory" acknowledge="auto">
