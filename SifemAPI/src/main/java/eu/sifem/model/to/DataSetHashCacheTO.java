@@ -17,6 +17,8 @@ public class DataSetHashCacheTO  implements AbstractTO {
 	
 	private  String simulationName;
 	
+	private String projectID;
+	
 	private  String xName;
 	
 	private  String yName;
@@ -32,6 +34,23 @@ public class DataSetHashCacheTO  implements AbstractTO {
 	private String instanceName;
 	
 	
+	
+
+	public String getProjectID() {
+		return projectID;
+	}
+
+
+
+
+
+	public void setProjectID(String projectID) {
+		this.projectID = projectID;
+	}
+
+
+
+
 
 	public String getInstanceName() {
 		return instanceName;

@@ -169,18 +169,12 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	@Override
 	public SolverResultXYGraphTO showResultGraphs(String projectID,Boolean isInsert) throws Exception {
 		SolverResultFilesTO solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
-
-
-		
 		SolverResultXYGraphTO  solverResultXYGraphTO = parseStreamsToWrapperObjects(solverResultFilesTO,isInsert,projectID);
-
 		return solverResultXYGraphTO;
 	}
 	
 	@Override
 	public SolverResultXYGraphTO parseStreamsToWrapperObjects(SolverResultFilesTO solverResultFilesTO,Boolean isInsert, String projectID) throws Exception {
-		
-
 		
 		if(solverResultFilesTO==null || solverResultFilesTO.get_id()==null || 
 				solverResultFilesTO.getDcenterlineFile()==null ||

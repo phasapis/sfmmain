@@ -843,8 +843,8 @@ public class VisualisationOutputController extends GenericMB {
 
 		shinyAppHostName = resourceInjectionService
 				.getShinyVisualizationAppHostName()
-				+ "?projectID="+projectSimulationEB.getProjectSimulationTO().getProjectSimulationID();
-//				+ resourceInjectionService.getApplicationServerURL()
+				+ "?projectID="+projectSimulationEB.getProjectSimulationTO().getProjectSimulationID()
+				+"&interpretationHostName="+ resourceInjectionService.getApplicationServerURL();
 //				+ sb.toString().trim();
 		System.out.println(shinyAppHostName);
 		projectSimulationController.getProjectSimulationEB().getProjectSimulationTO().setShinyHost(shinyAppHostName);

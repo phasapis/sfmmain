@@ -9,7 +9,7 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	<!-- import resource="classpath:SifemCore-applicationContext_desenv.xml"  -->
-	<import resource="classpath:SifemCore-applicationContext_desenv.xml"/>
+	<import resource="classpath:SifemCore-applicationContext_desenv_out.xml"/>
 	<context:annotation-config />
 	<context:component-scan annotation-config="true"
 		base-package="eu" />

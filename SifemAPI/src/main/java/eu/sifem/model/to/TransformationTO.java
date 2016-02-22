@@ -35,8 +35,18 @@ public class TransformationTO implements AbstractTO{
 	
 	private List<String> namedGraphs = new ArrayList<String>();
 	
+	private String projectID;
 	
 	
+	
+	public String getProjectID() {
+		return projectID;
+	}
+
+	public void setProjectID(String projectID) {
+		this.projectID = projectID;
+	}
+
 	public List<String> getNamedGraphs() {
 		return namedGraphs;
 	}
