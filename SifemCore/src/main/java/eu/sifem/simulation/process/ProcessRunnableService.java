@@ -95,7 +95,14 @@ public class ProcessRunnableService implements IProcessRunnableService {
 			SessionIndexTO sessionIndexTO, String commandLineArgument) throws Exception {
             
                 System.err.println(" --- startAsync 2");
-
+                System.err.println(simulationInstanceTO.getProjectName());
+                
+                /*
+                simulationInstanceTO.setProjectName("finalfwoeifw");
+                simulationInstanceTO.setInstanceName("finalfwoeifwinst");
+                simulationInstanceTO.setSimulationName("wef4et56sim");
+                        */
+                
 		List<DatAndUnvSolverTO> datAndUnvSolverTOList = callPakService(
 				simulationInstanceTO, sessionIndexTO, commandLineArgument);
 		System.out.println(simulationInstanceTO);
@@ -140,6 +147,9 @@ public class ProcessRunnableService implements IProcessRunnableService {
 			if (cfgIs == null) {
 				return Collections.EMPTY_LIST;
 			}
+                        
+                        System.err.println("i = " + i);                        
+                        
 //			FileUtils.writeByteArrayToFile(new File("C:/SifemWindowsResourceFiles/input_panos_"+i+".cfg"),IOUtils.toByteArray(cfgIs.get(0)));
 			
                         System.err.println(" ---- cfgIS.size" + cfgIs.size());
@@ -202,6 +212,7 @@ public class ProcessRunnableService implements IProcessRunnableService {
             String session = null;
             PAKCRestServiceWrapperTO result = new PAKCRestServiceWrapperTO();
             PAKCRestServiceTO simulationInstance = new PAKCRestServiceTO();
+            System.err.println(" -------------- In Call service - cline=" + commandLineArgument + " " + simulationInstanceTO.getProjectName());
             
             //String StringFromInputStream = IOUtils.toString(is, "UTF-8");
             //System.out.println(StringFromInputStream);            
@@ -261,13 +272,21 @@ public class ProcessRunnableService implements IProcessRunnableService {
             InputStream unvIS = new ByteArrayInputStream(simulationInstance.getUnvFile());
             
 
+            /*
             InputStream pImagFile = pImagFile(simulationInstance);
             InputStream dCenterLineFile  = dCenterLineFile(simulationInstance);
             InputStream pRealFile  = pRealFile(simulationInstance);
             InputStream vMagnFile  = vMagnFile(simulationInstance);
             InputStream vPhaseFile  = vPhaseFile(simulationInstance);
-            
+            */
 
+            InputStream pImagFile = new ByteArrayInputStream(simulationInstance.getpImagFile());
+            InputStream dCenterLineFile = new ByteArrayInputStream(simulationInstance.getdCenterLineFile());
+            InputStream pRealFile  = new ByteArrayInputStream(simulationInstance.getpRealFile());
+            InputStream vMagnFile  = new ByteArrayInputStream(simulationInstance.getvMagnFile());
+            InputStream vPhaseFile  = new ByteArrayInputStream(simulationInstance.getvPhaseFile());
+            
+            
             System.out.println(" -------------- Done");
             result.setSessionID(session);
             result.setDatFile(datIS);

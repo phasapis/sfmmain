@@ -455,7 +455,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					sb.append(meshSetupTO.getDivisionH());
 					sb.append(SPACE);
 					sb.append(meshSetupTO.getDivisionh());
-					sb.append("\r\n\r\n\"");
+					sb.append("\r\n");
 					isMeshDivisionFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.MESH, BigDecimal.ONE.intValue());
@@ -468,6 +468,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.GEOMETRY.getName())){
 				if(mapCount.get(ParameterTypes.GEOMETRY).equals(BigDecimal.ZERO.intValue())){
 					sb.append(paramHeader);
+                                        /*
 					GeometrySetupTO geometrySetupTO = solverConfigCreatorTO.getGeometrySetupTO();
 					sb.append("0");
 					sb.append(SPACE);                                        
@@ -480,7 +481,9 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					sb.append(geometrySetupTO.getWidthBM());
 					sb.append(SPACE);
 					sb.append(geometrySetupTO.getThicknessh());
-					sb.append("\r\n\r\n\"");
+					sb.append("\r\n");
+                                        */
+                                        sb.append("0 3.5e+01 1.0e+00 1.0e+00 3.0e-01 5.0e-02\r\n");
 					isGeometryFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.GEOMETRY, BigDecimal.ONE.intValue());
@@ -510,7 +513,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+ "\r\n\r\n\"");		
+								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+ "\r\n");
 							}	
 						isLoadParametersFilled = Boolean.TRUE;		
 					}
@@ -543,7 +546,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 												
 						}
 						if(!NA.equals(value) && !"".equals(value)){
-							sb.append(value+"  "+FLUID_CONSTANT+" \r\n\r\n\"");
+							sb.append(value + " \r\n");
 						}
 						isMaterialPropertyFilled = Boolean.TRUE;				
 					}
@@ -563,7 +566,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(paramHeader);
 						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.YOUNG).getId());
 						if(valueList!=null){
-							sb.append(Util.removeListKeysFromString(valueList.toString()));
+							sb.append(Util.removeListKeysFromString(valueList.toString())  +" \r\n");
 							isYoungsFilled = Boolean.TRUE;										
 						}
 					}
@@ -582,7 +585,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(paramHeader);
 							List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.DAMPING).getId());		
 							if(valueList!=null){
-								sb.append(Util.removeListKeysFromString(valueList.toString()));
+								sb.append(Util.removeListKeysFromString(valueList.toString()) +" \r\n");
 								isDampingFilled = Boolean.TRUE;
 							}
 						}
@@ -607,13 +610,34 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(externalLoadParametersTO.getDispY());
 						sb.append(SPACE);
 						sb.append(externalLoadParametersTO.getDispZ());
-						sb.append("\r\n\r\n\"");
+						sb.append("\r\n");
 						isExternalparametersFilled = Boolean.TRUE;				
 					}
 					mapCount.put(ParameterTypes.EXTERNAL, BigDecimal.ONE.intValue());
 				}
 
 			}
+                        
+			//YOUNG_MODULUS_FUNCTION PART
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.FUNCT.getName())){
+				if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.FUNCT)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.FUNCT).getId()).isEmpty()){
+					if(mapCount.get(ParameterTypes.FUNCT).equals(BigDecimal.ZERO.intValue())){
+						sb.append(paramHeader);
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.FUNCT).getId());
+						if(valueList!=null){
+							sb.append(Util.removeListKeysFromString(valueList.toString())  +" \r\n");
+							isYoungsFilled = Boolean.TRUE;										
+						}
+					}
+					mapCount.put(ParameterTypes.FUNCT, BigDecimal.ONE.intValue());
+				}
+			}
+                                                
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+                        sb.append(paramHeader);
                         System.err.println("6 -- " + sb.toString());
 
                         
@@ -700,7 +724,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					sb.append(meshSetupTO.getDivisionH().intValue());
 					sb.append(SPACE);
 					sb.append(meshSetupTO.getDivisionh().intValue());
-					sb.append("\r\n\r\n");
+					sb.append("\r\n");
 					isMeshDivisionFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.MESH, BigDecimal.ONE.intValue());
@@ -730,7 +754,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                                         sb.append(geometrySetupTO.getThicknesshend());
 					sb.append(SPACE);                                        
                                         sb.append(geometrySetupTO.getHelicotrema());                                        
-					sb.append("\r\n\r\n");
+					sb.append("\r\n");
 					isGeometryFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.GEOMETRY, BigDecimal.ONE.intValue());
@@ -765,7 +789,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+"\r\n\r\n");
+								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+"\r\n");
 							}	
 						isLoadParametersFilled = Boolean.TRUE;		
 					}
@@ -798,7 +822,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 							}
                                                         
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr + "\r\n\r\n");
+								sb.append(valueStr + "\r\n");
 							}
 						isConductFilled = Boolean.TRUE;		
 					}
@@ -930,10 +954,14 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					}
 		
 					mapCount.put(ParameterTypes.ANALYSIS, BigDecimal.ONE.intValue());
-				}
+				}                                
 			}
                         System.err.println("3 -- " + sb.toString());
                         
+                        
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+                        sb.append(paramHeader + "\r\n");                        
                         
 			System.out.println("Before test: "+sb.toString().trim());                        
 			Boolean isAllParametersFilled = isMeshDivisionFilled && isGeometryFilled && isLoadParametersFilled &&
@@ -1018,7 +1046,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					sb.append(meshSetupTO.getDivisionH());
 					sb.append(SPACE);
 					sb.append(meshSetupTO.getDivisionh());
-					sb.append("\r\n\r\n");
+					sb.append("\r\n");
 					isMeshDivisionFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.MESH, BigDecimal.ONE.intValue());
@@ -1031,6 +1059,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.GEOMETRY.getName())){
 				if(mapCount.get(ParameterTypes.GEOMETRY).equals(BigDecimal.ZERO.intValue())){
 					sb.append(paramHeader);
+                                        /*
 					GeometrySetupTO geometrySetupTO = solverConfigCreatorTO.getGeometrySetupTO();
 					sb.append("0");
 					sb.append(SPACE);                                        
@@ -1043,7 +1072,11 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					sb.append(geometrySetupTO.getWidthBM());
 					sb.append(SPACE);
 					sb.append(geometrySetupTO.getThicknessh());
-					sb.append("\r\n\r\n");
+					sb.append("\r\n");
+                                        */
+
+                                        sb.append("0 3.5e+01 1.0e+00 1.0e+00 3.0e-01 5.0e-02\r\n");
+                                        
 					isGeometryFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.GEOMETRY, BigDecimal.ONE.intValue());
@@ -1073,7 +1106,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+ "\r\n\r\n");		
+								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+ "\r\n");		
 							}	
 						isLoadParametersFilled = Boolean.TRUE;		
 					}
@@ -1106,7 +1139,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 												
 						}
 						if(!NA.equals(value) && !"".equals(value)){
-							sb.append(value+"  "+FLUID_CONSTANT+" \r\n\r\n");
+							sb.append(value + "\r\n");
 						}
 						isMaterialPropertyFilled = Boolean.TRUE;				
 					}
@@ -1126,7 +1159,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(paramHeader);
 						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.YOUNG).getId());
 						if(valueList!=null){
-							sb.append(Util.removeListKeysFromString(valueList.toString()));
+							sb.append(Util.removeListKeysFromString(valueList.toString()) + "\r\n");
 							isYoungsFilled = Boolean.TRUE;										
 						}
 					}
@@ -1135,6 +1168,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 
 			}
 
+                        /*
 			//DAMPING MULTIPLIER PARAMETERS 
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
@@ -1157,7 +1191,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+ "\r\n\r\n");		
+								sb.append(valueStr);		
 							}	
 						isDampingMuptiplierFilled = Boolean.TRUE;		
 					}
@@ -1166,7 +1200,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 				}
 			}
                         System.err.println("3 -- " + sb.toString());
-                        
+                        */
 			//DAMPING REST PART
 			++count;
 			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
@@ -1176,7 +1210,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(paramHeader);
 						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.DAMPING).getId());
 						if(valueList!=null){
-							sb.append(Util.removeListKeysFromString(valueList.toString()));
+							sb.append(Util.removeListKeysFromString(valueList.toString())+"\r\n");
 							isDampingFilled = Boolean.TRUE;										
 						}
 					}
@@ -1198,14 +1232,14 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(externalLoadParametersTO.getDispY());
 						sb.append(SPACE);
 						sb.append(externalLoadParametersTO.getDispZ());
-						sb.append("\r\n\r\n");
+						sb.append("\r\n");
 						isExternalparametersFilled = Boolean.TRUE;				
 					}
 					mapCount.put(ParameterTypes.EXTERNAL, BigDecimal.ONE.intValue());
 				}
 
 			}
-                        System.err.println("6 -- " + sb.toString());
+                        System.err.println("6 -- " + sb.toString() + " count" + count);
 
 			//FUNCTION PART
 			++count;
@@ -1216,7 +1250,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 						sb.append(paramHeader);
 						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.YOUNG).getId());
 						if(valueList!=null){
-							sb.append(Util.removeListKeysFromString(valueList.toString()));
+							sb.append(Util.removeListKeysFromString(valueList.toString()) + "\r\n");
 							isFunctionFilled = Boolean.TRUE;										
 						}
 					}
@@ -1225,9 +1259,16 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 
 			}                        
                         
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+                        sb.append(paramHeader + "\r\n");                          
+                        
+                        System.err.println("6 -- " + sb.toString() + " count" + count);
+                        
+                        
 //			System.out.println("Before test: "+sb.toString().trim());                        
 			Boolean isAllParametersFilled = isMeshDivisionFilled && isGeometryFilled && isLoadParametersFilled &&
-					isMaterialPropertyFilled &&  isYoungsFilled && isDampingFilled && isDampingMuptiplierFilled && isExternalparametersFilled && isFunctionFilled;// && isExternalparametersFilled;
+					isMaterialPropertyFilled &&  isYoungsFilled && isDampingFilled && isExternalparametersFilled && isFunctionFilled;// && isExternalparametersFilled;
                         
                         System.err.println("allParams -- " + isAllParametersFilled);
 
@@ -1309,7 +1350,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 					sb.append(meshSetupTO.getDivisionH().intValue());
 					sb.append(SPACE);
 					sb.append(meshSetupTO.getDivisionh().intValue());
-					sb.append("\r\n\r\n");
+					sb.append("\r\n");
 					isMeshDivisionFilled = Boolean.TRUE;				
 				}
 				mapCount.put(ParameterTypes.MESH, BigDecimal.ONE.intValue());
@@ -1339,8 +1380,8 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
                                         sb.append(geometrySetupTO.getThicknesshend());
 					sb.append(SPACE);                                        
                                         sb.append(geometrySetupTO.getHelicotrema());                                        
-					sb.append("\r\n\r\n");
-					isGeometryFilled = Boolean.TRUE;				
+					sb.append("\r\n");
+					isGeometryFilled = Boolean.TRUE;
 				}
 				mapCount.put(ParameterTypes.GEOMETRY, BigDecimal.ONE.intValue());
 			}
@@ -1374,7 +1415,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 								}
 							}
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+"\r\n\r\n");
+								sb.append(valueStr +"  "+FREQUENCY_CONSTANT+"\r\n");
 							}	
 						isLoadParametersFilled = Boolean.TRUE;		
 					}
@@ -1497,7 +1538,7 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 							}
                                                         
 							if(!NA.equals(valueStr) && !"".equals(valueStr)){
-								sb.append(valueStr + "\r\n\r\n");
+								sb.append(valueStr + "\r\n");
 							}
 						isDensityFilled = Boolean.TRUE;		
 					}
@@ -1506,6 +1547,10 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 				}
 			}
                         System.err.println("3 -- " + sb.toString());                        
+
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+                        sb.append(paramHeader + "\r\n");                         
                         
 			System.out.println("Before test: "+sb.toString().trim());                        
 			Boolean isAllParametersFilled = isMeshDivisionFilled && isGeometryFilled && isLoadParametersFilled &&
@@ -1893,6 +1938,253 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 			Boolean isAllParametersFilled = isTympanic1Filled;
                         
                         System.err.println("allParams -- " + sb.toString());
+                        
+			if(isAllParametersFilled && !"".equals(sb.toString())){
+				resultFilesAsString.add(sb.toString().trim());	
+				mapCount = getMapCounter();
+			}else{
+				continue;
+			}
+		}
+
+                System.err.println("Res: " + resultFilesAsString);
+		return resultFilesAsString;                
+    }
+
+    private List<String> handleCoupledModelCase(SolverConfigCreatorTO solverConfigCreatorTO, Map<String, List<String>> mapAttributeValues, Map<ParameterTypes, ParameterTO> mapTeplateKeysAndIds) throws IOException
+    {
+                InputStream in = this.getClass().getClassLoader().getResourceAsStream("inputCoupledModel.txt");
+		String templateStr = IOUtils.toString(in);
+		
+		List<String> resultFilesAsString = new ArrayList<String>();
+		Map<ParameterTypes,Integer> mapCount = getMapCounter();
+		
+		Boolean isPressureFilled = Boolean.FALSE;
+		Boolean isFrequencyFilled = Boolean.FALSE;
+		Boolean isBasilarMembraneFilled = Boolean.FALSE;                
+                Boolean isOvalWindowFilled = Boolean.FALSE;
+                Boolean isFluidFilled = Boolean.FALSE;                
+                Boolean isAnalysisFilled = Boolean.FALSE;                
+                
+		Map<String,CombinationHelper> combinationMap = new TreeMap<String,CombinationHelper>();
+		
+		int size = applyCombinationMapService(mapAttributeValues,solverConfigCreatorTO.getLoadParametersTOList(),combinationMap);
+                System.err.println("size = " + size);
+		for(int i=0;i<size;i++){
+			StringBuilder sb = new StringBuilder();
+			int count = 0;
+			++count;
+			//LOAD PARAMETERS pressure
+			String paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.PRESSURECOUPLED.getName())){
+				if(mapCount.get(ParameterTypes.PRESSURECOUPLED).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.PRESSURECOUPLED)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.PRESSURECOUPLED).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.PRESSURECOUPLED).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.PRESSURECOUPLED).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+                                                                valueStr = valueStr.replace(';', ' ');                                                            
+								sb.append(valueStr);
+							}	
+						isPressureFilled = Boolean.TRUE;		
+					}
+		
+					mapCount.put(ParameterTypes.PRESSURECOUPLED, BigDecimal.ONE.intValue());
+				}
+			}
+                        System.err.println("3 -- " + sb.toString());
+			
+                        ++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.FREQUENCY.getName())){
+				if(mapCount.get(ParameterTypes.FREQUENCY).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.FREQUENCY)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.FREQUENCY).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.FREQUENCY).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.FREQUENCY).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+                                                            valueStr = valueStr.replace(';', ' ');                                                              								
+                                                            sb.append(valueStr);
+							}	
+						isFrequencyFilled = Boolean.TRUE;		
+					}
+		
+					mapCount.put(ParameterTypes.FREQUENCY, BigDecimal.ONE.intValue());
+				}
+			}
+                        //System.err.println("3 -- " + sb.toString());
+
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+                        sb.append(paramHeader);
+                        
+                        ++count;                        
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.BASILAR_MEMBRANE_COUPLE.getName())){
+				if(mapCount.get(ParameterTypes.BASILAR_MEMBRANE_COUPLE).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_COUPLE)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_COUPLE).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_COUPLE).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.BASILAR_MEMBRANE_COUPLE).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+								sb.append(valueStr +"\r\n");
+							}	
+						isBasilarMembraneFilled = Boolean.TRUE;		
+					}
+		
+					mapCount.put(ParameterTypes.BASILAR_MEMBRANE_COUPLE, BigDecimal.ONE.intValue());
+				}
+			}
+                        System.err.println("3 -- " + sb.toString());
+                        
+			//MATERIAL PROPERTIES PART
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+                        
+                        //System.err.println("Where am i = " + paramHeader);
+                        
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.COUPLEDOVALWINDOW.getName())){
+				if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDOVALWINDOW)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDOVALWINDOW).getId()).isEmpty()){
+					if(mapCount.get(ParameterTypes.COUPLEDOVALWINDOW).equals(BigDecimal.ZERO.intValue())){
+						sb.append(paramHeader);
+						String value = NA;
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDOVALWINDOW).getId());
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDOVALWINDOW).getId());
+						int currentIndex = 0;
+						if(ch!=null && ch.getCurrentIndex()!=null){
+							currentIndex = ch.getCurrentIndex();						
+						}
+						if(!valueList.isEmpty()){
+							value = valueList.get(currentIndex);
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								ch.setCurrentIndex(++currentIndex);						
+							}
+												
+						}
+                                                
+						if(!NA.equals(value) && !"".equals(value)){
+                                                        value = value.replace(';', ' ');
+							sb.append(value  + "\r\n");
+						}
+
+						isOvalWindowFilled = Boolean.TRUE;				
+					}
+					mapCount.put(ParameterTypes.COUPLEDOVALWINDOW, BigDecimal.ONE.intValue());
+				}
+
+			}
+                        //System.err.println("4 -- " + sb.toString());
+                       
+
+			//ANALYSIS PARAMETERS 
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.COUPLEDFLUID.getName())){
+				if(mapCount.get(ParameterTypes.COUPLEDFLUID).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDFLUID)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDFLUID).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDFLUID).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.COUPLEDFLUID).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+                                                        
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+								sb.append(valueStr + "\r\n");
+							}
+                                                                
+						isFluidFilled = Boolean.TRUE;		
+					}
+		
+					mapCount.put(ParameterTypes.COUPLEDFLUID, BigDecimal.ONE.intValue());
+				}
+			}
+                        //System.err.println("3 -- " + sb.toString());
+
+			++count;
+			paramHeader = StringUtils.substringBetween(templateStr, "#-"+(count)+"#", "#+"+(count)+"#");
+			if(StringUtils.containsIgnoreCase(paramHeader,ParameterTypes.ANALYSIS.getName())){
+				if(mapCount.get(ParameterTypes.ANALYSIS).equals(BigDecimal.ZERO.intValue())){
+					sb.append(paramHeader);
+					
+					if(!mapAttributeValues.isEmpty() && mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS)!=null && !mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS).getId()).isEmpty()){
+						List<String> valueList = mapAttributeValues.get(mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS).getId());
+						String valueStr = NA;
+						CombinationHelper ch = combinationMap.get(mapTeplateKeysAndIds.get(ParameterTypes.ANALYSIS).getId());
+						int currentIndex = 0;
+							if(ch!=null && ch.getCurrentIndex()!=null){
+								currentIndex = ch.getCurrentIndex();						
+							}
+							if(!valueList.isEmpty()){
+								valueStr = valueList.get(currentIndex);
+								if(ch!=null && ch.getCurrentIndex()!=null){
+									ch.setCurrentIndex(++currentIndex);						
+								}
+							}
+                                                        
+							if(!NA.equals(valueStr) && !"".equals(valueStr)){
+								sb.append(valueStr + "\r\n");
+							}
+                                                                
+						isAnalysisFilled = Boolean.TRUE;		
+					}
+		
+					mapCount.put(ParameterTypes.ANALYSIS, BigDecimal.ONE.intValue());
+				}
+			}
+                        System.err.println("3 -- " + sb.toString());
+                        
+                                                
+			//System.out.println("Before test: "+sb.toString().trim());                        
+			Boolean isAllParametersFilled = isAnalysisFilled && isBasilarMembraneFilled && isFluidFilled && isFrequencyFilled && isOvalWindowFilled && isPressureFilled;
+                        
+                        //System.err.println("allParams -- " + sb.toString());
+
                         
 			if(isAllParametersFilled && !"".equals(sb.toString())){
 				resultFilesAsString.add(sb.toString().trim());	

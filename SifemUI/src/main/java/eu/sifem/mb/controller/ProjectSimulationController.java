@@ -233,11 +233,18 @@ public class ProjectSimulationController extends GenericMB {
 			System.out.println(" --- simulationName upon run() = "
 					+ simulationName);
 
+			System.out.println(" --- simulationInstanceTO upon run() = "
+					+ simulationInstanceTO.getProjectName() + " " + simulationInstanceTO.getSimulationName());
+                                                
 			ProcessTO sifemProcess = new ProcessTO();
 			sifemProcess.setProjectName(projectName);
 			sifemProcess.setSimulationName(simulationName);
 
 			sifemProcess.setIsNotStartedPhase(Boolean.TRUE);
+                        
+                        simulationInstanceTO.setProjectName(projectName);
+                        simulationInstanceTO.setSimulationName(simulationName);
+                        
 			pakSolverControlerService.saveOrUpdateProcessStatus(sifemProcess);
 
 			SessionIndexTO sessionIndexTO = (SessionIndexTO) getSession()

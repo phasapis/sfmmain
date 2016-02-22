@@ -145,7 +145,10 @@ public class ConfigFileDAO implements IConfigFileDAOService{
 
 	@Override
 	public void updateInstanceName(String projectName, String simulationName,String instanceName) {
-		if(instanceName==null || "".equals(instanceName) ){
+
+            System.err.println("Project" + projectName + " inst=" + " sim=" + simulationName);
+            
+            if(instanceName==null || "".equals(instanceName) ){
 			return;
 		}
 		 Query query = new Query();
