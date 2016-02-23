@@ -244,6 +244,7 @@ public class ProjectSimulationController extends GenericMB {
 			ProjectSimulationTO projectSimulationTO = simulationDAO
 					.findByID(projectSimulationEB.getProjectSimulationTO().get_id());
 			projectSimulationTO.setSimulationID(simulationID);
+			projectSimulationTO.setProjectSimulationID(projectSimulationEB.getProjectSimulationTO().get_id().toString());
 			ProjectSimulationEB projectSimulationEB = (ProjectSimulationEB) getSessionBean("projectSimulationEB");
 			projectSimulationEB.setProjectSimulationTO(projectSimulationTO);
 			simulationDAO.update(projectSimulationTO);
