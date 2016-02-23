@@ -47,6 +47,8 @@ public class ChartViewController extends GenericMB {
 	
 	private String projectID;
 	
+	private String simulationID;
+	
 	private SolverResultXYGraphTO solverResultXYGraphTO;
 
 	@PostConstruct
@@ -119,7 +121,8 @@ public class ChartViewController extends GenericMB {
 		HashMap<Double, Double> xyMap = new HashMap<Double, Double>();
 		
 		this.setProjectID(projectSimulationEB.getProjectSimulationTO().getProjectSimulationID());
-		solverResultXYGraphTO = pakSolverControlerService.showResultGraphs(this.getProjectID(),Boolean.TRUE);
+		this.setSimulationID(projectSimulationEB.getProjectSimulationTO().getSimulationID());
+		solverResultXYGraphTO = pakSolverControlerService.showResultGraphs(this.getProjectID(),this.getSimulationID(),Boolean.TRUE);
 		
 		try {
 			if(buttonID.equals(new String("bvm"))) {
@@ -195,5 +198,14 @@ public class ChartViewController extends GenericMB {
 		this.projectID = projectID;
 	}
 
+	public String getSimulationID() {
+		return simulationID;
+	}
+
+	public void setSimulationID(String simulationID) {
+		this.simulationID = simulationID;
+	}
+
+	
 	
 }

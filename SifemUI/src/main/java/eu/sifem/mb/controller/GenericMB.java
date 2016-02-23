@@ -254,7 +254,7 @@ public abstract class GenericMB implements Serializable {
 
 	    ViewHandler ViewH = fc.getApplication().getViewHandler(); 
 	    UIViewRoot UIV = ViewH.createView(fc,refreshpage);
-	    UIV.setViewId(refreshpage); 
+	    UIV.setViewId(refreshpage);
 	    fc.setViewRoot(UIV); 
 	}
 	

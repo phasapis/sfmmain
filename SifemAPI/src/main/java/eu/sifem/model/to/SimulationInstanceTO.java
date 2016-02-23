@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -13,6 +14,7 @@ public class SimulationInstanceTO implements AbstractTO{
 
 	private static final long serialVersionUID = -7622290983547686018L;
 
+	private ObjectId _id;
 	
 	private byte[] cfgFile;
 	
@@ -36,6 +38,10 @@ public class SimulationInstanceTO implements AbstractTO{
 	
 	private  String simulationName;
 	
+	private String simulationID;
+	
+	private String projectID;
+	
 	private  String instanceName;
 	
 	private String workspacebasePath;
@@ -53,12 +59,38 @@ public class SimulationInstanceTO implements AbstractTO{
 	
 	
 
+	public ObjectId get_id() {
+		return _id;
+	}
+
+	public void set_id(ObjectId _id) {
+		this._id = _id;
+	}
+
+	public String getSimulationID() {
+		return simulationID;
+	}
+
+	public void setSimulationID(String simulationID) {
+		this.simulationID = simulationID;
+	}
+
 	public Map<Integer, Map<String, File>> getInstanceFiles() {
 		return instanceFiles;
 	}
 
 	public void setInstanceFiles(Map<Integer, Map<String, File>> instanceFiles) {
 		this.instanceFiles = instanceFiles;
+	}
+	
+	
+
+	public String getProjectID() {
+		return projectID;
+	}
+
+	public void setProjectID(String projectID) {
+		this.projectID = projectID;
 	}
 
 	public String getxName() {

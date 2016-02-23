@@ -137,5 +137,56 @@ public class SolverResultFilesDAO implements ISolverResultFilesDAO{
 			
 			return solverResultTO;
 		}
+
+
+		@Override
+		public SolverResultFilesTO findByProjectAndSimulationID(
+				String projectID, String simulationID) {
+			
+			Query query = new Query();
+			query.addCriteria(Criteria.where("projectID").is(projectID))
+			.addCriteria(Criteria.where("simulationID").is(simulationID));
+//					query.addCriteria(Criteria.where("name").regex(transformationName, CASE_INSENSITIVE))
+//		.addCriteria(Criteria.where("projectName").regex(projectName, CASE_INSENSITIVE))
+//		.addCriteria(Criteria.where("simulationName").regex(simulationName, CASE_INSENSITIVE));
+			
+			
+			SolverResultFilesTO solverResultTO = mongoOperations.findOne(query, SolverResultFilesTO.class,SolverResultFilesTO.class.getSimpleName());
+			if(solverResultTO==null){
+				return null;
+			}
+	                
+			
+			ObjectId dcenterlineFileID = solverResultTO.getDcenterlineFileID();
+			GridFSDBFile dcenterlineFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(dcenterlineFileID)));
+			InputStream dcenterlineIS = dcenterlineFile.getInputStream();
+			solverResultTO.setDcenterlineFile(dcenterlineIS);
+			
+			ObjectId pimagFileID = solverResultTO.getPimagFileID();
+			GridFSDBFile pimagFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(pimagFileID)));
+			InputStream pimagIS = pimagFile.getInputStream();
+			solverResultTO.setPimagFile(pimagIS);
+			
+			ObjectId prealFileID = solverResultTO.getPrealFileID();
+			GridFSDBFile prealFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(prealFileID)));
+			InputStream prealIS = prealFile.getInputStream();
+			solverResultTO.setPrealFile(prealIS);
+			
+			
+			ObjectId vmagnFileID = solverResultTO.getVmagnFileID();
+			GridFSDBFile vmagnFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(vmagnFileID)));
+			InputStream vmagnIS = vmagnFile.getInputStream();
+			solverResultTO.setVmagnFile(vmagnIS);
+			
+			
+			ObjectId vphaseFileID = solverResultTO.getVphaseFileID();
+			GridFSDBFile vphaseFile = fsTemplate.findOne(new Query(Criteria.where("_id").is(vphaseFileID)));
+			InputStream vphaseIS = vphaseFile.getInputStream();
+			solverResultTO.setVphaseFile(vphaseIS);
+			
+			
+		
+		return solverResultTO;
+		}
 	
 }

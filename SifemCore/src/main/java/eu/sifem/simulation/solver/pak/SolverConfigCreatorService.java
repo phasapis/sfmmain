@@ -39,6 +39,7 @@ import eu.sifem.service.dao.IConfigFileDAOService;
 import eu.sifem.service.dao.IParameterDAOService;
 import eu.sifem.utils.BasicFileTools;
 import eu.sifem.utils.Util;
+
 import java.io.IOException;
 
 @Service(value="solverConfigCreator")
@@ -71,6 +72,9 @@ public class SolverConfigCreatorService implements ISolverConfigCreatorService{
 		Map<String,List<String>> mapAttributeValues = getAttribMapValuesService(solverConfigCreatorTO,mapTeplateKeysAndIds);
 		List<String> cfgFileStr = createCfgFilesAsStringService(solverConfigCreatorTO,mapAttributeValues,mapTeplateKeysAndIds);
 		System.err.println("----------------------------");
+		if(cfgFileStr==null || cfgFileStr.isEmpty()){
+			throw new RuntimeException("A properly config file was not defined for the seleted mesh type.");
+		}
                 System.err.println(cfgFileStr.get(0));
                 System.err.println("----------------------------");
                 cfgFileList.addAll(cfgFileStr);

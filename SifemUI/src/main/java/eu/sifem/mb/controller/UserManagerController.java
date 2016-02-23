@@ -26,6 +26,7 @@ public class UserManagerController extends GenericMB {
 		}
 		getSession().invalidate();
 		refreshPage();
+		//http://localhost:8080/Sifem/index.jsp
 		addInfoMessage("Logout","The session was closed with successful!");
 	}
 

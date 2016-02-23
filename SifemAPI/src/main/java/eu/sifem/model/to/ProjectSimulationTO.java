@@ -30,6 +30,8 @@ public class ProjectSimulationTO implements AbstractTO{
 	
 	private String simulationName;
 	
+	private String simulationID;
+	
 	private List<String> instanceNames = new ArrayList<String>();
 	
 	private String datasourceTempPath;
@@ -45,6 +47,20 @@ public class ProjectSimulationTO implements AbstractTO{
 	
 	
 	
+	public String getSimulationID() {
+		return simulationID;
+	}
+
+
+
+
+	public void setSimulationID(String simulationID) {
+		this.simulationID = simulationID;
+	}
+
+
+
+
 	public String getShinyHost() {
 		return shinyHost;
 	}

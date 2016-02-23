@@ -167,41 +167,44 @@ public class PakSolverControlerService implements IPakSolverControlerService {
 	}
 	
 	@Override
-	public SolverResultXYGraphTO showResultGraphs(String projectID,Boolean isInsert) throws Exception {
-		SolverResultFilesTO solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
-		SolverResultXYGraphTO  solverResultXYGraphTO = parseStreamsToWrapperObjects(solverResultFilesTO,isInsert,projectID);
+	public SolverResultXYGraphTO showResultGraphs(String projectID,String simulationID,Boolean isInsert) throws Exception {
+		//SolverResultFilesTO solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
+		SolverResultFilesTO solverResultFilesTO = solverResultFilesDAO.findByProjectAndSimulationID(projectID,simulationID);
+		SolverResultXYGraphTO  solverResultXYGraphTO = parseStreamsToWrapperObjects(solverResultFilesTO,isInsert,projectID,simulationID);
 		return solverResultXYGraphTO;
 	}
 	
 	@Override
-	public SolverResultXYGraphTO parseStreamsToWrapperObjects(SolverResultFilesTO solverResultFilesTO,Boolean isInsert, String projectID) throws Exception {
+	public SolverResultXYGraphTO parseStreamsToWrapperObjects(SolverResultFilesTO solverResultFilesTO,Boolean isInsert, String projectID, String simulationID) throws Exception {
 		
-		if(solverResultFilesTO==null || solverResultFilesTO.get_id()==null || 
-				solverResultFilesTO.getDcenterlineFile()==null ||
-				solverResultFilesTO.getPimagFile()==null || 
-				solverResultFilesTO.getPrealFile()==null || 
-				solverResultFilesTO.getVmagnFile()==null || 
-				solverResultFilesTO.getVphaseFile()==null){
-			solverResultFilesTO = new SolverResultFilesTO();
-			
-			InputStream dcenterlineIS = dCenterLineFile(null);
-			InputStream pImagIS = pImagFile(null);
-			InputStream pRealIS = pRealFile(null);
-			InputStream vMagnIS = vMagnFile(null);
-			InputStream vPhaseIS = vPhaseFile(null);
-			
-			solverResultFilesTO.setDcenterlineFile(dcenterlineIS);
-			solverResultFilesTO.setPimagFile(pImagIS);
-			solverResultFilesTO.setPrealFile(pRealIS);
-			solverResultFilesTO.setVmagnFile(vMagnIS);
-			solverResultFilesTO.setVphaseFile(vPhaseIS);
-			
-			if(isInsert){
-				solverResultFilesTO.setProjectID(projectID);
-				solverResultFilesDAO.insert(solverResultFilesTO);				
-			}
-		}
-		solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
+		solverResultFilesTO = solverResultFilesDAO.findByProjectAndSimulationID(projectID, simulationID);
+//		if(solverResultFilesTO==null || solverResultFilesTO.get_id()==null || 
+//				solverResultFilesTO.getDcenterlineFile()==null ||
+//				solverResultFilesTO.getPimagFile()==null || 
+//				solverResultFilesTO.getPrealFile()==null || 
+//				solverResultFilesTO.getVmagnFile()==null || 
+//				solverResultFilesTO.getVphaseFile()==null){
+//			solverResultFilesTO = new SolverResultFilesTO();
+//			
+//			InputStream dcenterlineIS = dCenterLineFile(null);
+//			InputStream pImagIS = pImagFile(null);
+//			InputStream pRealIS = pRealFile(null);
+//			InputStream vMagnIS = vMagnFile(null);
+//			InputStream vPhaseIS = vPhaseFile(null);
+//			
+//			solverResultFilesTO.setDcenterlineFile(dcenterlineIS);
+//			solverResultFilesTO.setPimagFile(pImagIS);
+//			solverResultFilesTO.setPrealFile(pRealIS);
+//			solverResultFilesTO.setVmagnFile(vMagnIS);
+//			solverResultFilesTO.setVphaseFile(vPhaseIS);
+//			
+//			if(isInsert){
+//				solverResultFilesTO.setProjectID(projectID);
+//				solverResultFilesTO.setSimulationID(simulationID);
+//				solverResultFilesDAO.insert(solverResultFilesTO);				
+//			}
+//		}
+		//solverResultFilesTO = solverResultFilesDAO.findByProjectID(projectID);
 		//String dcenterStr = IOUtils.toString(solverResultFilesTO.getDcenterlineFile(),"UTF-8");
 		String dcenterStr = BasicFileTools.extractText(solverResultFilesTO.getDcenterlineFile());
 		String pimagStr = BasicFileTools.extractText(solverResultFilesTO.getPimagFile());

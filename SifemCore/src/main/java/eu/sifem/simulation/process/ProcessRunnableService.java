@@ -172,7 +172,9 @@ public class ProcessRunnableService implements IProcessRunnableService {
 				datAndUnvSolverTO.setUnvFile(unvIs);
 				datAndUnvSolverTOList.add(datAndUnvSolverTO);
 				datAndUnvSolverDAO.insert(datAndUnvSolverTO);
-				
+
+				solverResultFilesTO.setProjectID(simulationInstanceTO.getProjectID());
+				solverResultFilesTO.setSimulationID(simulationInstanceTO.getSimulationID());
 				solverResultFilesTO.setDcenterlineFile(result.getdCenterLineFile());
 				solverResultFilesTO.setPimagFile(result.getpImagFile());
 				solverResultFilesTO.setPrealFile(result.getpRealFile());

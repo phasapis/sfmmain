@@ -64,7 +64,8 @@ public class SimulationDAO implements ISimulationDAOService{
 		update.set("transformations", projectSimulationTO.getTransformations());
 		update.set("shinyHost", projectSimulationTO.getShinyHost());
 		update.set("projectSimulationID", projectSimulationTO.getProjectSimulationID());
-
+		update.set("simulationID", projectSimulationTO.getSimulationID());
+		
 		mongoOperations.findAndModify(query, update,
 				new FindAndModifyOptions().returnNew(true), ProjectSimulationTO.class);
 		

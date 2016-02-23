@@ -45,9 +45,9 @@ public interface IPakSolverControlerService{
 
 	void saveOrUpdateProcessStatus(ProcessTO sifemProcess);
 
-	SolverResultXYGraphTO showResultGraphs(String projectID,Boolean isInsert) throws Exception;
+	SolverResultXYGraphTO showResultGraphs(String projectID,String simulationID, Boolean isInsert) throws Exception;
 
 	SolverResultXYGraphTO parseStreamsToWrapperObjects(
-			SolverResultFilesTO solverResultFilesTO,Boolean isInsert,String projectID) throws IOException, Exception;
+			SolverResultFilesTO solverResultFilesTO,Boolean isInsert,String projectID,String simulationID) throws IOException, Exception;
 
 }

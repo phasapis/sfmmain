@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -16,6 +17,7 @@ import org.bson.types.ObjectId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import eu.sifem.dao.jena.SimulationInstanceDAO;
 import eu.sifem.dao.mongo.ProjectSimulationDAO;
 import eu.sifem.mb.entitybean.BoundaryInternalConditionsEB;
 import eu.sifem.mb.entitybean.DataAnalysisValidationRulesEB;
@@ -133,14 +135,14 @@ public class ProjectSimulationController extends GenericMB {
 							&& ProjectSimulationTOObj instanceof ProjectSimulationEB) {
 						((ProjectSimulationEB) ProjectSimulationTOObj)
 								.setProjectSimulationTO(new ProjectSimulationTO());
-						fillListOfParams(); //
-						String projectID = simulationDAO
-								.insert(((ProjectSimulationEB) ProjectSimulationTOObj)
-										.getProjectSimulationTO());
-						((ProjectSimulationEB) ProjectSimulationTOObj)
-								.getProjectSimulationTO().setProjectSimulationID(projectID);
-						putSessionBean("projectSimulationEB",
-								ProjectSimulationTOObj);
+//						fillListOfParams(); //
+//						String projectID = simulationDAO
+//								.insert(((ProjectSimulationEB) ProjectSimulationTOObj)
+//										.getProjectSimulationTO());
+//						((ProjectSimulationEB) ProjectSimulationTOObj)
+//								.getProjectSimulationTO().setProjectSimulationID(projectID);
+//						putSessionBean("projectSimulationEB",
+//								ProjectSimulationTOObj);
 					}
 				}
 			}
@@ -172,25 +174,29 @@ public class ProjectSimulationController extends GenericMB {
 					addErrorMessage("ERROR", "Project name not defined!");
 				}
 
+				ProjectSimulationTO projectSimulationTO = projectSimulationEB.getProjectSimulationTO();
+				projectSimulationTO.setProjectName(projectName);
+				fillListOfParams(); //
+				String projectID = simulationDAO.insert(projectSimulationTO);
+				projectSimulationTO = simulationDAO
+						.findByID(projectSimulationEB.getProjectSimulationTO().get_id());
+				projectSimulationTO.setProjectSimulationID(projectID);
+				Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
+				putSessionBean("projectSimulationEB",ProjectSimulationTOObj);
+				
+				
+
 				List<TransformationTO> transformations = transformation
 						.findAllService();
-				ProjectSimulationTO projectSimulationTO = simulationDAO
-						.findByID(projectSimulationEB.getProjectSimulationTO().get_id());
-				projectSimulationTO.setProjectName(projectName);
-
-				//projectSimulationTO.setTransformations(null);
 				setCurrentSimulationName(projectName);
 				projectSimulationTO.setProjectSimulationID(projectSimulationEB.getProjectSimulationTO().get_id().toString());
-				simulationService.insertService(projectSimulationTO);
-//				SolverResultXYGraphTO solverResultXYGraphTO = pakSolverControlerService
-//						.showResultGraphs(projectSimulationTO.getProjectSimulationID(),Boolean.TRUE);
+//				simulationService.insertService(projectSimulationTO);
 				if (transformations != null && !transformations.isEmpty()) {
 					projectSimulationEB.getProjectSimulationTO()
 							.setTransformations(transformations);
-					Object ProjectSimulationTOObj = getSessionBean("projectSimulationEB");
+					
 					if (ProjectSimulationTOObj != null
 							&& ProjectSimulationTOObj instanceof ProjectSimulationEB) {
-//						projectSimulationTO.setResultGraphID(solverResultXYGraphTO.get_id().toString());
 						
 						((ProjectSimulationEB) ProjectSimulationTOObj)
 								.setProjectSimulationTO(projectSimulationTO);
@@ -207,9 +213,6 @@ public class ProjectSimulationController extends GenericMB {
 							"Try to configure \"Material Property\" and \"Mesh\". Then you can create and run this new simulation through \"Save All\" and \"Run\".");
 					projectSimulationEB.getProjectSimulationTO()
 							.setProjectName(projectName);
-
-					// TODO Deprecating..
-					// projectSimulationEB.getProjectSimulationTO().setWorkspace(workspaceLocation);
 					return;
 				}
 
@@ -235,6 +238,22 @@ public class ProjectSimulationController extends GenericMB {
 
 			System.out.println(" --- simulationInstanceTO upon run() = "
 					+ simulationInstanceTO.getProjectName() + " " + simulationInstanceTO.getSimulationName());
+			
+						
+			String simulationID = UUID.randomUUID().toString();
+			ProjectSimulationTO projectSimulationTO = simulationDAO
+					.findByID(projectSimulationEB.getProjectSimulationTO().get_id());
+			projectSimulationTO.setSimulationID(simulationID);
+			ProjectSimulationEB projectSimulationEB = (ProjectSimulationEB) getSessionBean("projectSimulationEB");
+			projectSimulationEB.setProjectSimulationTO(projectSimulationTO);
+			simulationDAO.update(projectSimulationTO);
+			putSessionBean("projectSimulationEB",projectSimulationEB);
+			
+			simulationInstanceTO.setSimulationID(simulationID);
+			simulationInstanceTO.setProjectID(projectSimulationEB.getProjectSimulationTO().get_id().toString());
+			
+			System.out.println("simulationID => "+simulationID);
+			System.out.println("simulationInstanceTO.getProjectID() => "+simulationInstanceTO.getProjectID());
                                                 
 			ProcessTO sifemProcess = new ProcessTO();
 			sifemProcess.setProjectName(projectName);

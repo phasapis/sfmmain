@@ -19,6 +19,8 @@ public class SolverResultFilesTO implements AbstractTO{
 	
 	private String simulationName;
 	
+	private String simulationID;
+	
 	private String instanceName;
 	
 	private ObjectId pimagFileID;
@@ -50,6 +52,14 @@ public class SolverResultFilesTO implements AbstractTO{
 	
 	
 	
+	public String getSimulationID() {
+		return simulationID;
+	}
+
+	public void setSimulationID(String simulationID) {
+		this.simulationID = simulationID;
+	}
+
 	public ObjectId get_id() {
 		return _id;
 	}

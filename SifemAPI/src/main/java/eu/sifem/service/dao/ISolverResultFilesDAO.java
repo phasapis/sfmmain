@@ -8,4 +8,6 @@ public interface ISolverResultFilesDAO {
 
 	SolverResultFilesTO findByProjectID(String projectID);
 
+	SolverResultFilesTO findByProjectAndSimulationID(String projectID,String simulationID);
+
 }
