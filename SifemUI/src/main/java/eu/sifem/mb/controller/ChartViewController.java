@@ -14,6 +14,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
@@ -77,6 +78,17 @@ public class ChartViewController extends GenericMB {
 			Axis yAxis = lineModel.getAxis(AxisType.Y);
 			yAxis.setMin(0);
 			yAxis.setMax(10);
+			
+//			lineModel.setTitle("Pesquisa de Opinião"); 
+//			lineModel.setLegendPosition("e"); 
+//			lineModel.setShowPointLabels(true); 
+//			lineModel.getAxes().put(AxisType.X, new CategoryAxis("Pesquisas")); 
+//			lineModel.setZoom(true); 
+//			Axis yAxis = lineModel.getAxis(AxisType.Y); 
+//			yAxis.setLabel("% de votos"); 
+//			yAxis.setMin(0); 
+//			yAxis.setMax(100);
+			
 		} catch (Exception e) {
 			addErrorMessage("Error!",e.getMessage());
 		}
@@ -89,7 +101,177 @@ public class ChartViewController extends GenericMB {
          
         return model;
     }
+
+	private LineChartModel initBVMLinearModel(HashMap<Double, Double> xyMap) {
+        LineChartModel model = new LineChartModel();
+        try {
+			model.setTitle("Modal BM Velocity Magnitude vs. X Coord: f = 1000.00 Hz");
+			model.setLegendPosition("e");
+			model.setShowPointLabels(true);	
+			LineChartSeries series1 = new LineChartSeries();
+			series1.setLabel("Modal BM Velocity Magnitude vs. X Coord");
+			
+			model.getAxes().put(AxisType.X, new CategoryAxis("Coord[mm]"));
+			model.setZoom(true);
+			
+			Axis yAxis = model.getAxis(AxisType.Y); 
+			yAxis.setLabel("V_bm[dB]"); 
+			//yAxis.setMin(0); 
+			//yAxis.setMax(100);
+
+ 
+			Set<Double> keySet = xyMap.keySet();
+			Iterator<Double> keyIter = keySet.iterator();
+			while(keyIter.hasNext()) {
+				Double x = keyIter.next();
+				Double y = xyMap.get(x);
+				series1.set(x, y);
+			}
+ 
+			model.addSeries(series1);
+		} catch (Exception e) {
+			addErrorMessage("Error!",e.getMessage());
+		}
+         
+        return model;
+    }
+
+	private LineChartModel initBVPLinearModel(HashMap<Double, Double> xyMap) {
+        LineChartModel model = new LineChartModel();
+        try {
+			model.setTitle("Modal BM Velocity Phase vs. X Coord: f = 1000.00 Hz");
+			model.setLegendPosition("e");
+			model.setShowPointLabels(true);	
+			LineChartSeries series1 = new LineChartSeries();
+			series1.setLabel("Modal BM Velocity Phase vs. X Coord");
+			
+			model.getAxes().put(AxisType.X, new CategoryAxis("Coord[mm]"));
+			model.setZoom(true);
+			
+			Axis yAxis = model.getAxis(AxisType.Y); 
+			yAxis.setLabel("V_bm[Cycles]"); 
+			//yAxis.setMin(0); 
+			//yAxis.setMax(100);
+
+ 
+			Set<Double> keySet = xyMap.keySet();
+			Iterator<Double> keyIter = keySet.iterator();
+			while(keyIter.hasNext()) {
+				Double x = keyIter.next();
+				Double y = xyMap.get(x);
+				series1.set(x, y);
+			}
+ 
+			model.addSeries(series1);
+		} catch (Exception e) {
+			addErrorMessage("Error!",e.getMessage());
+		}
+         
+        return model;
+    }	
 	
+	private LineChartModel initPRPLinearModel(HashMap<Double, Double> xyMap) {
+        LineChartModel model = new LineChartModel();
+        try {
+			model.setTitle("Real part of pressure vs. X Coord: f = 1000.00 Hz");
+			model.setLegendPosition("e");
+			model.setShowPointLabels(true);	
+			LineChartSeries series1 = new LineChartSeries();
+			series1.setLabel("Pressure vs. X Coord");
+			
+			model.getAxes().put(AxisType.X, new CategoryAxis("Coord[mm]"));
+			model.setZoom(true);
+			
+			Axis yAxis = model.getAxis(AxisType.Y); 
+			yAxis.setLabel("Pressure [Pa]"); 
+			//yAxis.setMin(0); 
+			//yAxis.setMax(100);
+
+ 
+			Set<Double> keySet = xyMap.keySet();
+			Iterator<Double> keyIter = keySet.iterator();
+			while(keyIter.hasNext()) {
+				Double x = keyIter.next();
+				Double y = xyMap.get(x);
+				series1.set(x, y);
+			}
+ 
+			model.addSeries(series1);
+		} catch (Exception e) {
+			addErrorMessage("Error!",e.getMessage());
+		}
+         
+        return model;
+    }
+
+	
+	private LineChartModel initPIPLinearModel(HashMap<Double, Double> xyMap) {
+        LineChartModel model = new LineChartModel();
+        try {
+			model.setTitle("Imaginary part of pressure vs. X Coord: f = 1000.00 Hz");
+			model.setLegendPosition("e");
+			model.setShowPointLabels(true);	
+			LineChartSeries series1 = new LineChartSeries();
+			series1.setLabel("Pressure vs. X Coord");
+			
+			model.getAxes().put(AxisType.X, new CategoryAxis("Coord[mm]"));
+			model.setZoom(true);
+			
+			Axis yAxis = model.getAxis(AxisType.Y); 
+			yAxis.setLabel("Pressure[Pa]"); 
+			//yAxis.setMin(0); 
+			//yAxis.setMax(100);
+
+ 
+			Set<Double> keySet = xyMap.keySet();
+			Iterator<Double> keyIter = keySet.iterator();
+			while(keyIter.hasNext()) {
+				Double x = keyIter.next();
+				Double y = xyMap.get(x);
+				series1.set(x, y);
+			}
+ 
+			model.addSeries(series1);
+		} catch (Exception e) {
+			addErrorMessage("Error!",e.getMessage());
+		}
+         
+        return model;
+    }
+	
+	private LineChartModel initCLLinearModel(HashMap<Double, Double> xyMap) {
+        LineChartModel model = new LineChartModel();
+        try {
+			model.setTitle("Centerline position: f = 1000.00 Hz");
+			model.setLegendPosition("e");
+			model.setShowPointLabels(true);	
+			LineChartSeries series1 = new LineChartSeries();
+			series1.setLabel("Magnitude");
+			
+			model.getAxes().put(AxisType.X, new CategoryAxis("Coord[mm]"));
+			model.setZoom(true);
+			
+			Axis yAxis = model.getAxis(AxisType.Y); 
+			yAxis.setLabel("Magnitude Max [e1 mm]"); 
+			//yAxis.setMin(0); 
+			//yAxis.setMax(100);
+
+ 
+			Set<Double> keySet = xyMap.keySet();
+			Iterator<Double> keyIter = keySet.iterator();
+			while(keyIter.hasNext()) {
+				Double x = keyIter.next();
+				Double y = xyMap.get(x);
+				series1.set(x, y);
+			}
+ 
+			model.addSeries(series1);
+		} catch (Exception e) {
+			addErrorMessage("Error!",e.getMessage());
+		}
+         
+        return model;
+    }
 	
 	private LineChartModel initLinearModel(HashMap<Double, Double> xyMap) {
         LineChartModel model = new LineChartModel();
@@ -130,34 +312,34 @@ public class ChartViewController extends GenericMB {
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getVmagnTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
-				lineModel = initLinearModel(xyMap);
+				lineModel = initBVMLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("bvp"))) {
 				
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getVphaseTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
-				lineModel = initLinearModel(xyMap);
+				lineModel = initBVPLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("prp"))) {
 				
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getPrealTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
-				lineModel = initLinearModel(xyMap);
+				lineModel = initPRPLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("pip"))) {
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getPimagTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
-				lineModel = initLinearModel(xyMap);
+				lineModel = initPIPLinearModel(xyMap);
 				
 			} else if(buttonID.equals(new String("cl"))) {
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getCenterlineTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				
-				lineModel = initLinearModel(xyMap);
+				lineModel = initCLLinearModel(xyMap);
 				
 			}
 		} catch (Exception e) {
