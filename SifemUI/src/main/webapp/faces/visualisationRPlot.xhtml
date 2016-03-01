@@ -31,7 +31,12 @@
 						style="margin-bottom:10px;height:630px;width:1440px;text-align: center">
 						<h:panelGrid columns="6" cellpadding="5" id="visualisationButtons"
 							style="text-align: center">
-
+							
+							<p:commandButton value="test" id="test">
+								<f:ajax listener="#{chartViewController.plotChartActionListner}"
+									process="@this csvLineChart" render="@this csvLineChart" />
+							</p:commandButton>
+							
 							<p:commandButton value="BM Velocity Magnitude" id="bvm">
 								<f:ajax listener="#{chartViewController.plotChartActionListner}"
 									process="@this csvLineChart" render="@this csvLineChart" />

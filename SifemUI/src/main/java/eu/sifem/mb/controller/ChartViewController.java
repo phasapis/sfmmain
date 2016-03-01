@@ -273,7 +273,7 @@ public class ChartViewController extends GenericMB {
         return model;
     }
 	
-	private LineChartModel initLinearModel(HashMap<Double, Double> xyMap) {
+	private LineChartModel initLinearTestModel(HashMap<Double, Double> xyMap) {
         LineChartModel model = new LineChartModel();
         try {
 			model.setTitle("Linear Chart");
@@ -289,6 +289,8 @@ public class ChartViewController extends GenericMB {
 				Double y = xyMap.get(x);
 				series1.set(x, y);
 			}
+			
+			
  
 			model.addSeries(series1);
 		} catch (Exception e) {
@@ -307,40 +309,56 @@ public class ChartViewController extends GenericMB {
 		solverResultXYGraphTO = pakSolverControlerService.showResultGraphs(this.getProjectID(),this.getSimulationID(),Boolean.TRUE);
 		
 		try {
+				HashMap<Double, Double> xyMapTest = new HashMap<Double, Double>();
+				
+				if(buttonID.equals(new String("test"))) {
+					
+					xyMapTest.put(1.0, 8.0);
+					xyMapTest.put(2.0, 9.5);
+					xyMapTest.put(3.2, 3.2);
+					xyMapTest.put(4.0, 10.0);
+					xyMapTest.put(5.0, 1.0);
+					lineModel = initLinearTestModel(xyMapTest);
+				return;
+				
+			} 
 			if(buttonID.equals(new String("bvm"))) {
 			
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getVmagnTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initBVMLinearModel(xyMap);
+				return;
 				
-			} else if(buttonID.equals(new String("bvp"))) {
+			} 
+			if(buttonID.equals(new String("bvp"))) {
 				
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getVphaseTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initBVPLinearModel(xyMap);
-				
-			} else if(buttonID.equals(new String("prp"))) {
+				return;	
+			} 
+			if(buttonID.equals(new String("prp"))) {
 				
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getPrealTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initPRPLinearModel(xyMap);
-				
-			} else if(buttonID.equals(new String("pip"))) {
+				return;
+			} if(buttonID.equals(new String("pip"))) {
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getPimagTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				lineModel = initPIPLinearModel(xyMap);
-				
-			} else if(buttonID.equals(new String("cl"))) {
+				return;
+			}if(buttonID.equals(new String("cl"))) {
 				for (Map.Entry<Double, Double> entry : solverResultXYGraphTO.getCenterlineTO().getXyMap().entrySet()) {
 					xyMap.put( entry.getKey(),entry.getValue());
 				}
 				
 				lineModel = initCLLinearModel(xyMap);
-				
+				return;
 			}
 		} catch (Exception e) {
 			addErrorMessage("Error!",e.getMessage());
