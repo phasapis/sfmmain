@@ -36,12 +36,12 @@
 					<h:outputText value="#{rulesV.ruleValidity}" />
 				</p:column>
 				<f:facet name="footer">
-					<p:commandButton process="checkboxDT" action="#{rulesValidationController.loadRulesActionListner}" update="@form"
+					<p:commandButton process="checkboxDT" action="#{rulesValidationController.loadRulesActionListner}" update="checkboxDT"
 						icon="" value="Load Rules"
 						oncomplete="" />
 				</f:facet>
 				<f:facet name="footer">
-					<p:commandButton process="checkboxDT" action="#{rulesValidationController.validateRulesActionListner}" update="@form"
+					<p:commandButton process="checkboxDT" action="#{rulesValidationController.validateRulesActionListner}" update="checkboxDT"
 						icon="" value="Validate Rules"
 						oncomplete="" />
 				</f:facet>

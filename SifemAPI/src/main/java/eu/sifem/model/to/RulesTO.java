@@ -55,6 +55,7 @@ public class RulesTO implements AbstractTO {
 		validationMethodList.put("velocity", "velocity");
 		validationMethodList.put("pressure", "pressure");
 		validationMethodList.put("kinematic viscosity", "kinematic viscosity");
+		validationMethodList.put("frequency", "frequency");
 
 		validationOperatorList.put("equal", "=");
 		validationOperatorList.put("greater", ">");

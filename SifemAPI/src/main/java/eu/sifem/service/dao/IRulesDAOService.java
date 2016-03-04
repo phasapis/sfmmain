@@ -8,6 +8,7 @@ import java.util.Map;
 import eu.sifem.model.to.RulesBasicTO;
 import eu.sifem.model.to.RulesTO;
 import eu.sifem.model.to.RulesThenTO;
+import eu.sifem.model.to.RulesValidationTO;
 
 
 /**
@@ -117,7 +118,7 @@ public interface IRulesDAOService {
 			+ "}";
 
 	
-	void saveRules(List<RulesTO> rulesTOList, List<RulesThenTO> rulesTOThenList, RulesBasicTO rulesBasicTO);
+	void saveRules(List<RulesTO> rulesTOList, List<RulesThenTO> rulesTOThenList, RulesBasicTO rulesBasicTO, List<RulesValidationTO> rulesValidationTOList);
 	
 	Map<String,String> getRulesMethodList();
 

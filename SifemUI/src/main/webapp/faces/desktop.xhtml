@@ -136,15 +136,11 @@ function cancel() {
 
 				<p:menuitem value="Data Analysis and Validation Rules"
 					icon="resources/images/icon1.png" url="#"
-					onclick="PF('dataAnalysisValidationRulesDialog').show();" />
+					onclick="PF('rulesValidationDialog').show();" />
 
 				<p:menuitem value="Knowledgebase Editor"
 					icon="resources/images/icon2.png" url="#"
 					onclick="PF('knowledgebaseEditorDialog').show();" />
-
-				<p:menuitem value="Rules Editor"
-					icon="resources/images/icon3.png" url="#"
-					onclick="PF('rulesDialog').show();" />
 
 
 				<p:menuitem value="Transformations"
@@ -215,11 +211,11 @@ function cancel() {
 
 		<!-- (6)  -->
 		<h:form id="dataAnalysisValidationRulesForm">
-			<p:dialog widgetVar="dataAnalysisValidationRulesDialog"
+			<p:dialog widgetVar="rulesValidationDialog"
 				header="Data Analysis Validation and Rules" closeOnEscape="true"
 				resizable="true" draggable="true" modal="false" closable="true"
 				showEffect="fade" hideEffect="fade">
-				<ui:include src="dataAnalysisValidationRules.xhtml"></ui:include>
+				<ui:include src="rulesValidationDialog.xhtml"></ui:include>
 			</p:dialog>
 		</h:form>
 		<!-- (6) -->
@@ -237,15 +233,7 @@ function cancel() {
 		<!-- (7) -->
 
 
-		<!-- (8)  -->
-		<h:form id="rulesForm">
-			<p:dialog widgetVar="rulesDialog" header="Rules" closeOnEscape="true"
-				resizable="true" draggable="true" modal="false" closable="true"
-				showEffect="fade" hideEffect="fade" dynamic="true">
-				<ui:include src="rulesDialog.xhtml"></ui:include>
-			</p:dialog>
-		</h:form>
-		<!-- (8)  -->
+
 
 
 		<!-- (9)  -->

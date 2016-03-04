@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import eu.sifem.mb.entitybean.RulesEB;
+import eu.sifem.mb.entitybean.RulesValidationEB;
 import eu.sifem.service.IRulesService;
 
 
@@ -32,6 +33,9 @@ public class RulesController extends GenericMB implements Serializable {
 	
 	@ManagedProperty(value="#{rulesService}")
 	private IRulesService rulesService;
+	
+	@ManagedProperty(value="#{rulesValidationEB}")
+	private RulesValidationEB rulesValidationEB;
 	
 	private Map<String, String> rulesMethod = new HashMap<String, String>();
 	
@@ -70,6 +74,16 @@ public class RulesController extends GenericMB implements Serializable {
 	}
 
 
+	public RulesValidationEB getRulesValidationEB() {
+		return rulesValidationEB;
+	}
+
+
+	public void setRulesValidationEB(RulesValidationEB rulesValidationEB) {
+		this.rulesValidationEB = rulesValidationEB;
+	}
+
+
 	public Map<String, String> getRulesMethod() {
 		return rulesService.getRulesMethodList();
 	}
@@ -86,7 +100,7 @@ public class RulesController extends GenericMB implements Serializable {
 	public void saveRulesActionListner() {
 		try {
 //		System.out.println("Feature: "+rulesEB.getRulesTOList().iterator().next().getFeature());
-			rulesService.saveRules(rulesEB.getRulesTOList(), rulesEB.getRulesThenTOList(), rulesEB.getRulesBasicTO());
+			rulesService.saveRules(rulesEB.getRulesTOList(), rulesEB.getRulesThenTOList(), rulesEB.getRulesBasicTO(), rulesValidationEB.getRulesValidationTOList());
 			//TODO insertcode here
 		} catch (Exception e) {
 			addExceptionMessage(e);

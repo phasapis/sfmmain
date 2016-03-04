@@ -19,6 +19,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import eu.sifem.model.to.RulesBasicTO;
 import eu.sifem.model.to.RulesTO;
 import eu.sifem.model.to.RulesThenTO;
+import eu.sifem.model.to.RulesValidationTO;
 import eu.sifem.service.dao.IRulesDAOService;
 
 
@@ -33,7 +34,7 @@ import eu.sifem.service.dao.IRulesDAOService;
 public class RulesDAO extends GenericDAO implements IRulesDAOService {
 
 	@Override
-	public void saveRules(List<RulesTO> rulesTOList, List<RulesThenTO> rulesTOThenList, RulesBasicTO rulesBasicTO) {
+	public void saveRules(List<RulesTO> rulesTOList, List<RulesThenTO> rulesTOThenList, RulesBasicTO rulesBasicTO, List<RulesValidationTO> rulesValidationTOList) {
 		
 		System.out.println("Label: " + rulesBasicTO.getRuleLabel() + " ### Type: " + rulesBasicTO.getRuleType());
 		
@@ -115,13 +116,16 @@ public class RulesDAO extends GenericDAO implements IRulesDAOService {
 		try {
 			sps.setString(0, "sifem:Rule_" + uniqueNumber);
 			sps.setString(1, "\"" + spsConstruct.toString() + "\"");
+			
 			sps.setString(2, "\"" + rulesBasicTO.getRuleType() + "\"");
 			sps.setString(3, "\"" + rulesBasicTO.getRuleLabel() + "\"");
 			System.out.println(sps.toString());
-			execute(sps.toString());
+//			execute(sps.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		rulesValidationTOList.add(new RulesValidationTO(rulesValidationTOList.size()+1, "", rulesBasicTO.getRuleLabel(), spsConstruct.toString(), ""));
 		
 		
 	}

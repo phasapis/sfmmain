@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import eu.sifem.model.to.RulesBasicTO;
 import eu.sifem.model.to.RulesTO;
 import eu.sifem.model.to.RulesThenTO;
+import eu.sifem.model.to.RulesValidationTO;
 import eu.sifem.service.IRulesService;
 import eu.sifem.service.dao.IKnowledgeBaseDAOService;
 import eu.sifem.service.dao.IRulesDAOService;
@@ -48,9 +49,9 @@ public class RulesService implements IRulesService {
 
 	@Override
 	public void saveRules(List<RulesTO> rulesTOList,
-			List<RulesThenTO> rulesTOThenList, RulesBasicTO rulesBasicTO) {
+			List<RulesThenTO> rulesTOThenList, RulesBasicTO rulesBasicTO, List<RulesValidationTO> rulesValidationTOList) {
 		
-		rulesDAO.saveRules(rulesTOList, rulesTOThenList, rulesBasicTO);
+		rulesDAO.saveRules(rulesTOList, rulesTOThenList, rulesBasicTO, rulesValidationTOList);
 		
 	}
 

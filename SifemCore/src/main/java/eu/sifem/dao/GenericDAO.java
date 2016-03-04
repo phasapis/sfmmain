@@ -75,25 +75,27 @@ public class GenericDAO{
 	
 	
 	protected boolean executeASK(String ASKSparql) throws Exception{
-        GraphStore graphstore = null;
-        File graphStoreFile = resourceInjectionService.getDatasetPathCompletePathAndFile().getFile();
-        if(graphStoreFile.length()==0){
-        	graphstore = GraphStoreFactory.create();
-        }else{
-    		Path input = Paths.get(resourceInjectionService.getDatasetBasePath().getFile().getPath(), resourceInjectionService.getDatasetPathCompletePathAndFile().getFile().getName()); 
-    		DatasetGraph dataset = RDFDataMgr.loadDataset(input.toUri().toString(), Lang.NQ).asDatasetGraph();
-    		graphstore = GraphStoreFactory.create(dataset);
-        }
-        
-        Query query = QueryFactory.create(ASKSparql) ;
-        QueryExecution qexec = QueryExecutionFactory.create(query, graphstore.toDataset()) ;
-            
-        boolean b = qexec.execAsk();
-            
-        // Close objects
-        qexec.close();
-        
-        return b;
+		//TODO uncomment it before running up virtuoso properly
+//        GraphStore graphstore = null;
+//        File graphStoreFile = resourceInjectionService.getDatasetPathCompletePathAndFile().getFile();
+//        if(graphStoreFile.length()==0){
+//        	graphstore = GraphStoreFactory.create();
+//        }else{
+//    		Path input = Paths.get(resourceInjectionService.getDatasetBasePath().getFile().getPath(), resourceInjectionService.getDatasetPathCompletePathAndFile().getFile().getName()); 
+//    		DatasetGraph dataset = RDFDataMgr.loadDataset(input.toUri().toString(), Lang.NQ).asDatasetGraph();
+//    		graphstore = GraphStoreFactory.create(dataset);
+//        }
+//        
+//        Query query = QueryFactory.create(ASKSparql) ;
+//        QueryExecution qexec = QueryExecutionFactory.create(query, graphstore.toDataset()) ;
+//            
+//        boolean b = qexec.execAsk();
+//            b=true;
+//        // Close objects
+//        qexec.close();
+//        
+//        return b;
+		return Boolean.TRUE; 
 	}
 	
 

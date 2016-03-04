@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import eu.sifem.mb.entitybean.RulesEB;
 import eu.sifem.mb.entitybean.RulesValidationEB;
+import eu.sifem.model.to.RulesBasicTO;
 import eu.sifem.model.to.RulesValidationTO;
 import eu.sifem.service.IRulesValidationService;
 
@@ -33,6 +34,9 @@ public class RulesValidationController extends GenericMB implements Serializable
 	
 	@ManagedProperty(value="#{rulesValidationService}")
 	private IRulesValidationService rulesValidationService;
+	
+	@ManagedProperty(value="#{rulesEB}")
+	private RulesEB rulesEB;
 
 	
 	public RulesValidationEB getRulesValidationEB() {
@@ -53,14 +57,41 @@ public class RulesValidationController extends GenericMB implements Serializable
 	}
 	
 	
+	public RulesEB getRulesEB() {
+		return rulesEB;
+	}
+
+	public void setRulesEB(RulesEB rulesEB) {
+		this.rulesEB = rulesEB;
+	}
+
 	public void loadRulesActionListner() {
 		try {
-			if(!(rulesValidationEB.getRulesValidationTOList().isEmpty())) {
-				rulesValidationEB.getRulesValidationTOList().clear();
-			}
+//			if(!(rulesValidationEB.getRulesValidationTOList().isEmpty())) {
+//				rulesValidationEB.getRulesValidationTOList().clear();
+//			}
 			
 			List<RulesValidationTO> rulesValidationTOList = rulesValidationService.loadRules();
-			rulesValidationEB.addRulesValidationTOList(rulesValidationTOList);			//TODO insertcode here
+
+			if(rulesValidationTOList.size() == 0) {
+
+//				rulesValidationTOList = rulesValidationService.loadRules(rulesEB.getRulesBasicTO(), rulesEB.getRulesThenTOList(), rulesEB.getRulesTOList());
+				
+//				RulesBasicTO ruleBasicTO = rulesEB.getRulesBasicTO();
+//				String ruleLabel = ruleBasicTO.getRuleLabel();
+//				int ruleID = 1;
+//				String ruleURI = "Rule URI";
+//				String constructQuery = "";
+//				String ruleValidity = "";
+//				
+//				RulesValidationTO rulesValidationTO = new RulesValidationTO(ruleID, ruleURI, ruleLabel, constructQuery, ruleValidity);
+//				rulesValidationTOList.add(rulesValidationTO);
+//				rulesValidationEB.addRulesValidationTOList(rulesValidationTOList);
+			
+			} else {
+				rulesValidationEB.addRulesValidationTOList(rulesValidationTOList);
+			}
+			//TODO insertcode here
 		} catch (Exception e) {
 			addExceptionMessage(e);
 		}
